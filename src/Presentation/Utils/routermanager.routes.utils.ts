@@ -1,5 +1,9 @@
 export const PublicRoutes = {
-    HOME: '',
+    HOME: '/',
+    PRODUCTS: '/products',
+    PRODUCTSWITHFILTERS: '/products?page=:page&filters=:filters&sort=:sort',
+
+    STORES: '/stores',
     SIGNIN: '/signin',
     SIGNUP: '/signup',
     FORGOTTENPASSWORD: '/forgottenpassword',
@@ -7,5 +11,8 @@ export const PublicRoutes = {
 }
 
 export const PrivateRoutes = {
-    CHATUI: '/chatui',
+    DASHBOARD: '/dashboard',
+    DASHBOARDACCOUNT: '/dashboard/account',
+    DASHBOARDORDERS: '/dashboard/orders',
+    DASHBOARDSTORES: '/dashboard/stores',
 }
