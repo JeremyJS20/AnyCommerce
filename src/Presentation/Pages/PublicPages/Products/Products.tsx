@@ -2,14 +2,10 @@ import { Divider } from "@nextui-org/divider";
 import { Button, Card, CardBody, Link } from "@nextui-org/react";
 import { FunctionComponent, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { eCommerce } from "../../../Assets/Img/ImgCollection";
 import { useNavigate } from "react-router-dom";
 import { PublicRoutes } from "../../../Utils/routermanager.routes.utils";
 import {
-  BoxIcon,
-  StarEmptyIcon,
-  StarFilledIcon,
-  StarHalfFilledIcon,
+  BoxIcon
 } from "../../../Assets/Icons/IconsCollection";
 import { cartProducts, productInfo } from "../../../Utils/types.utils";
 import { CartContext } from "../../../Context/CartContext";
@@ -26,6 +22,7 @@ import {
 } from "../../../Hooks/Common/useFilterPanel2";
 import usePager, { useQuery } from "../../../Hooks/Common/usePager";
 import useProducts from "../../../Hooks/Pages/Products/useProducts";
+import { renderProductRating, renderUnitsInStock } from "../../../Components/Common/CommonComponents";
 
 interface IProductsProps {}
 
@@ -45,37 +42,7 @@ const Products: FunctionComponent<IProductsProps> = ({}) => {
   const [products, setProducts] = useState<productInfo[]>(ProductsCollection);
   const [products2, setProducts2] = useState<productInfo[]>(ProductsCollection);
 
-  const renderProductRating = (rating: (number | null)[]) => {
-    return rating.map((rat) => (
-      <>
-        {rat != null ? (
-          String(rat).includes(".") ? (
-            <></>
-          ) : String(rating[rating.indexOf(rat) + 1])?.includes(".") ? (
-            <StarHalfFilledIcon size="sm" color={"text-gray-500"} />
-          ) : (
-            <StarFilledIcon size="sm" color={"text-gray-500"} />
-          )
-        ) : (
-          <StarEmptyIcon size="sm" color={"text-gray-500"} />
-        )}
-      </>
-    ));
-  };
 
-  const renderUnitsInStock = (stock: number) => {
-    return (
-      <p className={`${stock <= 10 ? "text-red-500" : "text-gray-500"}`}>
-        {stock > 20
-          ? `+20 ${t("unidades-en-stock").toLowerCase()}`
-          : stock <= 10
-          ? `${t("solo")} ${stock} ${t(
-              "pocas-unidades-en-stock"
-            ).toLowerCase()} - ${t("ordena-pronto").toLowerCase()}`
-          : `${stock} ${t("unidades-en-stock").toLowerCase()}`}
-      </p>
-    );
-  };
 
   const { selectedFiltersFormatted, setSelectedFilters, FilterPanelComponent } =
     useFilterPanel({ filterCollection: ProductFiltersCollection });
@@ -90,11 +57,10 @@ const Products: FunctionComponent<IProductsProps> = ({}) => {
     sortCollection: ProductSortCollection,
   });
 
-  const { PagerComponent, pagerOptions } =
-    usePager({
-      items: products2,
-      take: 12,
-    });
+  const { PagerComponent, pagerOptions } = usePager({
+    items: products2,
+    take: 12,
+  });
 
   const { applyFilters, applySorter, applyPaging } = useProducts({});
 
@@ -124,7 +90,7 @@ const Products: FunctionComponent<IProductsProps> = ({}) => {
     if (filtersKeys.length <= 0) return;
 
     filtersKeys.forEach((filterKey) => {
-            if (sfv[filterKey] == undefined) {
+      if (sfv[filterKey] == undefined) {
         delete sfv[filterKey];
 
         setSelectedFiltersValues(sfv);
@@ -133,94 +99,61 @@ const Products: FunctionComponent<IProductsProps> = ({}) => {
     });
   }, [selectedFiltersValues]);
 
-  //   useEffect(() => {
-  //     let route = '/products?';
-
-  //     const [productsFiltered, routewithfilters] = applyFilters({
-  //       products: ProductsCollection,
-  //       filters: selectedFiltersValues,
-  //       setSelectedFilters: setSelectedFilters,
-  //       setSelectedFiltersValue: setSelectedFiltersValues,
-  //       route: route
-  //     });
-
-  //     const [productsSortered, routewithsorter] = applySorter({
-  //       products: productsFiltered,
-  //       sortCollection: ProductSortCollection,
-  //       sortValue: sortValue,
-  //       route: routewithfilters
-  //     });
-
-  //     const [pagedProducts, routewithpage, klk] = applyPaging({
-  //       allProducts: ProductsCollection,
-  //       products: productsSortered,
-  //       pagerValues: pagerOptions,
-  //       route: routewithsorter,
-  //       pagerOptions: pagerOptions
-  //     });
-  // console.log(klk);
-  // //setPagerOptions(klk)
-  //     setProducts(pagedProducts);
-  //     //console.log(routewithpage);
-  //     navigate(routewithpage)
-  //   }, [selectedFiltersValues, sortValue, pagerResult]);
-
-  
   useEffect(() => {
     let p = ProductsCollection.slice();
 
-    const queryFilters = query.get('filters');
-    const querySorter = query.get('sort');
-    const queryPager = query.get('page');
+    const queryFilters = query.get("filters");
+    const querySorter = query.get("sort");
+    const queryPager = query.get("page");
 
-    if(queryFilters != null){      
+    if (queryFilters != null) {
       const [productsFiltered] = applyFilters({
         products: p,
         filters: JSON.parse(queryFilters),
         setSelectedFilters: setSelectedFilters,
         setSelectedFiltersValue: setSelectedFiltersValues,
-        route: ''
-      });      
+        route: "",
+      });
       p = productsFiltered;
-      setProducts2(productsFiltered)
+      setProducts2(productsFiltered);
     }
 
-    if(querySorter != null){      
+    if (querySorter != null) {
       const [productsSortered] = applySorter({
         products: p,
         sortCollection: ProductSortCollection,
         sortValue: querySorter,
-        route: ''
+        route: "",
       });
 
-      p = productsSortered
-    }    
+      p = productsSortered;
+    }
 
     if (queryPager != null) {
       const [pagedProducts] = applyPaging({
         allProducts: ProductsCollection,
         products: p,
         pagerValues: pagerOptions,
-        route: '',
+        route: "",
         pagerOptions: pagerOptions,
       });
-    
+
       p = pagedProducts;
     }
-    
+
     setProducts(p);
   }, [query]);
 
   return (
-    <div className="w-[95em] px-6">
-      <div className="flex flex-col pt-10 pb-5 gap-3">
+    <div className="w-[95%] px-6 py-10 laptop:w-[80%]">
+      <div className="flex flex-col pb-5 gap-3">
         <div>
           <header className="font-bold text-3xl">{t("productos")}</header>
           <p className="text-base text-gray-500">
             {t("productos-descripcion2")}
           </p>
         </div>
-        <Divider orientation="horizontal" className="" />
+        {/* <Divider orientation="horizontal" className="" /> */}
       </div>
       <div className="flex flex-col gap-5">
         <div className="flex gap-4 flex-wrap tablet:flex-nowrap">
@@ -243,7 +176,7 @@ const Products: FunctionComponent<IProductsProps> = ({}) => {
                 <Card
                   key={prod.id}
                   isBlurred={false}
-                  className="border w-full rounded-lg border-gray-300 dark:border-gray-700 bg-transparent desktop:w-[24%] laptop:w-[32.4%] tablet:w-[49%]"
+                  className="border w-full rounded-lg border-gray-300 dark:border-gray-700 bg-transparent desktop:w-[23.9%] laptop:w-[30%] tablet:w-[48.5%]"
                   shadow="none"
                 >
                   <CardBody className="p-0 rounded-lg border-none border-gray-300 dark:border-gray-700 ">
@@ -253,26 +186,22 @@ const Products: FunctionComponent<IProductsProps> = ({}) => {
                         e.preventDefault();
                         navigate(`${PublicRoutes.PRODUCTS}/${prod.id}`);
                       }}
+                      className="!h-full"
                     >
-                      <div className="flex flex-col gap-2 border-none text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 rounded-lg p-3">
-                        <img src={eCommerce} className="w-[100%] h-auto" />
-                        <div className="flex flex-col gap-4 px-2">
-                          <div className="flex flex-col gap-0">
-                            <p className=" text-xl">{prod.name}</p>
-                            <div className="flex items-center gap-0 text-gray-500">
-                              <p className="mr-2">
-                                {prod.rating.reduce((a, b) => {
-                                  return Math.max(Number(a), Number(b));
-                                }, 0)}
-                                {prod.rating
-                                  .find((rat) => String(rat).includes("."))
-                                  ?.toString()
-                                  .replace("0", "")}
-                              </p>
-                              {renderProductRating(prod.rating)}
+                      <div className="h-full flex flex-col justify-between gap-4 border-none text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 rounded-lg p-3">
+                        <div className="flex flex-col gap-2">
+                          <img src={prod.img} className="w-[100%] h-auto bg-cover bg-center bg-no-repeat " />
+                          <div className="flex flex-col gap-4 px-2">
+                            <div className="flex flex-col gap-0">
+                              <p className=" text-xl">{prod.name}</p>
+                              <div className="flex items-center gap-0 text-gray-500">
+                                {renderProductRating(prod.rating, 'sm')}
+                              </div>
+                              {renderUnitsInStock(prod.stock, t)}
                             </div>
-                            {renderUnitsInStock(prod.stock)}
                           </div>
+                        </div>
+                        <div className="flex flex-col gap-5">
                           <div className="flex gap-[2px]">
                             <p>$</p>
                             <p className="text-4xl">
@@ -289,9 +218,15 @@ const Products: FunctionComponent<IProductsProps> = ({}) => {
                             size="md"
                             radius="sm"
                             variant="bordered"
-                            className="border border-none text-gray-100 bg-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 dark:text-gray-800 dark:bg-gray-100"
+                            className={`border border-none text-gray-100 bg-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 dark:text-gray-800 dark:bg-gray-100 ${prod.stock <= 0? '!bg-gray-900/80 dark:!bg-gray-100/80':''}`}
+                            disabled={prod.stock <= 0}
                             onClick={(e) => {
                               e.preventDefault();
+
+                              if(prod.stock <= 0){
+                                return toast.error(t('existencia-de-producto-en-tienda-agotada'))
+                              }
+                            
                               const cartExists = JSON.parse(
                                 String(localStorage.getItem("cart"))
                               ) as cartProducts[] | null;

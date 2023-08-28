@@ -33,12 +33,22 @@
     "alfabeticamente": "Alphabetically",
     "fecha": "Date",
     "o-mas": "Or higher",
+    "opiniones": "Reviews",
+    "calificaciones-y-opiniones": "Ratings and Reviews",
+    "detalles": "Details",
+    "descripcion": "Description",
+    "descripcion-del-producto": "Product description",
+    "caracteristicas-del-producto": "Product characteristics",
+    "caracteristicas": "Characteristics",
     "agregar-al-carrito": "Add to cart",
     "producto-agredado-a-carrito": "Product added to cart.",
     "existencia-de-producto-excedida": "Product stock exceeded.",
     "existencia-de-producto-en-tienda-excedida": "Store product stock exceeded.",
     "existencia-de-producto-alcanzada": "Product stock reached.",
     "existencia-de-producto-en-tienda-alcanzada": "Store product stock reached.",
+    "existencia-de-producto-agotada": "Product out-of-stock.",
+    "existencia-de-producto-en-tienda-agotada": "Product out-of-stock in the store.",
+
     "unidad-en-stock": "Unit in stock",
     "unidades-en-stock": "Units in stock",
     "pocas-unidades-en-stock": "Units left in stock",
@@ -82,5 +92,10 @@
     "no-tienes-cuenta?": "Don't have an account?",
     "crea-tu-cuenta": "Create your account",
     "crea-tu-cuenta2": "Create an account to start buying or selling products.",
-    "ya-tienes-cuenta?": "Already have an account?"
+    "ya-tienes-cuenta?": "Already have an account?",
+    "derechos-de-autor": "2023 by Jeremy. All right reserved.",
+    "terminos-de-servicio": "Terms of service",
+    "politica-de-servicio": "Policy service",
+    "politica-de-cookies": "Cookies policy"
+
 }

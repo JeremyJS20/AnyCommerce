@@ -212,6 +212,7 @@ const MainNavBar = forwardRef(
                 title: "text-sm",
                 description: "",
               }}
+              aria-label="ddd"
             >
               {featureItems.map((feat) => (
                 <DropdownItem
@@ -369,6 +370,12 @@ const MobileNavBar = forwardRef(({}, ref) => {
     else document.body.classList.remove('overflow-hidden')
   }, [collapseMobileMenu]);
 
+  /**
+   *       className={`fixed top-0 z-0 w-full h-full bg-gray-900/50 backdrop-blur-sm laptop:hidden transition-opacity duration-300 ${
+        collapseMobileMenu ? " opacity-100 !z-40" : "opacity-0"
+      }`}
+   */
+
   return (
     <div
       className={`fixed top-0 z-0 w-full h-full bg-gray-900/50 backdrop-blur-sm laptop:hidden transition-opacity duration-300 ${
@@ -469,8 +476,8 @@ const Cart = forwardRef(({}, ref) => {
   return (
     <div
       id="noCartArea"
-      className={`fixed bottom-0 z-0 w-full h-screen bg-gray-900/50 backdrop-blur-sm transition-opacity duration-300 ${
-        collapseCart ? `opacity-100 !z-50 ` : "opacity-0"
+      className={`fixed bottom-0 z-0 right-0 h-screen bg-gray-900/50 backdrop-blur-sm transition-width duration-300 ${
+        collapseCart ? "w-full !z-50 " : "w-0"
       }`}
       onClick={(e) => {
         if (!collapseCart) return;
@@ -479,7 +486,7 @@ const Cart = forwardRef(({}, ref) => {
       }}
     >
       <div
-        className={`h-full top-0 right-0 absolute items-start bg-gray-100 border-l border-divider dark:bg-gray-900 transition-width duration-300 z-50 ${
+        className={`h-full top-0 right-0 absolute items-start bg-gray-100 border-l-none border-divider dark:bg-gray-900 transition-width duration-300 z-50 ${
           collapseCart ? "w-full desktopW:w-[28vw] tablet:w-[60vw] " : "w-0"
         }`}
       >

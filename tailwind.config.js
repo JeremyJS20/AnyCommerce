@@ -7,6 +7,7 @@ module.exports = {
     "./src/Main/*.{html,js,ts,jsx,tsx}",
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
     "./src/Presentation/Components/*.{js,ts,jsx,tsx}",
+    "./src/Presentation/Components/**/*.{js,ts,jsx,tsx}",
     "./src/Presentation/Pages/**/*.{js,ts,jsx,tsx}",
     "./src/Presentation/Hooks/**/*.{js,ts,jsx,tsx}",
 

@@ -2,9 +2,12 @@ import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "./Navbar";
 import { useContext, useEffect } from "react";
 import { ThemeContext, themeVerifier } from "../Context/ThemeContext";
-import { anyCommerceIconLight } from "../Assets/Img/ImgCollection";
+import {
+  anyCommerceIconLight,
+} from "../Assets/Img/ImgCollection";
 import { PublicRoutes } from "../Utils/routermanager.routes.utils";
-import { Toaster } from 'sonner';
+import { Toaster } from "sonner";
+import Footer from "./Footer";
 
 interface IContainerProps {}
 
@@ -21,8 +24,8 @@ const Container: React.FunctionComponent<IContainerProps> = () => {
 
   useEffect(() => {
     if (theme === "undefined") return;
-    document.body.classList.remove(themeVerifier(theme));
-    document.body.classList.add(theme);
+    document.body.classList.remove(themeVerifier(theme), 'bg-gray-900', 'bg-gray-100');
+    document.body.classList.add(theme, 'h-screen', theme == 'dark'? 'bg-gray-900': 'bg-gray-100');
   }, [theme]);
 
   useEffect(() => {
@@ -46,16 +49,19 @@ const Container: React.FunctionComponent<IContainerProps> = () => {
     );
 
   return (
-    <div className=" bg-gray-100 text-gray-900 tracking-tighter dark:text-gray-100 dark:bg-gray-900">
+    <div className=" bg-gray-100 text-gray-900 tracking-tight dark:text-gray-100 dark:bg-gray-900">
       <Navbar />
       <div className="flex justify-center">
         <Outlet />
-
       </div>
-      <div className="py-32 bottom-5 ">
-            Footer
-        </div>
-        <Toaster position="bottom-center" toastOptions={{className: '!bg-gray-900 !text-gray-100 !border-none dark:!text-gray-900 dark:!bg-gray-100'}} />
+      <Footer />
+      <Toaster
+        position="bottom-center"
+        toastOptions={{
+          className:
+            "!bg-gray-900 !text-gray-100 !border-none dark:!text-gray-900 dark:!bg-gray-100",
+        }}
+      />
     </div>
   );
 };

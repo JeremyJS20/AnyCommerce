@@ -1,3 +1,5 @@
+import { commonType } from "../Pages/PublicPages/Products/Products";
+
 export type cartProducts = {
   productInfo: productInfo;
   cartInfo: {
@@ -16,5 +18,10 @@ export type productInfo = {
     dates:{
       creation: Date,
       restock?: Date
+    }
+    description?: string,
+    details?: {
+      description?: string,
+      characteristics?: commonType[]
     }
   }

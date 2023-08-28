@@ -28,12 +28,21 @@
     "alfabeticamente": "Alfabéticamente",
     "fecha": "Fehca",
     "o-mas": "O más",
+    "opiniones": "Opiniones",
+    "calificaciones-y-opiniones": "Calificaciones y Opiniones",
+    "detalles": "Detalles",
+    "descripcion": "Descripción",
+    "descripcion-del-producto": "Descripción del producto",
+    "caracteristicas-del-producto": "Características del producto",
+    "caracteristicas": "Características",
     "agregar-al-carrito": "Agregar al carrito",
     "producto-agredado-a-carrito": "Producta agregado al carrito.",
     "existencia-de-producto-excedida": "Unidades del producto excedida.",
     "existencia-de-producto-en-tienda-excedida": "Unidades del producto en la tienda excedida.",
     "existencia-de-producto-alcanzada": "Unidades del producto alcanzada.",
     "existencia-de-producto-en-tienda-alcanzada": "Unidades del producto en la tienda alcanzada.",
+    "existencia-de-producto-agotada": "Unidades del producto agotadas.",
+    "existencia-de-producto-en-tienda-agotada": "Unidades del producto agotadas en la tienda.",
     "unidad-en-stock": "Unidad en stock",
     "unidades-en-stock": "Unidades en stock",
     "pocas-unidades-en-stock": "Unidades restantes en stock",
@@ -77,6 +86,9 @@
     "no-tienes-cuenta?": "No tienes una cuenta?",
     "crea-tu-cuenta": "Crea tu cuenta",
     "crea-tu-cuenta2": "Crea una cuenta para empezar a comprar o vender productos.",
-    "ya-tienes-cuenta?": "Ya tienes una cuenta?"
-
+    "ya-tienes-cuenta?": "Ya tienes una cuenta?",
+    "derechos-de-autor": "2023 por Jeremy. Todos los derechos reservados.",
+    "terminos-de-servicio": "Términos de servicio",
+    "politica-de-servicio": "Política de servicio",
+    "politica-de-cookies": "Política de cookies"
 }

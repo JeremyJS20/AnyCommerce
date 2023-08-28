@@ -2,6 +2,7 @@ export const PublicRoutes = {
     HOME: '/',
     PRODUCTS: '/products',
     PRODUCTSWITHFILTERS: '/products?page=:page&filters=:filters&sort=:sort',
+    PRODUCTDETAILS: '/products/:id',
 
     STORES: '/stores',
     SIGNIN: '/signin',

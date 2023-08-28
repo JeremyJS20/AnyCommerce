@@ -27,6 +27,13 @@ const FilterIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl'|'2xl'|
 const DollarSignIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl'|'2xl'|'4xl'|'6xl'}) => (<i className={`fa-solid fa-dollar-sign p-1 text-gray-900 text-${props.size} dark:text-gray-100`}></i>);
 const CategoryIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl'|'2xl'|'4xl'|'6xl'}) => (<i className={`fa-solid fa-list text-gray-900 text-${props.size} dark:text-gray-100`}></i>);
 const SortIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl'|'2xl'|'4xl'|'6xl'}) => (<i className={`fa-solid fa-sort text-gray-900 text-${props.size} dark:text-gray-100`}></i>);
+const HeartEmptyIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl'|'2xl'|'4xl'|'6xl'}) => (<i className={`fa-regular fa-heart text-gray-900 text-${props.size} dark:text-gray-100`}></i>);
+const HeartFilledIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl'|'2xl'|'4xl'|'6xl', color?: string}) => (<i className={`fa-solid fa-heart ${props.color? props.color: 'text-gray-900 dark:text-gray-100'} text-${props.size} `}></i>);
+const ListIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl'|'2xl'|'4xl'|'6xl'}) => (<i className={`fa-solid fa-list text-gray-900 text-${props.size} dark:text-gray-100`}></i>);
+const InfoIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl'|'2xl'|'4xl'|'6xl'}) => (<i className={`fa-solid fa-circle-info text-gray-900 text-${props.size} dark:text-gray-100`}></i>);
+const CopyRightIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl', color?: string}) => (<i className={`fa-regular fa-copyright ${props.color? props.color: 'text-gray-900 dark:text-gray-100'} text-${props.size} `}></i>);
+const XTwitterIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl', color?: string}) => (<i className={`fa-brands fa-x-twitter ${props.color? props.color: 'text-gray-900 dark:text-gray-100'} text-${props.size} `}></i>);
+const InstagramIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl', color?: string}) => (<i className={`fa-brands fa-instagram ${props.color? props.color: 'text-gray-900 dark:text-gray-100'} text-${props.size} `}></i>);
 
 export {
     SearchIcon,
@@ -56,5 +63,12 @@ export {
     DoubleArrowRightIcon,
     ArrowLeftIcon,
     DoubleArrowLeftIcon,
-    HorizontalDotsIcon
+    HorizontalDotsIcon,
+    HeartEmptyIcon,
+    HeartFilledIcon,
+    ListIcon,
+    InfoIcon,
+    CopyRightIcon,
+    XTwitterIcon,
+    InstagramIcon
 }

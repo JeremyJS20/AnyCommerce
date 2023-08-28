@@ -10,6 +10,7 @@ import SignIn from "../PublicPages/SignIn/SignIn";
 import SignUp from "../PublicPages/SignUp/SignUp";
 import Products from "../PublicPages/Products/Products";
 import CartContextProvider from "../../Context/CartContext";
+import ProductDetails from "../PublicPages/Products/ProductDetails";
 
 interface IRouterManagerProps {}
 
@@ -28,6 +29,7 @@ const RouterManager: React.FunctionComponent<IRouterManagerProps> = ({}) => {
                   <Route path={PublicRoutes.SIGNIN} element={<SignIn />} />
                   <Route path={PublicRoutes.SIGNUP} element={<SignUp />} />
                   <Route path={PublicRoutes.PRODUCTS || PublicRoutes.PRODUCTSWITHFILTERS } element={<Products />} />
+                  <Route path={PublicRoutes.PRODUCTDETAILS} element={<ProductDetails />} />
 
                   <Route
                     path={PublicRoutes.FORGOTTENPASSWORD}
