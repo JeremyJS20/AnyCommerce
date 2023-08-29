@@ -323,7 +323,7 @@ const MainNavBar = forwardRef(
             </Dropdown>
           </NavbarItem>
           <NavbarItem>
-            <Badge content={cart.reduce((a,b) => a + b.cartInfo.amount, 0)}  color="primary" size="md" classNames={{badge: `bg-gray-800 text-gray-100 dark:bg-gray-100 border-none dark:text-gray-800 ${cart.reduce((a,b) => a + b.cartInfo.amount, 0) <= 0? 'hidden':''}`}}>
+            <Badge content={cart != null && cart.reduce((a,b) => a + b.cartInfo.amount, 0)}  color="primary" size="md" classNames={{badge: `bg-gray-800 text-gray-100 dark:bg-gray-100 border-none dark:text-gray-800 ${cart != null && cart.reduce((a,b) => a + b.cartInfo.amount, 0) <= 0? 'hidden':''}`}}>
               <Button
                 isIconOnly
                 size="sm"
@@ -498,7 +498,7 @@ const Cart = forwardRef(({}, ref) => {
           <header className="mb-3 flex justify-between">
             <p className="text-xl font-bold">
               {t("carrito")}
-              {`(${cart.reduce((a, b) => a + b.cartInfo.amount, 0)})`}
+              {`(${cart != null && cart.reduce((a, b) => a + b.cartInfo.amount, 0)})`}
             </p>
             <Button
               isIconOnly
@@ -514,14 +514,14 @@ const Cart = forwardRef(({}, ref) => {
           <Divider orientation="horizontal" />
 
           <div className="h-[90vh] flex flex-col justify-between">
-            {cart.length <= 0 ? (
+            {cart != null && cart.length <= 0 ? (
               <div className="flex h-[90vh] items-center justify-center">
                 <p className="text-xl text-gray-500">{t("carrito-vacio")}</p>
               </div>
             ) : (
               <div className=" max-h-[65vh] overflow-auto tablet:max-h-[75vh]">
                 <ol className=" ">
-                  {cart.map((prod, index) => (
+                  {cart != null && cart.map((prod, index) => (
                     <>
                       <li
                         key={prod.productInfo.id + index}
@@ -683,7 +683,7 @@ const Cart = forwardRef(({}, ref) => {
                 </ol>
               </div>
             )}
-            {cart.length > 0 && (
+            {cart != null &&  cart.length > 0 && (
               <div className="">
                 <Divider orientation="horizontal" className="my-3" />
                 <div className="flex flex-col gap-2">
