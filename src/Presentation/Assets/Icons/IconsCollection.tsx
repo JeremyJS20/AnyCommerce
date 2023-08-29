@@ -19,7 +19,7 @@ const ArrowLeftIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl'}) =
 const DoubleArrowLeftIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl'}) => (<i className={`fa-solid fa-angles-left text-gray-900 text-${props.size} dark:text-gray-100`}></i>);
 const HorizontalDotsIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl'}) => (<i className={`fa-solid fa-ellipsis text-gray-900 text-${props.size} dark:text-gray-100`}></i>);
 
-const StarFilledIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl', color?: string}) => (<i className={`fa-solid fa-star ${props.color? props.color: 'text-gray-900 dark:text-gray-100'} text-${props.size} `}></i>);
+const StarFilledIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl'|'2xl'|'4xl'|'6xl', color?: string}) => (<i className={`fa-solid fa-star ${props.color? props.color: 'text-gray-900 dark:text-gray-100'} text-${props.size} `}></i>);
 const StarHalfFilledIcon = ({...props}:{size: 'xs'|'medium'|'sm'|'base'|'lg'|'xl', color: string}) => (<i className={`fa-regular fa-star-half-stroke ${props.color} text-${props.size} `}></i>);
 const StarEmptyIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl', color: string}) => (<i className={`fa-regular fa-star ${props.color} text-${props.size} `}></i>);
 const BoxIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl'|'2xl'|'4xl'|'6xl' | ''} ) => (<i className={`fa-solid fa-box-open text-gray-900 text-${props.size} dark:text-gray-100`}></i>);
@@ -31,6 +31,8 @@ const HeartEmptyIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl'|'2
 const HeartFilledIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl'|'2xl'|'4xl'|'6xl', color?: string}) => (<i className={`fa-solid fa-heart ${props.color? props.color: 'text-gray-900 dark:text-gray-100'} text-${props.size} `}></i>);
 const ListIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl'|'2xl'|'4xl'|'6xl'}) => (<i className={`fa-solid fa-list text-gray-900 text-${props.size} dark:text-gray-100`}></i>);
 const InfoIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl'|'2xl'|'4xl'|'6xl'}) => (<i className={`fa-solid fa-circle-info text-gray-900 text-${props.size} dark:text-gray-100`}></i>);
+const ProfileIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl'|'2xl'|'4xl'|'6xl'}) => (<i className={`fa-solid fa-circle-user text-gray-900 text-${props.size} dark:text-gray-100`}></i>);
+
 const CopyRightIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl', color?: string}) => (<i className={`fa-regular fa-copyright ${props.color? props.color: 'text-gray-900 dark:text-gray-100'} text-${props.size} `}></i>);
 const XTwitterIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl', color?: string}) => (<i className={`fa-brands fa-x-twitter ${props.color? props.color: 'text-gray-900 dark:text-gray-100'} text-${props.size} `}></i>);
 const InstagramIcon = ({...props}:{size: 'xs'|'sm'|'medium'|'base'|'lg'|'xl', color?: string}) => (<i className={`fa-brands fa-instagram ${props.color? props.color: 'text-gray-900 dark:text-gray-100'} text-${props.size} `}></i>);
@@ -70,5 +72,6 @@ export {
     InfoIcon,
     CopyRightIcon,
     XTwitterIcon,
-    InstagramIcon
+    InstagramIcon,
+    ProfileIcon
 }

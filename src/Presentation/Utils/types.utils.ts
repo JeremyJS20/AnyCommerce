@@ -24,4 +24,16 @@ export type productInfo = {
       description?: string,
       characteristics?: commonType[]
     }
+    reviews? : 
+      {
+        key: string,
+        profileImg?: any,
+        userName: string,
+        from: string,
+        rating:  (number | null)[],
+        date: Date,
+        opinion: string,
+        medias?: any
+      }[]
+    
   }

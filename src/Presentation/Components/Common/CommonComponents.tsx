@@ -87,7 +87,7 @@ export const ImagesSlider: FunctionComponent<{ images: string[] }> = ({
   const [imageIndex, setImageIndex] = useState<number>(0);
 
   return (
-    <div className="w-[90%] h-full flex flex-col gap-3">
+    <div className="w-[95%] h-full flex flex-col gap-3">
       <div className="relative flex">
         <div
           className="w-full h-[20em] laptop:h-[40em] rounded-xl bg-cover bg-center bg-no-repeat "

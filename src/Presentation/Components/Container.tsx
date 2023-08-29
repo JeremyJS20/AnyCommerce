@@ -8,12 +8,15 @@ import {
 import { PublicRoutes } from "../Utils/routermanager.routes.utils";
 import { Toaster } from "sonner";
 import Footer from "./Footer";
+import { Divider } from "@nextui-org/react";
+import { useTranslation } from "react-i18next";
 
 interface IContainerProps {}
 
 const Container: React.FunctionComponent<IContainerProps> = () => {
   const { theme } = useContext(ThemeContext);
   const location = useLocation();
+  const { t } = useTranslation();
 
   const routesWithNoNavbar = [
     PublicRoutes.SIGNIN,
@@ -51,6 +54,10 @@ const Container: React.FunctionComponent<IContainerProps> = () => {
   return (
     <div className=" bg-gray-100 text-gray-900 tracking-tight dark:text-gray-100 dark:bg-gray-900">
       <Navbar />
+      <div className="flex items-center p-2 justify-center font-bold">
+        {t('web-en-construccion')}
+      </div>
+      <Divider orientation="horizontal"/>
       <div className="flex justify-center">
         <Outlet />
       </div>

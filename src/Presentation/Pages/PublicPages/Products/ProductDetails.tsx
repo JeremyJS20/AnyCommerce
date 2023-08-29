@@ -3,6 +3,7 @@ import { cartProducts, productInfo } from "../../../Utils/types.utils";
 import { useContext, useState } from "react";
 import { ProductsCollection } from "../../../Utils/DataCollection/Products.datacollection.utils";
 import {
+  Avatar,
   Button,
   Chip,
   Divider,
@@ -30,6 +31,7 @@ import {
 } from "../../../Components/Common/CommonComponents";
 import { toast } from "sonner";
 import { CartContext } from "../../../Context/CartContext";
+import { LanguageContext } from "../../../Context/LanguageContext";
 
 type IProductDetailsProps = {};
 
@@ -38,6 +40,7 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { setCart } = useContext(CartContext);
+  const { locale } = useContext(LanguageContext);
 
   const [product, setProduct] = useState<productInfo>(
     ProductsCollection.find((prod) => prod.id == id) as productInfo
@@ -96,7 +99,50 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
       key: "tab1",
       label: "calificaciones-y-opiniones",
       icon: <StarFilledIcon size="base" />,
-      content: () => <div className="px-10">dd</div>,
+      content: () => (
+        <div className="w-[95%] mx-auto flex flex-col gap-14 tablet:w-[90%]">
+          {
+          product.reviews && product.reviews.length <= 0? 
+          <div className="flex flex-col py-24 gap-2 items-center justify-center">
+            <StarFilledIcon size="4xl"/>
+            <p className="text-xl">{t('no-se-encontraron-reviews')}</p>
+          </div>
+          :
+          product.reviews?.map((r) => (
+            <div
+              key={r.key}
+              className="flex flex-col gap-2"
+            >
+              <div className="flex items-center gap-3">
+                <Avatar
+                  size="lg"
+                  src={
+                    r.profileImg
+                      ? r.profileImg
+                      : "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+                  }
+                />
+                <div className="flex flex-col gap-0">
+                  <p className=" font-semibold text-lg">{r.userName}</p>
+                  <div className="flex items-start gap-2 text-default-500 flex-col tablet:flex-row tablet:items-center">
+                    <div className="flex items-center">
+                      {renderProductRating(r.rating, "base")}
+                    </div>
+                    <p>{`${t("calificado-en")} ${r.from}, ${new Date(
+                      r.date
+                    ).toLocaleDateString(locale, {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}`}</p>
+                  </div>
+                </div>
+              </div>
+              <p className="text-default-500">"{r.opinion}"</p>
+            </div>
+          ))}
+        </div>
+      ),
     },
   ]);
 
@@ -140,7 +186,7 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
         {/* <Divider orientation="horizontal" className="" /> */}
       </div>
 
-      <div className="flex flex-col items-center gap-5 tablet:gap-14 py-10 tablet:flex-row tablet:items-start">
+      <div className="flex flex-col items-center gap-5 tablet:gap-8 py-10 tablet:flex-row tablet:items-start">
         {/* product images slider */}
         <ImagesSlider images={[product.img]} />
         {/* product basic data */}
