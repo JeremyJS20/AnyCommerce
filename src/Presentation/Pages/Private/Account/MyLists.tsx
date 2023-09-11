@@ -56,7 +56,7 @@ const MyLists: FunctionComponent<IMyListsProps> = ({}) => {
           <Link
             key={list.id}
             //href={`${location.pathname}/${list.id}`}
-            className="w-full laptop:w-[47%] border cursor-pointer border-gray-800 dark:border-gray-700 rounded-xl py-3 px-5 flex items-center justify-between text-inherit"
+            className="w-full laptop:w-[49%] border cursor-pointer border-gray-800 dark:border-gray-700 rounded-xl py-3 px-5 flex items-center justify-between text-inherit"
             onClick={(e) => {
               e.preventDefault();
               //navigate(`${location.pathname}/${list.id}`);
@@ -122,7 +122,7 @@ const MyLists: FunctionComponent<IMyListsProps> = ({}) => {
 
         <Link
           href={`${location.pathname}/new`}
-          className={`w-full laptop:w-[47%] border-2 border-dashed cursor-pointer border-gray-800 dark:border-gray-700 rounded-xl py-3 px-5 flex items-center justify-between text-inherit ${
+          className={`w-full laptop:w-[49%] border-2 border-dashed cursor-pointer border-gray-800 dark:border-gray-700 rounded-xl py-3 px-5 flex items-center justify-between text-inherit ${
             lists.length <= 0 ? "hidden" : ""
           }`}
           onClick={(e) => {
