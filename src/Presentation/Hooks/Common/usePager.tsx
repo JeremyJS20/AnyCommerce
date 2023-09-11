@@ -125,7 +125,7 @@ const usePager = ({ ...props }: IUsePagerProps): usePagerType => {
 // console.log(query.get('page'));
 
 navigate(
-    `/products?page=${pagerOptions.currentPage}${
+    `${location.pathname}?page=${pagerOptions.currentPage}${
       query.get("filters") != null ? `&filters=${query.get("filters")}` : ""
     }${query.get("sort") != null ? `&sort=${query.get("sort")}` : ""}`
   );

@@ -1,7 +1,7 @@
 import { CategoryIcon, DollarSignIcon, SearchIcon, StarFilledIcon } from "../../Assets/Icons/IconsCollection";
 import { commonType } from "../../Pages/PublicPages/Products/Products";
 
-export type ProductFiltersCollectionType = {
+export type FiltersCollectionType = {
   key: string;
   text: string;
   filterValueSelected?: any;
@@ -13,7 +13,7 @@ export type ProductFiltersCollectionType = {
   };
 }
 
-export type ProductSortCollectionType = {
+export type SortCollectionType = {
   key: string,
   text: string,
   text2?: string,
@@ -22,7 +22,7 @@ export type ProductSortCollectionType = {
   dataType: 'date' | 'number' | 'string'
 }
 
-export const ProductFiltersCollection:ProductFiltersCollectionType[] = [
+export const ProductFiltersCollection:FiltersCollectionType[] = [
   {
     key: "search",
     text: "buscador",
@@ -96,7 +96,7 @@ export const ProductFiltersCollection:ProductFiltersCollectionType[] = [
   }
 ]
 
-export const ProductSortCollection:ProductSortCollectionType[] = [
+export const ProductSortCollection:SortCollectionType[] = [
   {
     key: "priceAsc",
     text: "precio",

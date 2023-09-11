@@ -1,11 +1,11 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 import Navbar from "./Navbar";
 import { useContext, useEffect } from "react";
 import { ThemeContext, themeVerifier } from "../Context/ThemeContext";
 import {
   anyCommerceIconLight,
 } from "../Assets/Img/ImgCollection";
-import { PublicRoutes } from "../Utils/routermanager.routes.utils";
+import { PrivateRoutes, PublicRoutes } from "../Utils/routermanager.routes.utils";
 import { Toaster } from "sonner";
 import Footer from "./Footer";
 import { Divider } from "@nextui-org/react";
@@ -18,12 +18,22 @@ const Container: React.FunctionComponent<IContainerProps> = () => {
   const location = useLocation();
   const { t } = useTranslation();
 
+  const { childPage } = useParams();
+
   const routesWithNoNavbar = [
     PublicRoutes.SIGNIN,
     PublicRoutes.SIGNUP,
     PublicRoutes.FORGOTTENPASSWORD,
     PublicRoutes.RESETPASSWORD,
   ];
+
+  const routesWithNoFooter = [
+    PrivateRoutes.MYPROFILE,
+    PrivateRoutes.MYORDERS,
+    PrivateRoutes.MYPURCHASES,
+    PrivateRoutes.MYLISTS,
+    PrivateRoutes.MYPAYMENTMETHODS
+  ]
 
   useEffect(() => {
     if (theme === "undefined") return;
@@ -58,10 +68,12 @@ const Container: React.FunctionComponent<IContainerProps> = () => {
         {t('web-en-construccion')}
       </div>
       <Divider orientation="horizontal"/>
-      <div className="flex justify-center">
+      <div className="flex justify-center ">
         <Outlet />
       </div>
-      <Footer />
+      {
+        !routesWithNoFooter.includes(String(childPage)) && (<Footer />)
+      }
       <Toaster
         position="bottom-center"
         toastOptions={{

@@ -7,6 +7,11 @@ import {
   Button,
   Chip,
   Divider,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownSection,
+  DropdownTrigger,
   Input,
   Link,
   Tab,
@@ -15,11 +20,14 @@ import {
 import { useTranslation } from "react-i18next";
 import { PublicRoutes } from "../../../Utils/routermanager.routes.utils";
 import {
+  AddPlusIcon,
+  ArrowDownIcon,
   ArrowRightIcon,
   HeartFilledIcon,
   InfoIcon,
   ListIcon,
   MinusIcon,
+  NotificationIcon,
   PlusIcon,
   StarFilledIcon,
 } from "../../../Assets/Icons/IconsCollection";
@@ -101,46 +109,49 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
       icon: <StarFilledIcon size="base" />,
       content: () => (
         <div className="w-[95%] mx-auto flex flex-col gap-14 tablet:w-[90%]">
-          {
-          product.reviews && product.reviews.length <= 0? 
-          <div className="flex flex-col py-24 gap-2 items-center justify-center">
-            <StarFilledIcon size="4xl"/>
-            <p className="text-xl">{t('no-se-encontraron-reviews')}</p>
-          </div>
-          :
-          product.reviews?.map((r) => (
-            <div
-              key={r.key}
-              className="flex flex-col gap-2"
-            >
-              <div className="flex items-center gap-3">
-                <Avatar
-                  size="lg"
-                  src={
-                    r.profileImg
-                      ? r.profileImg
-                      : "https://i.pravatar.cc/150?u=a042581f4e29026024d"
-                  }
-                />
-                <div className="flex flex-col gap-0">
-                  <p className=" font-semibold text-lg">{r.userName}</p>
-                  <div className="flex items-start gap-2 text-default-500 flex-col tablet:flex-row tablet:items-center">
-                    <div className="flex items-center">
-                      {renderProductRating(r.rating, "base")}
+          {product.reviews && product.reviews.length <= 0 ? (
+            <div className="flex flex-col py-24 gap-2 items-center justify-center">
+              <StarFilledIcon size="4xl" />
+              <p className="text-xl">{t("no-se-encontraron-reviews")}</p>
+            </div>
+          ) : (
+            product.reviews?.map((r) => (
+              <div key={r.key} className="flex flex-col gap-2">
+                <div className="flex flex-col items-start gap-3 tablet:flex-row tablet:items-center">
+                  <Avatar
+                    size="lg"
+                    src={
+                      r.profileImg
+                        ? r.profileImg
+                        : "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+                    }
+                  />
+                  <div className="flex flex-col gap-0">
+                    <p className=" font-semibold text-lg">{r.userName}</p>
+                    <div className="flex items-start gap-2 text-default-500 flex-col tablet:flex-row tablet:items-center">
+                      <div className="flex items-center">
+                        {renderProductRating(r.rating, "base")}
+                      </div>
+                      <p>{`${t("calificado-en")} ${r.from}, ${new Date(
+                        r.date
+                      ).toLocaleDateString(locale, {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}`}</p>
                     </div>
-                    <p>{`${t("calificado-en")} ${r.from}, ${new Date(
-                      r.date
-                    ).toLocaleDateString(locale, {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}`}</p>
                   </div>
                 </div>
+                <p className="text-default-500">"{r.opinion}"</p>
+                <Divider
+                  orientation="horizontal"
+                  className={`${
+                    product.reviews?.slice(-1)[0] == r ? "hidden" : ""
+                  }`}
+                />
               </div>
-              <p className="text-default-500">"{r.opinion}"</p>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       ),
     },
@@ -193,7 +204,7 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
         <div className="w-full tablet:[50%] flex flex-col h-full justify-between gap-5">
           <div className="flex justify-between">
             <div className="flex flex-col gap-3">
-              <h1 className="text-2xl font-semibold line-clamp-3 tablet:text-3xl">
+              <h1 className="text-2xl font-semibold line-clamp-1 laptop:line-clamp-3 tablet:text-3xl">
                 {product.name}
               </h1>
               <div className="flex items-center gap-1">
@@ -227,8 +238,14 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
             <Divider orientation="horizontal" className="" />
           </div>
           <div className="flex flex-col gap-5">
-            {renderUnitsInStock(product.stock, t)}
-            <div className="flex gap-5 flex-col  tablet:flex-row">
+            <div className="text-xl">
+              {renderUnitsInStock(product.stock, t)}
+            </div>
+            <div
+              className={`flex gap-5 flex-col  tablet:flex-row ${
+                product.stock <= 0 ? "hidden" : ""
+              }`}
+            >
               <div className="flex justify-center tablet:justify-start gap-2 ">
                 <Button
                   isIconOnly
@@ -361,6 +378,87 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
               >
                 {t("agregar-al-carrito")}
               </Button>
+            </div>
+            <div className={`flex ${product.stock > 0 ? "hidden" : ""}`}>
+              <div className="flex flex-col text-default-500 gap-4">
+                {product.dates.restock ? (
+                  <p className=" text-default-500">
+                    {t("posible-existencia-mensaje")}
+                    {": "}
+                    {`${new Date(
+                      String(product.dates.restock)
+                    ).toLocaleDateString(locale, {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}`}
+                  </p>
+                ) : (
+                  <p>{t("sin-existencia-mensaje")}:</p>
+                )}
+
+                <div className="flex items-center flex-col gap-2 tablet:flex-row">
+                  <Button
+                    startContent={
+                      <NotificationIcon
+                        size="lg"
+                        color="text-gray-100 dark:text-gray-900"
+                      />
+                    }
+                    size="md"
+                    className=" w-full border border-none text-gray-100 bg-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 dark:text-gray-900 dark:bg-gray-100 tablet:w-fit"
+                  >
+                    {t("agregar-recordatorio")}
+                  </Button>
+
+                  <p>{t("o").toLowerCase()}</p>
+
+                  <Dropdown
+                    classNames={{ base: "!max-w-[13em] " }}
+                    className="bg-gray-200 dark:bg-gray-700"
+                  >
+                    <DropdownTrigger>
+                      <Button
+                        startContent={
+                          <ListIcon
+                            size="lg"
+                            color="text-gray-100 dark:text-gray-900"
+                          />
+                        }
+                        endContent={
+                          <ArrowDownIcon
+                            size="xs"
+                            color="text-gray-100 dark:text-gray-900"
+                          />
+                        }
+                        size="md"
+                        className=" w-full border border-none text-gray-100 bg-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 dark:text-gray-900 dark:bg-gray-100 tablet:w-fit"
+                      >
+                        {t("agregar-a-lista")}
+                      </Button>
+                    </DropdownTrigger>
+
+                    <DropdownMenu className="!max-w-[13em]" aria-label="ddd">
+                      <DropdownSection showDivider>
+                        <DropdownItem className="text-gray-800 hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100">
+                          <div className="flex gap-2">
+                            <div className="flex flex-col">
+                              <span className="">List1</span>
+                              <span className=" text-default-500">private</span>
+                            </div>
+                          </div>
+                        </DropdownItem>
+                      </DropdownSection>
+                      <DropdownItem
+                        startContent={<AddPlusIcon size="sm" />}
+                        className="text-gray-800 hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100"
+                      >
+                        {t("crear-lista")}
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </div>
+              </div>
             </div>
           </div>
         </div>

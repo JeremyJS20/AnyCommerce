@@ -146,10 +146,10 @@ const Products: FunctionComponent<IProductsProps> = ({}) => {
 
   return (
     <div className="w-[95%] px-6 py-10 laptop:w-[80%]">
-      <div className="flex flex-col pb-5 gap-3">
+      <div className="flex flex-col pb-5 gap-2">
         <div>
-          <header className="font-bold text-3xl">{t("productos")}</header>
-          <p className="text-base text-gray-500">
+          <header className="font-semibold text-2xl">{t("productos")}</header>
+          <p className="text-base text-default-500">
             {t("productos-descripcion2")}
           </p>
         </div>

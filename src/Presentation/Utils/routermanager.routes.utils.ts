@@ -12,6 +12,14 @@ export const PublicRoutes = {
 }
 
 export const PrivateRoutes = {
+    ACCOUNT: '/account',
+    MYPROFILE: 'myprofile',
+    MYORDERS: 'myorders',
+    MYPURCHASES: 'mypurchases',
+    MYLISTS: 'mylists',
+    MYPAYMENTMETHODS: 'mypaymentmethods',
+    ACCOUNTFILTERS: '?page=:page&filters=:filters&sort=:sort',
+    STORES: '/stores',
     DASHBOARD: '/dashboard',
     DASHBOARDACCOUNT: '/dashboard/account',
     DASHBOARDORDERS: '/dashboard/orders',

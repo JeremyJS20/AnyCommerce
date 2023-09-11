@@ -26,14 +26,14 @@ import {
 } from "../../Assets/Icons/IconsCollection";
 import { commonType } from "../../Pages/PublicPages/Products/Products";
 import {
-  ProductFiltersCollectionType,
-  ProductSortCollectionType,
+  FiltersCollectionType,
+  SortCollectionType,
 } from "../../Utils/DataCollection/Products.datacollection.filter.utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "./usePager";
 
 interface IFilterPanelProps {
-  filterCollection: ProductFiltersCollectionType[];
+  filterCollection: FiltersCollectionType[];
 }
 
 type IRendersProps = {
@@ -60,8 +60,8 @@ export const useFilterPanel = ({ ...props }: IFilterPanelProps) => {
         .map((x) => props.filterCollection.find((fc) => fc.key == x))
         .sort(
           (a, b) =>
-            (a as ProductFiltersCollectionType).placeNumber -
-            (b as ProductFiltersCollectionType).placeNumber
+            (a as FiltersCollectionType).placeNumber -
+            (b as FiltersCollectionType).placeNumber
         )
         .map((x) => x?.key) as string[],
     [selectedFilters]
@@ -140,7 +140,7 @@ export const useFilterPanelBtns = ({
   ...props
 }: {
   selectedFilters: string[];
-  filterCollection: ProductFiltersCollectionType[];
+  filterCollection: FiltersCollectionType[];
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -172,8 +172,8 @@ export const useFilterPanelBtns = ({
         .map((sfv) => props.filterCollection.find((pf) => pf.key == sfv))
         .sort(
           (a, b) =>
-            (a as ProductFiltersCollectionType).placeNumber -
-            (b as ProductFiltersCollectionType).placeNumber
+            (a as FiltersCollectionType).placeNumber -
+            (b as FiltersCollectionType).placeNumber
         )
         .map((filter) => {
           if (filter?.inputType === "dropdown") {
@@ -283,7 +283,7 @@ export const useFilterPanelBtns = ({
 export const useSortBtn = ({
   ...props
 }: {
-  sortCollection: ProductSortCollectionType[];
+  sortCollection: SortCollectionType[];
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -329,7 +329,7 @@ export const useSortBtn = ({
             radius="sm"
             variant="bordered"
             className="border !max-w-[350px] px-5 border-gray-800  bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
-            endContent={<ArrowDownIcon size="xs" />}
+            endContent={<ArrowDownIcon size="xs" color="text-gray-900 dark:text-gray-100" />}
             startContent={<SortIcon size="base" />}
           >
             <p className={`text-md text-gray-900 dark:text-gray-100`}>
@@ -471,7 +471,7 @@ const RenderDropDown: FunctionComponent<IRendersProps> = ({
             radius="sm"
             variant="bordered"
             className="border border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
-            endContent={<ArrowDownIcon size="xs" />}
+            endContent={<ArrowDownIcon size="xs" color="text-gray-900 dark:text-gray-100"/>}
             startContent={props.filter.icon}
           >
             <p className={`text-md text-gray-900 dark:text-gray-100`}>
@@ -719,7 +719,7 @@ const RenderSearcher: FunctionComponent<IRendersProps> = ({
       startContent={<SearchIcon size="sm" />}
       value={filterValues.search}
       width={50}
-      placeholder={t("escribe-nombre-algun-producto")}
+      placeholder={t("escribe-algo")}
       onValueChange={(value) =>
         setFilterValues({ ...filterValues, search: value })
       }

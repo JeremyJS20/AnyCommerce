@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { PublicRoutes } from "../Utils/routermanager.routes.utils";
+import { PrivateRoutes, PublicRoutes } from "../Utils/routermanager.routes.utils";
 import {
   Navbar as NextNavbar,
   NavbarContent,
@@ -7,13 +7,13 @@ import {
   Button,
   Link,
   Input,
-  Avatar,
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
   Divider,
   Badge,
+  DropdownSection,
 } from "@nextui-org/react";
 import { useTranslation } from "react-i18next";
 import { ThemeContext, themeVerifier } from "../Context/ThemeContext";
@@ -41,7 +41,10 @@ import {
   LanguageIcon,
   MinusIcon,
   PlusIcon,
+  ProfileIcon,
   SearchIcon,
+  SignOutIcon,
+  StoreIcon,
   ThemeDarkIcon,
   ThemeLightIcon,
   TrashIcon,
@@ -107,7 +110,7 @@ const MainNavBar = forwardRef(
       },
     ];
 
-    const featureItems:{
+    const featureItems: {
       key: string;
       text: string;
       description: string;
@@ -248,36 +251,6 @@ const MainNavBar = forwardRef(
           />
         </NavbarContent>
         <NavbarContent as="div" className="items-center gap-2" justify="end">
-          <Dropdown placement="bottom-end">
-            <DropdownTrigger>
-              <Avatar
-                isBordered
-                as="button"
-                className="transition-transform hidden"
-                color="secondary"
-                name="Jason Hughes"
-                size="sm"
-                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-              />
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Profile Actions" variant="flat">
-              <DropdownItem key="profile" className="h-14 gap-2">
-                <p className="font-semibold">Signed in as</p>
-                <p className="font-semibold">zoey@example.com</p>
-              </DropdownItem>
-              <DropdownItem key="settings">My Settings</DropdownItem>
-              <DropdownItem key="team_settings">Team Settings</DropdownItem>
-              <DropdownItem key="analytics">Analytics</DropdownItem>
-              <DropdownItem key="system">System</DropdownItem>
-              <DropdownItem key="configurations">Configurations</DropdownItem>
-              <DropdownItem key="help_and_feedback">
-                Help & Feedback
-              </DropdownItem>
-              <DropdownItem key="logout" color="danger">
-                Log Out
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
           <NavbarItem>
             <Button
               isIconOnly
@@ -323,13 +296,27 @@ const MainNavBar = forwardRef(
             </Dropdown>
           </NavbarItem>
           <NavbarItem>
-            <Badge content={cart != null && cart.reduce((a,b) => a + b.cartInfo.amount, 0)}  color="primary" size="md" classNames={{badge: `bg-gray-800 text-gray-100 dark:bg-gray-100 border-none dark:text-gray-800 ${cart != null && cart.reduce((a,b) => a + b.cartInfo.amount, 0) <= 0? 'hidden':''}`}}>
+            <Badge
+              content={
+                cart != null && cart.reduce((a, b) => a + b.cartInfo.amount, 0)
+              }
+              color="primary"
+              size="md"
+              classNames={{
+                badge: `bg-gray-800 text-gray-100 dark:bg-gray-100 border-none dark:text-gray-800 ${
+                  cart != null &&
+                  cart.reduce((a, b) => a + b.cartInfo.amount, 0) <= 0
+                    ? "hidden"
+                    : ""
+                }`,
+              }}
+            >
               <Button
                 isIconOnly
                 size="sm"
                 radius="sm"
                 variant="bordered"
-                className="border border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
+                className="border border-gray-800 bg-gray-100 text-gray-900 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-100 dark:bg-gray-800"
                 onClick={() => {
                   props.cartRef.current?.setCollapseCart(true);
                 }}
@@ -349,6 +336,66 @@ const MainNavBar = forwardRef(
               {t("iniciar-sesion")}
             </Button>
           </NavbarItem>
+          <Dropdown
+            placement="bottom-end"
+            classNames={{ base: "!max-w-[13em] " }}
+            className="bg-gray-200 dark:bg-gray-700"
+          >
+            <DropdownTrigger>
+              {/* <Avatar
+                as="button"
+                className="transition-transform"
+                size="sm"
+                src={<ProfileIcon size="xl"/>}
+              /> */}
+              <Button 
+                isIconOnly
+                size="md"
+                startContent={<ProfileIcon size="2xl"/>}
+                className="bg-transparent rounded-full"
+              />
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Profile Actions" variant="flat">
+              <DropdownSection showDivider>
+                <DropdownItem textValue="1" className="text-gray-800 hover:!bg-transparent dark:hover:!bg-transparent dark:text-gray-100 cursor-default">
+                  <p className="font-semibold">Jeremy Solano</p>
+                  <p className="text-default-500">jeremy@example.com</p>
+                </DropdownItem>
+              </DropdownSection>
+
+              <DropdownSection showDivider>
+                <DropdownItem
+                  key="account"
+                  textValue="2"
+                  className="text-gray-800 hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100"
+                  startContent={<ProfileIcon size="lg" />}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate(`${PrivateRoutes.ACCOUNT}/myprofile`)
+                  }}
+                >
+                  {t("cuenta")}
+                </DropdownItem>
+                <DropdownItem
+                  key="settings"
+                  textValue="3"
+                  className="text-gray-800 hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100"
+                  startContent={<StoreIcon size="base" />}
+                >
+                  {t("tiendas")}
+                </DropdownItem>
+              </DropdownSection>
+
+              <DropdownItem
+                key="logout"
+                textValue="4"
+                className="text-gray-800 hover:!bg-red-600/60 dark:hover:!bg-red-600/60 dark:text-gray-100"
+                startContent={<SignOutIcon size="base" />}
+              >
+                {t("cerrar-sesion")}
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </NavbarContent>
       </NextNavbar>
     );
@@ -366,8 +413,8 @@ const MobileNavBar = forwardRef(({}, ref) => {
   }));
 
   useEffect(() => {
-    if(collapseMobileMenu) document.body.classList.add('overflow-hidden');
-    else document.body.classList.remove('overflow-hidden')
+    if (collapseMobileMenu) document.body.classList.add("overflow-hidden");
+    else document.body.classList.remove("overflow-hidden");
   }, [collapseMobileMenu]);
 
   /**
@@ -452,8 +499,8 @@ const Cart = forwardRef(({}, ref) => {
   const screenWidth = window.innerWidth;
 
   useEffect(() => {
-    if(collapseCart) document.body.classList.add('overflow-hidden');
-    else document.body.classList.remove('overflow-hidden')
+    if (collapseCart) document.body.classList.add("overflow-hidden");
+    else document.body.classList.remove("overflow-hidden");
   }, [collapseCart]);
 
   const getCartSubtotal = (cart: cartProducts[]) => {
@@ -464,13 +511,23 @@ const Cart = forwardRef(({}, ref) => {
           0
         )
       ).split(".")[0]
-    }.${!String(
-      cart.reduce((a: any, b) => a + b.productInfo.cost * b.cartInfo.amount, 0)
-    )
-      .split(".")[1]? '00': String(
-        cart.reduce((a: any, b) => a + b.productInfo.cost * b.cartInfo.amount, 0)
-      )
-        .split(".")[1].substring(0,2)}`;
+    }.${
+      !String(
+        cart.reduce(
+          (a: any, b) => a + b.productInfo.cost * b.cartInfo.amount,
+          0
+        )
+      ).split(".")[1]
+        ? "00"
+        : String(
+            cart.reduce(
+              (a: any, b) => a + b.productInfo.cost * b.cartInfo.amount,
+              0
+            )
+          )
+            .split(".")[1]
+            .substring(0, 2)
+    }`;
   };
 
   return (
@@ -498,7 +555,9 @@ const Cart = forwardRef(({}, ref) => {
           <header className="mb-3 flex justify-between">
             <p className="text-xl font-bold">
               {t("carrito")}
-              {`(${cart != null && cart.reduce((a, b) => a + b.cartInfo.amount, 0)})`}
+              {`(${
+                cart != null && cart.reduce((a, b) => a + b.cartInfo.amount, 0)
+              })`}
             </p>
             <Button
               isIconOnly
@@ -521,169 +580,183 @@ const Cart = forwardRef(({}, ref) => {
             ) : (
               <div className=" max-h-[65vh] overflow-auto tablet:max-h-[75vh]">
                 <ol className=" ">
-                  {cart != null && cart.map((prod, index) => (
-                    <>
-                      <li
-                        key={prod.productInfo.id + index}
-                        className="mt-3 flex justify-between items-center"
-                      >
-                        <div className="flex items-center gap-5">
-                          <img
-                            className="w-16 h-16 tablet:w-20 tablet:h-20"
-                            src={prod.productInfo.img}
-                          />
-                          <div className="flex flex-col justify-between text-sm tablet:text-base">
-                            {screenWidth < 640 ? (
-                              <>
-                                <p className=" text-base laptop:text-lg">
-                                  {prod.productInfo.name
-                                    .substring(0, 10)
-                                    .trim()}
-                                  ...
-                                </p>
-                                <div>
-                                  <p className="text-gray-500">
-                                    {`$${prod.productInfo.cost} x ${prod.cartInfo.amount}`
-                                      .substring(0, 10)
-                                      .trim()}
-                                    .....
-                                  </p>
-                                  <p className="text-gray-500">
-                                    {prod.productInfo.category
+                  {cart != null &&
+                    cart.map((prod, index) => (
+                      <>
+                        <li
+                          key={prod.productInfo.id + index}
+                          className="mt-3 flex justify-between items-center"
+                        >
+                          <div className="flex items-center gap-5">
+                            <img
+                              className="w-16 h-16 tablet:w-20 tablet:h-20"
+                              src={prod.productInfo.img}
+                            />
+                            <div className="flex flex-col justify-between text-sm tablet:text-base">
+                              {screenWidth < 640 ? (
+                                <>
+                                  <p className=" text-base laptop:text-lg">
+                                    {prod.productInfo.name
                                       .substring(0, 10)
                                       .trim()}
                                     ...
                                   </p>
-                                </div>
-                              </>
-                            ) : (
-                              <>
-                                <p className=" text-base laptop:text-lg">
-                                  {prod.productInfo.name}
-                                </p>
-                                <div>
-                                  <p className="text-gray-500">
-                                    {`$${prod.productInfo.cost} x ${prod.cartInfo.amount}`}
+                                  <div>
+                                    <p className="text-gray-500">
+                                      {`$${prod.productInfo.cost} x ${prod.cartInfo.amount}`
+                                        .substring(0, 10)
+                                        .trim()}
+                                      .....
+                                    </p>
+                                    <p className="text-gray-500">
+                                      {prod.productInfo.category
+                                        .substring(0, 10)
+                                        .trim()}
+                                      ...
+                                    </p>
+                                  </div>
+                                </>
+                              ) : (
+                                <>
+                                  <p className=" text-base laptop:text-lg">
+                                    {prod.productInfo.name}
                                   </p>
-                                  <p className="text-gray-500">
-                                    {prod.productInfo.category}
-                                  </p>
-                                </div>
-                              </>
-                            )}
+                                  <div>
+                                    <p className="text-gray-500">
+                                      {`$${prod.productInfo.cost} x ${prod.cartInfo.amount}`}
+                                    </p>
+                                    <p className="text-gray-500">
+                                      {prod.productInfo.category}
+                                    </p>
+                                  </div>
+                                </>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                        <div className="flex gap-1">
-                          <Button
-                            isIconOnly
-                            size="sm"
-                            radius="sm"
-                            variant="bordered"
-                            className="border border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
-                            onClick={() => {
-                              const temp = cart.slice();
-                              const element = temp.find(
-                                (i) => i.productInfo.id == prod.productInfo.id
-                              );
-                              if (element) {
-                                element.cartInfo.amount -= 1;
+                          <div className="flex gap-1">
+                            <Button
+                              isIconOnly
+                              size="sm"
+                              radius="sm"
+                              variant="bordered"
+                              className="border border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
+                              onClick={() => {
+                                const temp = cart.slice();
+                                const element = temp.find(
+                                  (i) => i.productInfo.id == prod.productInfo.id
+                                );
+                                if (element) {
+                                  element.cartInfo.amount -= 1;
 
-                                if (element.cartInfo.amount == 0) {
-                                  temp.splice(temp.indexOf(element), 1);
-                                }
-
-                                setCart(temp);
-                              }
-                            }}
-                          >
-                            <MinusIcon size="xs" />
-                          </Button>
-
-                          <Input
-                            classNames={{
-                              base: "w-[3em]",
-                              mainWrapper: "",
-                              input: "text-xs",
-                              inputWrapper:
-                                "border border-gray-700 !bg-transparent text-default-500 dark:border-gray-700 hover:!bg-gray-200 dark:hover:!bg-gray-700 dark:!bg-gray-800",
-                            }}
-                            size="sm"
-                            type="number"
-                            onValueChange={(value) => {
-                              const temp = cart.slice();
-                              const prod2 = temp.find(
-                                (i) => i.productInfo.id == prod.productInfo.id
-                              );
-
-                              if (prod2) {
-                                if (value == "0") {
-                                  temp.splice(temp.indexOf(prod2), 1);
-                                } else {                                  
-                                  if(Number(value) < prod2.productInfo.stock){
-                                    prod2.cartInfo.amount = Number(value);
-                                  } else{
-                                    return toast.error(t('existencia-de-producto-en-tienda-excedida'));
+                                  if (element.cartInfo.amount == 0) {
+                                    temp.splice(temp.indexOf(element), 1);
                                   }
-                                }
-                                setCart(temp);
-                              }
-                            }}
-                            value={String(prod.cartInfo.amount)}
-                          />
 
-                          <Button
-                            isIconOnly
-                            size="sm"
-                            radius="sm"
-                            variant="bordered"
-                            className="border border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
-                            onClick={() => {
-                              const temp = cart.slice();
-                              const element = temp.find(
-                                (i) => i.productInfo.id == prod.productInfo.id
-                              );
-                              if (element) {                                
-                                if(element.cartInfo.amount !== prod.productInfo.stock){
-                                  element.cartInfo.amount += 1;
-                                } else{
-                                  return toast.error(t('existencia-de-producto-en-tienda-excedida'));
+                                  setCart(temp);
                                 }
-                                setCart(temp);
-                              }
-                            }}
-                          >
-                            <PlusIcon size="xs" />
-                          </Button>
-                          <Button
-                            isIconOnly
-                            size="sm"
-                            radius="sm"
-                            variant="bordered"
-                            className="border border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
-                            onClick={() => {
-                              const temp = cart.slice();
-                              const element = temp.find(
-                                (i) => i.productInfo.id == prod.productInfo.id
-                              );
-                              if (element) {
-                                temp.splice(temp.indexOf(element), 1);
-                                setCart(temp);
-                              }
-                            }}
-                          >
-                            <TrashIcon size="xs" />
-                          </Button>
-                        </div>
-                      </li>
-                      {index != cart.indexOf(cart.slice(-1)[0]) && (
-                        <Divider orientation="horizontal" className="my-3" />
-                      )}
-                    </>
-                  ))}
+                              }}
+                            >
+                              <MinusIcon size="xs" />
+                            </Button>
+
+                            <Input
+                              classNames={{
+                                base: "w-[3em]",
+                                mainWrapper: "",
+                                input: "text-xs",
+                                inputWrapper:
+                                  "border border-gray-700 !bg-transparent text-default-500 dark:border-gray-700 hover:!bg-gray-200 dark:hover:!bg-gray-700 dark:!bg-gray-800",
+                              }}
+                              size="sm"
+                              type="number"
+                              onValueChange={(value) => {
+                                const temp = cart.slice();
+                                const prod2 = temp.find(
+                                  (i) => i.productInfo.id == prod.productInfo.id
+                                );
+
+                                if (prod2) {
+                                  if (value == "0") {
+                                    temp.splice(temp.indexOf(prod2), 1);
+                                  } else {
+                                    if (
+                                      Number(value) < prod2.productInfo.stock
+                                    ) {
+                                      prod2.cartInfo.amount = Number(value);
+                                    } else {
+                                      return toast.error(
+                                        t(
+                                          "existencia-de-producto-en-tienda-excedida"
+                                        )
+                                      );
+                                    }
+                                  }
+                                  setCart(temp);
+                                }
+                              }}
+                              value={String(prod.cartInfo.amount)}
+                            />
+
+                            <Button
+                              isIconOnly
+                              size="sm"
+                              radius="sm"
+                              variant="bordered"
+                              className="border border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
+                              onClick={() => {
+                                const temp = cart.slice();
+                                const element = temp.find(
+                                  (i) => i.productInfo.id == prod.productInfo.id
+                                );
+                                if (element) {
+                                  if (
+                                    element.cartInfo.amount !==
+                                    prod.productInfo.stock
+                                  ) {
+                                    element.cartInfo.amount += 1;
+                                  } else {
+                                    return toast.error(
+                                      t(
+                                        "existencia-de-producto-en-tienda-excedida"
+                                      )
+                                    );
+                                  }
+                                  setCart(temp);
+                                }
+                              }}
+                            >
+                              <PlusIcon size="xs" />
+                            </Button>
+                            <Button
+                              isIconOnly
+                              size="sm"
+                              radius="sm"
+                              variant="bordered"
+                              className="border border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
+                              onClick={() => {
+                                const temp = cart.slice();
+                                const element = temp.find(
+                                  (i) => i.productInfo.id == prod.productInfo.id
+                                );
+                                if (element) {
+                                  temp.splice(temp.indexOf(element), 1);
+                                  setCart(temp);
+                                }
+                              }}
+                            >
+                              <TrashIcon size="xs" />
+                            </Button>
+                          </div>
+                        </li>
+                        {index != cart.indexOf(cart.slice(-1)[0]) && (
+                          <Divider orientation="horizontal" className="my-3" />
+                        )}
+                      </>
+                    ))}
                 </ol>
               </div>
             )}
-            {cart != null &&  cart.length > 0 && (
+            {cart != null && cart.length > 0 && (
               <div className="">
                 <Divider orientation="horizontal" className="my-3" />
                 <div className="flex flex-col gap-2">
