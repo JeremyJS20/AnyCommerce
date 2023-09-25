@@ -1,4 +1,4 @@
-import { SearchIcon } from "../../Assets/Icons/IconsCollection";
+import { Icon } from "../../Assets/Icons/IconsCollection";
 import {
   FiltersCollectionType,
   SortCollectionType,
@@ -9,7 +9,7 @@ export const PurchaseFiltersCollection: FiltersCollectionType[] = [
     key: "search",
     text: "buscador",
     placeNumber: 1,
-    icon: <SearchIcon size={"base"} />,
+    icon: <Icon icon="search" size={"base"} />,
     inputType: "search",
   },
   // {

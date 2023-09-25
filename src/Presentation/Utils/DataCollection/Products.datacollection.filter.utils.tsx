@@ -1,4 +1,4 @@
-import { CategoryIcon, DollarSignIcon, SearchIcon, StarFilledIcon } from "../../Assets/Icons/IconsCollection";
+import { Icon } from "../../Assets/Icons/IconsCollection";
 import { commonType } from "../../Pages/PublicPages/Products/Products";
 
 export type FiltersCollectionType = {
@@ -27,21 +27,21 @@ export const ProductFiltersCollection:FiltersCollectionType[] = [
     key: "search",
     text: "buscador",
     placeNumber: 1,
-    icon: <SearchIcon size={"base"} />,
+    icon: <Icon icon="search" size={"base"} />,
     inputType: "search",
   },
   {
     key: "price",
     text: "precio",
     placeNumber: 2,
-    icon: <DollarSignIcon size={"base"} />,
+    icon: <Icon icon="dollarSign" size={"base"} />,
     inputType: "range",
   },
   {
     key: "rating",
     text: "calificacion",
     placeNumber: 3,
-    icon: <StarFilledIcon size={"base"} />,
+    icon: <Icon icon="starFilled" size={"base"} />,
     inputType: "dropdown",
     inputOptions: {
       items: [
@@ -77,7 +77,7 @@ export const ProductFiltersCollection:FiltersCollectionType[] = [
     key: "category",
     text: "categoria",
     placeNumber: 4,
-    icon: <CategoryIcon size={"base"} />,
+    icon: <Icon icon="list" size={"base"} />,
     inputType: "dropdown",
     inputOptions: {
       items: [

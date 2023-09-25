@@ -8,6 +8,8 @@ module.exports = {
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
     "./src/Presentation/Components/*.{js,ts,jsx,tsx}",
     "./src/Presentation/Components/**/*.{js,ts,jsx,tsx}",
+    "./src/Presentation/Components/**/**/*.{js,ts,jsx,tsx}",
+
     "./src/Presentation/Pages/**/*.{js,ts,jsx,tsx}",
     "./src/Presentation/Hooks/**/*.{js,ts,jsx,tsx}",
 
@@ -16,7 +18,10 @@ module.exports = {
     extend: {
       transitionProperty: {
         'width': 'width',
-      }
+      },
+    colors: {
+      'ideal-green': '#48bb78'
+    }
     },
     fontFamily: {
       RB: ["Roboto Mono", "cursive"],

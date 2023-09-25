@@ -7,15 +7,9 @@ import {
   Link,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  DoubleArrowLeftIcon,
-  DoubleArrowRightIcon,
-  HorizontalDotsIcon,
-} from "../../Assets/Icons/IconsCollection";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Icon } from "../../Assets/Icons/IconsCollection";
 
 type IUsePagerProps = {
   items: any[];
@@ -162,7 +156,7 @@ navigate(
               >
                 <div className="flex items-center gap-1">
                   {/* <p>{t("next")}</p> */}
-                  <DoubleArrowLeftIcon size="base" />
+                  <Icon icon="doubleArrowLeft" size="base" />
                 </div>
               </Link>
               <Link
@@ -187,7 +181,7 @@ navigate(
               >
                 <div className="flex items-center gap-1">
                   {/* <p>{t("ultimo")}</p> */}
-                  <ArrowLeftIcon size="base" />
+                  <Icon icon="arrowLeft" size="base" />
                 </div>
               </Link>
             </div>
@@ -266,7 +260,7 @@ navigate(
                   <DropdownTrigger>
                     <Button
                       isIconOnly
-                      startContent={<HorizontalDotsIcon size="base" />}
+                      startContent={<Icon icon="horizontalDots" size="base" />}
                       className="bg-transparent p-0"
                     />
                   </DropdownTrigger>
@@ -354,7 +348,7 @@ navigate(
               >
                 <div className="flex items-center gap-1">
                   {/* <p>{t("next")}</p> */}
-                  <ArrowRightIcon size="base" />
+                  <Icon icon="arrowRight" size="base" />
                 </div>
               </Link>
               <Link
@@ -381,7 +375,7 @@ navigate(
               >
                 <div className="flex items-center gap-1">
                   {/* <p>{t("ultimo")}</p> */}
-                  <DoubleArrowRightIcon size="base" />
+                  <Icon icon="doubleArrowRight" size="base" />
                 </div>
               </Link>
             </div>

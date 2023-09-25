@@ -1,4 +1,4 @@
-import { ClockIcon, SearchIcon } from "../../Assets/Icons/IconsCollection";
+import { Icon } from "../../Assets/Icons/IconsCollection";
 import {
   FiltersCollectionType,
   SortCollectionType,
@@ -9,14 +9,14 @@ export const OrdersFiltersCollection: FiltersCollectionType[] = [
     key: "search",
     text: "buscador",
     placeNumber: 1,
-    icon: <SearchIcon size={"base"} />,
+    icon: <Icon icon="search" size={"base"} />,
     inputType: "search",
   },
   {
     key: "status",
     text: "estado",
     placeNumber: 2,
-    icon: <ClockIcon size={"base"} color="text-gray-900 dark:text-gray-100" />,
+    icon: <Icon icon="clock" size={"base"} color="text-gray-900 dark:text-gray-100" />,
     inputType: "dropdown",
     inputOptions: {
       items: [

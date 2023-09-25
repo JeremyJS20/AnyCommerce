@@ -20,18 +20,6 @@ import {
 import { useTranslation } from "react-i18next";
 import { PublicRoutes } from "../../../Utils/routermanager.routes.utils";
 import {
-  AddPlusIcon,
-  ArrowDownIcon,
-  ArrowRightIcon,
-  HeartFilledIcon,
-  InfoIcon,
-  ListIcon,
-  MinusIcon,
-  NotificationIcon,
-  PlusIcon,
-  StarFilledIcon,
-} from "../../../Assets/Icons/IconsCollection";
-import {
   ImagesSlider,
   renderProductPrice,
   renderProductRating,
@@ -40,6 +28,8 @@ import {
 import { toast } from "sonner";
 import { CartContext } from "../../../Context/CartContext";
 import { LanguageContext } from "../../../Context/LanguageContext";
+import Btn from "../../../Components/Common/Inputs/Button";
+import { Icon } from "../../../Assets/Icons/IconsCollection";
 
 type IProductDetailsProps = {};
 
@@ -50,7 +40,7 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
   const { setCart } = useContext(CartContext);
   const { locale } = useContext(LanguageContext);
 
-  const [product, setProduct] = useState<productInfo>(
+  const [product] = useState<productInfo>(
     ProductsCollection.find((prod) => prod.id == id) as productInfo
   );
 
@@ -78,11 +68,11 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
     },
   ];
 
-  const [productTabs, setProductTabs] = useState([
+  const [productTabs] = useState([
     {
       key: "tab0",
       label: "detalles",
-      icon: <InfoIcon size="base" />,
+      icon: <Icon icon="info" size="base" />,
       content: () => (
         <div className="w-[95%] mx-auto flex flex-col gap-10 tablet:w-[90%]">
           <div className="flex flex-col gap-3">
@@ -106,12 +96,12 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
     {
       key: "tab1",
       label: "calificaciones-y-opiniones",
-      icon: <StarFilledIcon size="base" />,
+      icon: <Icon icon="starFilled" size="base" />,
       content: () => (
         <div className="w-[95%] mx-auto flex flex-col gap-14 tablet:w-[90%]">
           {product.reviews && product.reviews.length <= 0 ? (
             <div className="flex flex-col py-24 gap-2 items-center justify-center">
-              <StarFilledIcon size="4xl" />
+              <Icon icon="starFilled" size="4xl" />
               <p className="text-xl">{t("no-se-encontraron-reviews")}</p>
             </div>
           ) : (
@@ -130,7 +120,7 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
                     <p className=" font-semibold text-lg">{r.userName}</p>
                     <div className="flex items-start gap-2 text-default-500 flex-col tablet:flex-row tablet:items-center">
                       <div className="flex items-center">
-                        {renderProductRating(r.rating, "base")}
+                        {renderProductRating(r.rating, "base", t)}
                       </div>
                       <p>{`${t("calificado-en")} ${r.from}, ${new Date(
                         r.date
@@ -178,7 +168,7 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
           className=""
         >
           <Chip
-            endContent={<ArrowRightIcon size="xs" />}
+            endContent={<Icon icon="arrowRight" size="xs" />}
             variant="light"
             className="text-default-500 text-base p-0 flex items-center gap-3"
           >
@@ -197,21 +187,16 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
         {/* <Divider orientation="horizontal" className="" /> */}
       </div>
 
-      <div className="flex flex-col items-center gap-5 tablet:gap-8 py-10 tablet:flex-row tablet:items-start">
+      <div className="flex flex-col items-center h-fit gap-5 tablet:gap-8 py-10 laptop:flex-row tablet:items-start">
         {/* product images slider */}
         <ImagesSlider images={[product.img]} />
         {/* product basic data */}
-        <div className="w-full tablet:[50%] flex flex-col h-full justify-between gap-5">
+        <div className="w-full tablet:[50%] flex flex-col h-full justify-between py-5 gap-5">
           <div className="flex justify-between">
-            <div className="flex flex-col gap-3">
-              <h1 className="text-2xl font-semibold line-clamp-1 laptop:line-clamp-3 tablet:text-3xl">
-                {product.name}
-              </h1>
-              <div className="flex items-center gap-1">
-                {renderProductRating(product.rating, "lg")}
-              </div>
-              <div className="flex gap-[2px]">
-                {renderProductPrice(product.cost)}
+            <div className="flex flex-col gap-2">
+              <h1 className="text-3xl font- line-clamp-3">{product.name}</h1>
+              <div className="flex items-center gap-">
+                {renderProductRating(product.rating, "base", t)}
               </div>
             </div>
             <div className="flex flex-col justify-start hidden">
@@ -219,14 +204,14 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
                 isIconOnly
                 size="md"
                 startContent={
-                  <HeartFilledIcon color="text-gray-100" size="xl" />
+                  <Icon icon="heartFilled" color="text-gray-100" size="xl" />
                 }
                 className="bg-transparent"
               />
               <Button
                 isIconOnly
                 size="md"
-                startContent={<ListIcon size="xl" />}
+                startContent={<Icon icon="list" size="xl" />}
                 className="bg-transparent"
               />
             </div>
@@ -238,21 +223,28 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
             <Divider orientation="horizontal" className="" />
           </div>
           <div className="flex flex-col gap-5">
-            <div className="text-xl">
+            <div className="text-base">
               {renderUnitsInStock(product.stock, t)}
             </div>
             <div
-              className={`flex gap-5 flex-col  tablet:flex-row ${
+              className={`flex gap-5 flex-col items-center justify-between  tablet:flex-row ${
                 product.stock <= 0 ? "hidden" : ""
               }`}
             >
-              <div className="flex justify-center tablet:justify-start gap-2 ">
-                <Button
+              <div className="flex flex-col gap-5 w-full">
+                <Divider orientation="horizontal" className="" />
+                <div className="flex justify-between">
+                  <div className="flex flex-row justify-center tablet:justify-start gap-2 ">
+                    <div className="flex gap-[2px]">
+                      {renderProductPrice(product.cost)}
+                    </div>
+
+                    {/* <Button
                   isIconOnly
                   size="md"
                   radius="sm"
                   variant="bordered"
-                  className="border border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
+                  className="border hidden border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
                   disabled={product.stock <= 0}
                   onClick={() => {
                     setProductAmount(
@@ -260,36 +252,9 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
                     );
                   }}
                 >
-                  <MinusIcon size="sm" />
+                  <Icon icon="minus" size="sm" />
                 </Button>
 
-                <Input
-                  classNames={{
-                    base: "w-full tablet:w-[6em]",
-                    mainWrapper: "",
-                    input: "text-sm",
-                    inputWrapper:
-                      "border border-gray-700 !bg-transparent text-default-500 dark:border-gray-700 hover:!bg-gray-200 dark:hover:!bg-gray-700 dark:!bg-gray-800",
-                  }}
-                  size="md"
-                  type="number"
-                  disabled={product.stock <= 0}
-                  onValueChange={(value) => {
-                    setProductAmount(
-                      Number(value) <= 1
-                        ? 1
-                        : Number(value) < product.stock
-                        ? Number(value)
-                        : product.stock
-                    );
-                    if (productAmount == product.stock) {
-                      toast.error(
-                        t("existencia-de-producto-en-tienda-excedida")
-                      );
-                    }
-                  }}
-                  value={String(productAmount)}
-                />
 
                 <Button
                   isIconOnly
@@ -297,7 +262,7 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
                   radius="sm"
                   variant="bordered"
                   disabled={product.stock <= 0}
-                  className="border border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
+                  className="border hidden border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
                   onClick={() => {
                     setProductAmount(
                       productAmount < product.stock
@@ -311,73 +276,134 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
                     }
                   }}
                 >
-                  <PlusIcon size="sm" />
-                </Button>
+                  <Icon icon="plus" size="sm" />
+                </Button> */}
+                  </div>
+                  <div className="flex flex-row flex-wrap tablet:flex-row items-center justify-end gap-2">
+                    <Input
+                      classNames={{
+                        base: "w-[3.5em]",
+                        mainWrapper: "",
+                        input: "text-sm",
+                        inputWrapper:
+                          "border border-gray-700 !bg-transparent text-default-500 dark:border-gray-700 hover:!bg-gray-200 dark:hover:!bg-gray-700 dark:!bg-gray-800",
+                      }}
+                      size="md"
+                      type="number"
+                      disabled={product.stock <= 0}
+                      onValueChange={(value) => {
+                        setProductAmount(
+                          Number(value) <= 1
+                            ? 1
+                            : Number(value) < product.stock
+                            ? Number(value)
+                            : product.stock
+                        );
+                        if (productAmount == product.stock) {
+                          toast.error(
+                            t("existencia-de-producto-en-tienda-excedida")
+                          );
+                        }
+                      }}
+                      value={String(productAmount)}
+                    />
+                    <Btn
+                      size="md"
+                      type="quaternary"
+                      text="agregar-al-carrito"
+                      aditionalClassnames="text-gray-100 "
+                      onPress={
+                        () => {
+                          //e.preventDefault();
+  
+                          if (product.stock <= 0) {
+                            return toast.error(
+                              t("existencia-de-producto-en-tienda-agotada")
+                            );
+                          }
+  
+                          const cartExists = JSON.parse(
+                            String(localStorage.getItem("cart"))
+                          ) as cartProducts[] | null;
+  
+                          if (cartExists != null) {
+                            const prodInCart = cartExists.find(
+                              (ce) => ce.productInfo.id == product.id
+                            );
+  
+                            if (prodInCart != null || prodInCart != undefined) {
+                              prodInCart.cartInfo.amount = productAmount;
+                            } else {
+                              const cartProduct: cartProducts = {
+                                productInfo: product,
+                                cartInfo: {
+                                  amount: productAmount,
+                                },
+                              };
+                              cartExists.push(cartProduct);
+                            }
+                            setCart(cartExists);
+                          } else {
+                            const cartProducts: cartProducts[] = [
+                              {
+                                productInfo: product,
+                                cartInfo: {
+                                  amount: productAmount,
+                                },
+                              },
+                            ];
+                            setCart(cartProducts);
+                          }
+  
+                          toast.success(
+                            t("producto-agredado-a-carrito", {
+                              action: {
+                                label: "Undo",
+                                onClick: () => console.log("Undo"),
+                              },
+                            })
+                          );
+                        }
+                        // props.cartRef.current?.setCollapseCart(true)
+                      }
+                    />
+                    <Btn
+                      size="md"
+                      type="primary"
+                      text="comprar-ahora"
+                      onPress={() => {}}
+                    />
+                    <Btn
+                      icon={
+                        <Icon
+                          icon="heartFilled"
+                          size="xl"
+                          color="text-default-500"
+                        />
+                      }
+                      size="md"
+                      type="onlyIcon"
+                      aditionalClassnames="rounded-full bg-gray-200 dark:bg-gray-800 "
+                      onPress={
+                        () => {}
+                        // props.cartRef.current?.setCollapseCart(true)
+                      }
+                    />
+                    <Btn
+                      icon={
+                        <Icon icon="list" size="xl" color="text-default-500" />
+                      }
+                      size="md"
+                      type="onlyIcon"
+                      aditionalClassnames="rounded-full bg-gray-200 dark:bg-gray-800 "
+                      onPress={
+                        () => {}
+                        // props.cartRef.current?.setCollapseCart(true)
+                      }
+                    />
+                  </div>
+                </div>
               </div>
-              <Button
-                size="md"
-                radius="sm"
-                variant="bordered"
-                className={`border border-none text-gray-100 bg-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 dark:text-gray-800 dark:bg-gray-100 ${
-                  product.stock <= 0
-                    ? "!bg-gray-900/80 dark:!bg-gray-100/80"
-                    : ""
-                }`}
-                disabled={product.stock <= 0}
-                onClick={(e) => {
-                  e.preventDefault();
-
-                  if (product.stock <= 0) {
-                    return toast.error(
-                      t("existencia-de-producto-en-tienda-agotada")
-                    );
-                  }
-
-                  const cartExists = JSON.parse(
-                    String(localStorage.getItem("cart"))
-                  ) as cartProducts[] | null;
-
-                  if (cartExists != null) {
-                    const prodInCart = cartExists.find(
-                      (ce) => ce.productInfo.id == product.id
-                    );
-
-                    if (prodInCart != null || prodInCart != undefined) {
-                      prodInCart.cartInfo.amount = productAmount;
-                    } else {
-                      const cartProduct: cartProducts = {
-                        productInfo: product,
-                        cartInfo: {
-                          amount: productAmount,
-                        },
-                      };
-                      cartExists.push(cartProduct);
-                    }
-                    setCart(cartExists);
-                  } else {
-                    const cartProducts: cartProducts[] = [
-                      {
-                        productInfo: product,
-                        cartInfo: {
-                          amount: productAmount,
-                        },
-                      },
-                    ];
-                    setCart(cartProducts);
-                  }
-
-                  toast.success(
-                    t("producto-agredado-a-carrito", {
-                      action: {
-                        label: "Undo",
-                        onClick: () => console.log("Undo"),
-                      },
-                    })
-                  );
-                }}
-              >
-                {t("agregar-al-carrito")}
-              </Button>
             </div>
             <div className={`flex ${product.stock > 0 ? "hidden" : ""}`}>
               <div className="flex flex-col text-default-500 gap-4">
@@ -398,19 +424,19 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
                 )}
 
                 <div className="flex items-center flex-col gap-2 tablet:flex-row">
-                  <Button
-                    startContent={
-                      <NotificationIcon
+                  <Btn
+                    icon={
+                      <Icon
+                        icon="bell"
                         size="lg"
                         color="text-gray-100 dark:text-gray-900"
                       />
                     }
                     size="md"
-                    className=" w-full border border-none text-gray-100 bg-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 dark:text-gray-900 dark:bg-gray-100 tablet:w-fit"
-                  >
-                    {t("agregar-recordatorio")}
-                  </Button>
-
+                    aditionalClassnames="w-full tablet:w-fit"
+                    text="agregar-recordatorio"
+                    type="primary"
+                  />
                   <p>{t("o").toLowerCase()}</p>
 
                   <Dropdown
@@ -420,22 +446,35 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
                     <DropdownTrigger>
                       <Button
                         startContent={
-                          <ListIcon
+                          <Icon
+                            icon="list"
                             size="lg"
                             color="text-gray-100 dark:text-gray-900"
                           />
                         }
                         endContent={
-                          <ArrowDownIcon
+                          <Icon
+                            icon="arrowDown"
                             size="xs"
                             color="text-gray-100 dark:text-gray-900"
                           />
                         }
                         size="md"
-                        className=" w-full border border-none text-gray-100 bg-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 dark:text-gray-900 dark:bg-gray-100 tablet:w-fit"
+                        className="border border-none text-gray-100 bg-gray-800 hover:bg-gray-800 dark:hover:bg-gray-300 dark:text-gray-800 dark:bg-gray-100 w-full tablet:w-fit"
                       >
                         {t("agregar-a-lista")}
                       </Button>
+                      {/* <Btn
+                        icon={
+                          <ListIcon
+                            size="lg"
+                            color="text-gray-100 dark:text-gray-900"
+                          />
+                        }
+                        size="md"
+                        text="agregar-recordatorio"
+                        type="primary"
+                      /> */}
                     </DropdownTrigger>
 
                     <DropdownMenu className="!max-w-[13em]" aria-label="ddd">
@@ -450,7 +489,7 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
                         </DropdownItem>
                       </DropdownSection>
                       <DropdownItem
-                        startContent={<AddPlusIcon size="sm" />}
+                        startContent={<Icon icon="plus" size="sm" />}
                         className="text-gray-800 hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100"
                       >
                         {t("crear-lista")}
@@ -466,7 +505,7 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
 
       <div className="flex flex-col gap-5">
         <Divider orientation="horizontal" className="tablet:" />
-        <Tabs fullWidth variant={"underlined"} aria-label="Tabs variants">
+        <Tabs fullWidth variant={'underlined'} aria-label="Tabs variants">
           {productTabs.map((tab) => (
             <Tab
               key={tab.key}

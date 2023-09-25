@@ -3,35 +3,48 @@ import {
   Button,
   Chip,
   Divider,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
   Link,
 } from "@nextui-org/react";
 import { useTranslation } from "react-i18next";
-import { methodTypeCardInfo, methodTypeServiceInfo, paymentMethodInfo } from "../../../Utils/types.utils";
 import {
-  AddPlusIcon,
-  EditIcon,
-  MoneyTransferIcon,
-  TrashIcon,
-  VerticalDotsIcon,
-} from "../../../Assets/Icons/IconsCollection";
-import { useNavigate } from "react-router-dom";
+  methodTypeCardInfo,
+  methodTypeServiceInfo,
+  paymentMethodInfo,
+} from "../../../Utils/types.utils";
 import { paymentMethodsCollection } from "../../../Utils/DataCollection/PaymentMethods.datacollection";
 import { mastercard, paypal, visa } from "../../../Assets/Img/ImgCollection";
+import DropDw, {
+  dropDownItemType,
+} from "../../../Components/Common/Inputs/Dropdown";
+import { Icon } from "../../../Assets/Icons/IconsCollection";
 
 type IMyPaymentMethodsProps = {};
 
 const MyPaymentMethods: FunctionComponent<IMyPaymentMethodsProps> = ({}) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   // const query = useQuery();
 
-  const [paymentMethods, setPaymentMethods] = useState<paymentMethodInfo[]>(
+  const [paymentMethods] = useState<paymentMethodInfo[]>(
     paymentMethodsCollection
   );
+
+  const listDropDwItems: dropDownItemType[] = [
+    {
+      key: "transacciones",
+      text: "transacciones",
+      icon: <Icon icon="moneyTransaction" size="xs" />,
+      type: "normal",
+      onPress: () => {},
+    },
+    {
+      key: "eliminar",
+      text: "eliminar",
+      icon: <Icon icon="trash" size="xs" />,
+      type: "danger",
+      onPress: () => {},
+    },
+  ];
 
   return (
     <div className="flex gap-10 flex-col">
@@ -43,7 +56,7 @@ const MyPaymentMethods: FunctionComponent<IMyPaymentMethodsProps> = ({}) => {
             variant="bordered"
             className="border border-gray-800 text-gray-900  bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-100 dark:bg-gray-800"
             startContent={
-              <AddPlusIcon
+              <Icon icon="plus"
                 size="base"
                 color="text-gray-900 dark:text-gray-100"
               />
@@ -82,7 +95,9 @@ const MyPaymentMethods: FunctionComponent<IMyPaymentMethodsProps> = ({}) => {
                       <h1 className=" font-semibold text-sm laptop:text-base">
                         {`${(pm.methodInfo as methodTypeCardInfo).company} ${t(
                           "terminada-en"
-                        ).toLowerCase()} ${(pm.methodInfo as methodTypeCardInfo).ending}`}
+                        ).toLowerCase()} ${
+                          (pm.methodInfo as methodTypeCardInfo).ending
+                        }`}
                       </h1>
                       <p className=" text-default-500 text-sm laptop:text-base">
                         {`${t("fecha-de-expiracion")} ${(
@@ -110,49 +125,15 @@ const MyPaymentMethods: FunctionComponent<IMyPaymentMethodsProps> = ({}) => {
                       size="sm"
                       color="success"
                       className="bg-transparent"
-                    >{t('establecer-defecto')}</Button>
-                  )}
-                  <Dropdown
-                    placement="bottom-end"
-                    classNames={{ base: "!min-w-[10em] " }}
-                    className="bg-gray-200 dark:bg-gray-700"
-                  >
-                    <DropdownTrigger>
-                      <Button
-                        isIconOnly
-                        startContent={<VerticalDotsIcon size="lg" />}
-                        size="sm"
-                        className="bg-transparent z-10"
-                      />
-                    </DropdownTrigger>
-                    <DropdownMenu
-                      className="!max-w-[10em]"
-                      aria-label="ddd"
-                      variant="flat"
                     >
-                      <DropdownItem
-                        textValue="2"
-                        startContent={<MoneyTransferIcon size="xs" />}
-                        className="text-gray-800 hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100"
-                      >
-                        {t("transacciones")}
-                      </DropdownItem>
-                      <DropdownItem
-                        textValue="2"
-                        startContent={<EditIcon size="xs" />}
-                        className="text-gray-800 hidden hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100"
-                      >
-                        {t("editar")}
-                      </DropdownItem>
-                      <DropdownItem
-                        textValue="2"
-                        startContent={<TrashIcon size="xs" />}
-                        className="text-gray-800 hover:!bg-red-300 hover:!bg-red-600/60 dark:hover:!bg-red-600/60 dark:text-gray-100"
-                      >
-                        {t("eliminar")}
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
+                      {t("establecer-defecto")}
+                    </Button>
+                  )}
+                  <DropDw
+                  btnStartIcon={<Icon icon="verticalDots" size="lg" color="text-gray-900 dark:text-gray-100" />}
+                  items={listDropDwItems}
+                    placement="bottom-end"
+                  />
                 </div>
               </div>
             ) : (
@@ -161,7 +142,8 @@ const MyPaymentMethods: FunctionComponent<IMyPaymentMethodsProps> = ({}) => {
                   <div className="flex gap-5 items-center">
                     <img
                       src={
-                        (pm.methodInfo as methodTypeServiceInfo).name == "PayPal"
+                        (pm.methodInfo as methodTypeServiceInfo).name ==
+                        "PayPal"
                           ? paypal
                           : undefined
                       }
@@ -172,7 +154,6 @@ const MyPaymentMethods: FunctionComponent<IMyPaymentMethodsProps> = ({}) => {
                       <h1 className=" font-semibold text-sm laptop:text-base">
                         {`${(pm.methodInfo as methodTypeServiceInfo).name}`}
                       </h1>
-
                     </div>
                   </div>
                 </div>
@@ -191,49 +172,15 @@ const MyPaymentMethods: FunctionComponent<IMyPaymentMethodsProps> = ({}) => {
                       size="sm"
                       color="success"
                       className="bg-transparent"
-                    >{t('establecer-defecto')}</Button>
-                  )}
-                  <Dropdown
-                    placement="bottom-end"
-                    classNames={{ base: "!min-w-[10em] " }}
-                    className="bg-gray-200 dark:bg-gray-700"
-                  >
-                    <DropdownTrigger>
-                      <Button
-                        isIconOnly
-                        startContent={<VerticalDotsIcon size="lg" />}
-                        size="sm"
-                        className="bg-transparent z-10"
-                      />
-                    </DropdownTrigger>
-                    <DropdownMenu
-                      className="!max-w-[10em]"
-                      aria-label="ddd"
-                      variant="flat"
                     >
-                      <DropdownItem
-                        textValue="2"
-                        startContent={<MoneyTransferIcon size="xs" />}
-                        className="text-gray-800 hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100"
-                      >
-                        {t("transacciones")}
-                      </DropdownItem>
-                      <DropdownItem
-                        textValue="2"
-                        startContent={<EditIcon size="xs" />}
-                        className="text-gray-800 hidden hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100"
-                      >
-                        {t("editar")}
-                      </DropdownItem>
-                      <DropdownItem
-                        textValue="2"
-                        startContent={<TrashIcon size="xs" />}
-                        className="text-gray-800 hover:!bg-red-300 hover:!bg-red-600/60 dark:hover:!bg-red-600/60 dark:text-gray-100"
-                      >
-                        {t("eliminar")}
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
+                      {t("establecer-defecto")}
+                    </Button>
+                  )}
+                  <DropDw
+                  btnStartIcon={<Icon icon="verticalDots" size="lg" color="text-gray-900 dark:text-gray-100" />}
+                  items={listDropDwItems}
+                    placement="bottom-end"
+                  />
                 </div>
               </div>
             )}
@@ -251,7 +198,7 @@ const MyPaymentMethods: FunctionComponent<IMyPaymentMethodsProps> = ({}) => {
           }}
         >
           <div className="flex h-[3.5em] items-center gap-2 text-sm laptop:text-base">
-            <AddPlusIcon size="sm" color="text-default-500" />
+            <Icon icon="plus" size="sm" color="text-default-500" />
             <h1 className=" font-semibold text-default-500">
               {`${t("agregar")} ${t("metodo").toLowerCase()}`}
             </h1>

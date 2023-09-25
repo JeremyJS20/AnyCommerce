@@ -16,14 +16,6 @@ import {
   FunctionComponent,
 } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  ArrowDownIcon,
-  DollarSignIcon,
-  FilterIcon,
-  SearchIcon,
-  SortIcon,
-  XIcon,
-} from "../../Assets/Icons/IconsCollection";
 import { commonType } from "../../Pages/PublicPages/Products/Products";
 import {
   FiltersCollectionType,
@@ -31,6 +23,7 @@ import {
 } from "../../Utils/DataCollection/Products.datacollection.filter.utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "./usePager";
+import { Icon } from "../../Assets/Icons/IconsCollection";
 
 interface IFilterPanelProps {
   filterCollection: FiltersCollectionType[];
@@ -97,7 +90,7 @@ export const useFilterPanel = ({ ...props }: IFilterPanelProps) => {
             className="bg-transparent "
           >
             <div className="flex items-end">
-              <FilterIcon size="lg" />
+              <Icon icon="filter" size="lg" />
               <p className="text-sm text-end h-4 ml-[-5px] pt-[2px]">+</p>
             </div>
             <p className={`text-sm `}>{t("agregar-filtro")}</p>
@@ -329,8 +322,8 @@ export const useSortBtn = ({
             radius="sm"
             variant="bordered"
             className="border !max-w-[350px] px-5 border-gray-800  bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
-            endContent={<ArrowDownIcon size="xs" color="text-gray-900 dark:text-gray-100" />}
-            startContent={<SortIcon size="base" />}
+            endContent={<Icon icon="arrowDown" size="xs" color="text-gray-900 dark:text-gray-100" />}
+            startContent={<Icon icon="sort" size="base" color="text-gray-900 dark:text-gray-100"/>}
           >
             <p className={`text-md text-gray-900 dark:text-gray-100`}>
               {t("ordenar")}
@@ -471,7 +464,7 @@ const RenderDropDown: FunctionComponent<IRendersProps> = ({
             radius="sm"
             variant="bordered"
             className="border border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
-            endContent={<ArrowDownIcon size="xs" color="text-gray-900 dark:text-gray-100"/>}
+            endContent={<Icon icon="arrowDown" size="xs" color="text-gray-900 dark:text-gray-100"/>}
             startContent={props.filter.icon}
           >
             <p className={`text-md text-gray-900 dark:text-gray-100`}>
@@ -582,7 +575,7 @@ const RenderRange: FunctionComponent<IRendersProps> = ({
             radius="sm"
             variant="bordered"
             className="border border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
-            endContent={<ArrowDownIcon size="xs" />}
+            endContent={<Icon icon="arrowDown" size="xs" />}
             startContent={props.filter.icon}
           >
             <p className={`text-md text-gray-900 dark:text-gray-100`}>
@@ -631,7 +624,7 @@ const RenderRange: FunctionComponent<IRendersProps> = ({
                 label="Min"
                 maxLength={2}
                 min={0}
-                startContent={<DollarSignIcon size="xs" />}
+                startContent={<Icon icon="dollarSign" size="xs" />}
                 value={String(filterValues[props.keyFilter]?.min)}
                 onValueChange={(value) => {
                   const x = {
@@ -660,7 +653,7 @@ const RenderRange: FunctionComponent<IRendersProps> = ({
                 label="Max"
                 maxLength={2}
                 min={0}
-                startContent={<DollarSignIcon size="xs" />}
+                startContent={<Icon icon="dollarSign" size="xs" />}
                 value={String(filterValues[props.keyFilter]?.max)}
                 onValueChange={(value) => {
                   //if (Number(value) < filterValues.price.min) return;
@@ -716,7 +709,7 @@ const RenderSearcher: FunctionComponent<IRendersProps> = ({
       }}
       size="md"
       type="text"
-      startContent={<SearchIcon size="sm" />}
+      startContent={<Icon icon="search" size="sm" />}
       value={filterValues.search}
       width={50}
       placeholder={t("escribe-algo")}
@@ -737,7 +730,7 @@ const RenderSearcher: FunctionComponent<IRendersProps> = ({
             props.setSelectedFiltersValues(currentFilters);
           }}
         >
-          <XIcon size="xs" />
+          <Icon icon="x" size="xs" />
         </div>
       }
     />

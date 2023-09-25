@@ -80,6 +80,16 @@ export type listInfo = {
   products: productInfo[];
 };
 
+export type addressInfo = {
+  id: string;
+  country: string,
+  state: string,
+  city: string,
+  postalCode: number,
+  address: string,
+  default: boolean
+};
+
 export type paymentMethodInfo = {
   id: string;
   type: "card" | "service";
@@ -102,3 +112,7 @@ export type methodTypeCardInfo = {
 export type methodTypeServiceInfo = {
   name: string,
 }
+
+export type inputs = "name" | "lastName" | "email" | "phone" | "password" | undefined;
+
+export type profileInfoKeys = "personalInfo" | "mainAddress" | "security";

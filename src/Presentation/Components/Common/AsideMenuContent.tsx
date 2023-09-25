@@ -6,6 +6,7 @@ import MyOrders from "../../Pages/Private/Account/MyOrders";
 import MyPurchases from "../../Pages/Private/Account/MyPurchases";
 import MyLists from "../../Pages/Private/Account/MyLists";
 import MyPaymentMethods from "../../Pages/Private/Account/MyPaymentMethods";
+import MyAddresses from "../../Pages/Private/Account/MyAddresses";
 
 interface IAsideMenuContentProps {}
 
@@ -33,6 +34,10 @@ const AsideMenuContent: FunctionComponent<IAsideMenuContentProps> = ({}) => {
     {
       key: "mypaymentmethods",
       content: <MyPaymentMethods />,
+    },
+    {
+      key: "myaddresses",
+      content: <MyAddresses />,
     },
   ];
 

@@ -1,5 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { PrivateRoutes, PublicRoutes } from "../Utils/routermanager.routes.utils";
+import {
+  PrivateRoutes,
+  PublicRoutes,
+} from "../Utils/routermanager.routes.utils";
 import {
   Navbar as NextNavbar,
   NavbarContent,
@@ -11,7 +14,6 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Divider,
   Badge,
   DropdownSection,
 } from "@nextui-org/react";
@@ -34,25 +36,11 @@ import {
   anyCommerceIconDark,
   anyCommerceIconLight,
 } from "../Assets/Img/ImgCollection";
-import {
-  ArrowDownIcon,
-  CartIcon,
-  CollapseIcon,
-  LanguageIcon,
-  MinusIcon,
-  PlusIcon,
-  ProfileIcon,
-  SearchIcon,
-  SignOutIcon,
-  StoreIcon,
-  ThemeDarkIcon,
-  ThemeLightIcon,
-  TrashIcon,
-  XIcon,
-} from "../Assets/Icons/IconsCollection";
 import { CartContext } from "../Context/CartContext";
-import { cartProducts } from "../Utils/types.utils";
-import { toast } from "sonner";
+import Btn from "./Common/Inputs/Button";
+import Cart from "./Cart";
+import { Icon } from "../Assets/Icons/IconsCollection";
+import DropDw, { dropDownItemType } from "./Common/Inputs/Dropdown";
 
 interface INavbarProps {}
 
@@ -97,36 +85,37 @@ const MainNavBar = forwardRef(
     const { locale } = useContext(LanguageContext);
     const { cart } = useContext(CartContext);
 
-    const localesDropdownItems = [
+    const localesDropdownItems: dropDownItemType[] = [
       {
-        key: 0,
+        key: "locale0",
         text: "es-espanol",
-        value: "es",
+        type: "normal",
+        onPress: () => onLocaleItemClick("es"),
       },
       {
-        key: 1,
+        key: "locale1",
         text: "en-ingles",
-        value: "en",
+        type: "normal",
+        onPress: () => onLocaleItemClick("en"),
       },
     ];
 
-    const featureItems: {
-      key: string;
-      text: string;
-      description: string;
-      route: string;
-    }[] = [
+    const featureItems: dropDownItemType[] = [
       {
         key: "feature0",
         text: "productos",
         description: "productos-descripcion",
-        route: PublicRoutes.PRODUCTS,
+        type: "normal",
+        onPress: () => navigate(PublicRoutes.PRODUCTS),
+        //route: PublicRoutes.PRODUCTS,
       },
       {
         key: "feature1",
         text: "tiendas",
         description: "tiendas-descripcion",
-        route: PublicRoutes.STORES,
+        type: "normal",
+        onPress: () => navigate(PublicRoutes.STORES),
+        //route: PublicRoutes.STORES,
       },
     ];
 
@@ -146,9 +135,10 @@ const MainNavBar = forwardRef(
 
     return (
       <NextNavbar
-        className="py-0 h-14 bg-gray-100/90 dark:bg-gray-900/90"
+        className="py-0 h-14 bg-ideal-green text-gray-100 relative"
         maxWidth="2xl"
-        isBordered
+        //isBordered
+        
       >
         <NavbarContent className=" gap-6 items-center" justify="start">
           <NavbarItem className="flex laptop:hidden">
@@ -157,12 +147,10 @@ const MainNavBar = forwardRef(
               size="sm"
               radius="sm"
               variant="bordered"
-              className="border border-none bg-gray-100 hover:bg-gray-200  dark:hover:bg-transparent dark:text-gray-800 dark:bg-transparent"
-              onClick={() =>
-                props.mobileNavBarRef.current?.setCollapseMobileMenu(true)
-              }
+              className="border border-none bg-transparent z-50"
+              onClick={() => props.mobileNavBarRef.current?.setCollapseMobileMenu(true)}
             >
-              <CollapseIcon size={"xl"} />
+              <Icon icon="bars" size={"xl"} color="text-gray-100" />
             </Button>
           </NavbarItem>
           <NavbarItem className="hidden laptop:flex">
@@ -177,123 +165,68 @@ const MainNavBar = forwardRef(
                   navigate(PublicRoutes.HOME);
                 }
               }}
+              className="hidden laptop:flex"
             >
               <div className="gap-2 items-center flex">
-                <img
-                  src={
-                    theme === "light"
-                      ? anyCommerceIconDark
-                      : anyCommerceIconLight
-                  }
-                  className="w-5 h-auto"
-                />
-                <p className="font-bold text-xl !text-gray-800 dark:!text-gray-100">
-                  Any<span className="text-green-700">Commerce</span>
+                <img src={anyCommerceIconLight} className="w-6 h-auto" />
+                <p className="font-semibold text-xl !text-gray-100 dark:!text-gray-100">
+                  AnyCommerce
                 </p>
               </div>
             </Link>
           </NavbarItem>
-          <Dropdown className="bg-gray-200 dark:bg-gray-700">
-            <NavbarItem className="!pt-1 hidden laptop:flex">
-              <DropdownTrigger>
-                <Button
-                  disableRipple
-                  className="p-0 bg-transparent data-[hover=true]:bg-transparent"
-                  endContent={<ArrowDownIcon size="xs" />}
-                  radius="sm"
-                  size="md"
-                  variant="light"
-                >
-                  {t("articulos")}
-                </Button>
-              </DropdownTrigger>
-            </NavbarItem>
-            <DropdownMenu
-              className="w-[15em]"
-              itemClasses={{
-                base: "gap-4",
-                title: "text-sm",
-                description: "",
-              }}
-              aria-label="ddd"
-            >
-              {featureItems.map((feat) => (
-                <DropdownItem
-                  key={feat.key}
-                  description={t(feat.description)}
-                  className={`text-gray-800 hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100 ${
-                    location.pathname == feat.route
-                      ? "!bg-gray-300 dark:!bg-gray-500"
-                      : ""
-                  }`}
-                  onClick={() => navigate(feat.route)}
-                >
-                  {t(feat.text)}
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
+          <DropDw
+            btnTitle="articulos"
+            items={featureItems}
+            additionalClassName="hidden laptop:flex"
+            contentWidth={15}
+            btnEndIcon={<Icon icon="arrowDown" size="xs" />}
+            placement="bottom-start"
+          />
         </NavbarContent>
         <NavbarContent justify="center" className="hidden laptop:flex">
           <Input
             classNames={{
               base: "desktop:w-[45rem] laptop:w-[35em] tablet:w-[25em]",
               mainWrapper: "h-full",
-              input: "text-xs",
+              input: "text-sm",
+              label: " font-semibold !text-gray-100",
               inputWrapper:
-                "h-full border border-gray-700 !bg-transparent text-default-500 dark:border-gray-700 hover:!bg-gray-200 dark:hover:!bg-gray-700 dark:!bg-gray-800",
+                "h-full border-2 border-gray-100 !bg-transparent text-gray-100",
             }}
-            placeholder={t("buscar-productos")}
+            //placeholder={t("buscar-productos")}
             size="md"
-            startContent={<SearchIcon size="lg" />}
+            startContent={
+              <Icon icon="search" size="base" color="text-gray-100" />
+            }
             //endContent={<SearchIcon />}
             type="search"
           />
         </NavbarContent>
         <NavbarContent as="div" className="items-center gap-2" justify="end">
           <NavbarItem>
-            <Button
-              isIconOnly
+            <Btn
+              icon={
+                themeVerifier(theme) == "dark" ? (
+                  <Icon icon="moon" size="lg" color="text-gray-100" />
+                ) : (
+                  <Icon icon="sun" size="lg" color="text-gray-100" />
+                )
+              }
               size="sm"
-              radius="sm"
-              variant="bordered"
-              className="border border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
-              onClick={onThemeBtnClick}
-            >
-              {themeVerifier(theme) == "dark" ? (
-                <ThemeDarkIcon size="xs" />
-              ) : (
-                <ThemeLightIcon size="xs" />
-              )}
-            </Button>
+              type="onlyIcon"
+              aditionalClassnames="p-4"
+              onPress={onThemeBtnClick}
+            />
           </NavbarItem>
           <NavbarItem>
-            <Dropdown className="bg-gray-200 dark:bg-gray-700">
-              <DropdownTrigger>
-                <Button
-                  isIconOnly
-                  size="sm"
-                  radius="sm"
-                  variant="bordered"
-                  className="border border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
-                >
-                  <LanguageIcon size="xs" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu aria-label="Static Actions">
-                {localesDropdownItems.map((loc) => (
-                  <DropdownItem
-                    key={loc.key}
-                    className={`text-gray-800 hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100 ${
-                      locale == loc.value
-                        ? "!bg-gray-300 dark:!bg-gray-500"
-                        : ""
-                    }`}
-                    onClick={() => onLocaleItemClick(loc.value)}
-                  >{`${t(loc.text)}`}</DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
+            <DropDw
+              btnStartIcon={
+                <Icon icon="globe" size="lg" color="text-gray-100" />
+              }
+              items={localesDropdownItems}
+              placement="bottom-end"
+            />
           </NavbarItem>
           <NavbarItem>
             <Badge
@@ -301,40 +234,34 @@ const MainNavBar = forwardRef(
                 cart != null && cart.reduce((a, b) => a + b.cartInfo.amount, 0)
               }
               color="primary"
-              size="md"
+              size="sm"
               classNames={{
-                badge: `bg-gray-800 text-gray-100 dark:bg-gray-100 border-none dark:text-gray-800 ${
-                  cart != null &&
-                  cart.reduce((a, b) => a + b.cartInfo.amount, 0) <= 0
-                    ? "hidden"
-                    : ""
-                }`,
+                badge: `bg-gray-800 text-gray-100 border-none`,
               }}
+              className={`${
+                cart != null &&
+                cart.reduce((a, b) => a + b.cartInfo.amount, 0) <= 0
+                  ? "hidden"
+                  : ""
+              }`}
             >
-              <Button
-                isIconOnly
+              <Btn
+                icon={<Icon icon="cart" size="lg" color="text-gray-100" />}
                 size="sm"
-                radius="sm"
-                variant="bordered"
-                className="border border-gray-800 bg-gray-100 text-gray-900 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-100 dark:bg-gray-800"
-                onClick={() => {
-                  props.cartRef.current?.setCollapseCart(true);
-                }}
-              >
-                <CartIcon size="xs" />
-              </Button>
+                type="onlyIcon"
+                aditionalClassnames="p-4"
+                onPress={() => props.cartRef.current?.setCollapseCart(true)}
+              />
             </Badge>
           </NavbarItem>
           <NavbarItem>
-            <Button
+            <Btn
+              text={"iniciar-sesion"}
               size="sm"
-              radius="sm"
-              variant="bordered"
-              className="border border-none text-gray-100 bg-gray-800 hover:bg-gray-800 dark:hover:bg-gray-300 dark:text-gray-800 dark:bg-gray-100"
-              onClick={() => navigate(PublicRoutes.SIGNIN)}
-            >
-              {t("iniciar-sesion")}
-            </Button>
+              type="primary"
+              aditionalClassnames="!bg-gray-100 !text-gray-900"
+              onPress={() => navigate(PublicRoutes.SIGNIN)}
+            />
           </NavbarItem>
           <Dropdown
             placement="bottom-end"
@@ -348,16 +275,21 @@ const MainNavBar = forwardRef(
                 size="sm"
                 src={<ProfileIcon size="xl"/>}
               /> */}
-              <Button 
+              <Button
                 isIconOnly
                 size="md"
-                startContent={<ProfileIcon size="2xl"/>}
+                startContent={
+                  <Icon icon="user" size="2xl" color="text-gray-100" />
+                }
                 className="bg-transparent rounded-full"
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
               <DropdownSection showDivider>
-                <DropdownItem textValue="1" className="text-gray-800 hover:!bg-transparent dark:hover:!bg-transparent dark:text-gray-100 cursor-default">
+                <DropdownItem
+                  textValue="1"
+                  className="text-gray-800 hover:!bg-transparent dark:hover:!bg-transparent dark:text-gray-100 cursor-default"
+                >
                   <p className="font-semibold">Jeremy Solano</p>
                   <p className="text-default-500">jeremy@example.com</p>
                 </DropdownItem>
@@ -368,10 +300,10 @@ const MainNavBar = forwardRef(
                   key="account"
                   textValue="2"
                   className="text-gray-800 hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100"
-                  startContent={<ProfileIcon size="lg" />}
+                  startContent={<Icon icon="user" size="lg" />}
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate(`${PrivateRoutes.ACCOUNT}/myprofile`)
+                    navigate(`${PrivateRoutes.ACCOUNT}/myprofile`);
                   }}
                 >
                   {t("cuenta")}
@@ -380,7 +312,8 @@ const MainNavBar = forwardRef(
                   key="settings"
                   textValue="3"
                   className="text-gray-800 hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100"
-                  startContent={<StoreIcon size="base" />}
+                  //className="text-gray-800 hover:!bg-ideal-green hover:!text-gray-100 dark:text-gray-100"
+                  startContent={<Icon icon="store" size="base" />}
                 >
                   {t("tiendas")}
                 </DropdownItem>
@@ -389,8 +322,8 @@ const MainNavBar = forwardRef(
               <DropdownItem
                 key="logout"
                 textValue="4"
-                className="text-gray-800 hover:!bg-red-600/60 dark:hover:!bg-red-600/60 dark:text-gray-100"
-                startContent={<SignOutIcon size="base" />}
+                className="text-gray-800 hover:!bg-red-600/60 hover:!text-gray-100 dark:text-gray-100"
+                startContent={<Icon icon="signOut" size="base" />}
               >
                 {t("cerrar-sesion")}
               </DropdownItem>
@@ -477,322 +410,11 @@ const MobileNavBar = forwardRef(({}, ref) => {
               className="border border-none bg-gray-100 hover:bg-gray-200  dark:hover:bg-transparent dark:text-gray-800 dark:bg-transparent"
               onClick={() => setCollapseMobileMenu(false)}
             >
-              <XIcon size="xs" />
+              <Icon icon="x" size="xs" />
             </Button>
           </NavbarItem>
         </NavbarContent>
       </NextNavbar>
-    </div>
-  );
-});
-
-const Cart = forwardRef(({}, ref) => {
-  const { t } = useTranslation();
-  const { cart, setCart } = useContext(CartContext);
-
-  const [collapseCart, setCollapseCart] = useState<boolean>(false);
-
-  useImperativeHandle(ref, () => ({
-    setCollapseCart: setCollapseCart,
-  }));
-
-  const screenWidth = window.innerWidth;
-
-  useEffect(() => {
-    if (collapseCart) document.body.classList.add("overflow-hidden");
-    else document.body.classList.remove("overflow-hidden");
-  }, [collapseCart]);
-
-  const getCartSubtotal = (cart: cartProducts[]) => {
-    return `${
-      String(
-        cart.reduce(
-          (a: any, b) => a + b.productInfo.cost * b.cartInfo.amount,
-          0
-        )
-      ).split(".")[0]
-    }.${
-      !String(
-        cart.reduce(
-          (a: any, b) => a + b.productInfo.cost * b.cartInfo.amount,
-          0
-        )
-      ).split(".")[1]
-        ? "00"
-        : String(
-            cart.reduce(
-              (a: any, b) => a + b.productInfo.cost * b.cartInfo.amount,
-              0
-            )
-          )
-            .split(".")[1]
-            .substring(0, 2)
-    }`;
-  };
-
-  return (
-    <div
-      id="noCartArea"
-      className={`fixed bottom-0 z-0 right-0 h-screen bg-gray-900/50 backdrop-blur-sm transition-width duration-300 ${
-        collapseCart ? "w-full !z-50 " : "w-0"
-      }`}
-      onClick={(e) => {
-        if (!collapseCart) return;
-        if ((e.target as HTMLDivElement).id == "noCartArea")
-          setCollapseCart(false);
-      }}
-    >
-      <div
-        className={`h-full top-0 right-0 absolute items-start bg-gray-100 border-l-none border-divider dark:bg-gray-900 transition-width duration-300 z-50 ${
-          collapseCart ? "w-full desktopW:w-[28vw] tablet:w-[60vw] " : "w-0"
-        }`}
-      >
-        <div
-          className={`py-5 px-5 h-full w-full tablet:px-8 ${
-            collapseCart ? "" : "hidden"
-          }`}
-        >
-          <header className="mb-3 flex justify-between">
-            <p className="text-xl font-bold">
-              {t("carrito")}
-              {`(${
-                cart != null && cart.reduce((a, b) => a + b.cartInfo.amount, 0)
-              })`}
-            </p>
-            <Button
-              isIconOnly
-              size="sm"
-              radius="sm"
-              variant="bordered"
-              className="border border-none bg-gray-100 hover:bg-gray-200  dark:hover:bg-transparent dark:text-gray-800 dark:bg-transparent"
-              onClick={() => setCollapseCart(false)}
-            >
-              <XIcon size="xs" />
-            </Button>
-          </header>
-          <Divider orientation="horizontal" />
-
-          <div className="h-[90vh] flex flex-col justify-between">
-            {cart != null && cart.length <= 0 ? (
-              <div className="flex h-[90vh] items-center justify-center">
-                <p className="text-xl text-gray-500">{t("carrito-vacio")}</p>
-              </div>
-            ) : (
-              <div className=" max-h-[65vh] overflow-auto tablet:max-h-[75vh]">
-                <ol className=" ">
-                  {cart != null &&
-                    cart.map((prod, index) => (
-                      <>
-                        <li
-                          key={prod.productInfo.id + index}
-                          className="mt-3 flex justify-between items-center"
-                        >
-                          <div className="flex items-center gap-5">
-                            <img
-                              className="w-16 h-16 tablet:w-20 tablet:h-20"
-                              src={prod.productInfo.img}
-                            />
-                            <div className="flex flex-col justify-between text-sm tablet:text-base">
-                              {screenWidth < 640 ? (
-                                <>
-                                  <p className=" text-base laptop:text-lg">
-                                    {prod.productInfo.name
-                                      .substring(0, 10)
-                                      .trim()}
-                                    ...
-                                  </p>
-                                  <div>
-                                    <p className="text-gray-500">
-                                      {`$${prod.productInfo.cost} x ${prod.cartInfo.amount}`
-                                        .substring(0, 10)
-                                        .trim()}
-                                      .....
-                                    </p>
-                                    <p className="text-gray-500">
-                                      {prod.productInfo.category
-                                        .substring(0, 10)
-                                        .trim()}
-                                      ...
-                                    </p>
-                                  </div>
-                                </>
-                              ) : (
-                                <>
-                                  <p className=" text-base laptop:text-lg">
-                                    {prod.productInfo.name}
-                                  </p>
-                                  <div>
-                                    <p className="text-gray-500">
-                                      {`$${prod.productInfo.cost} x ${prod.cartInfo.amount}`}
-                                    </p>
-                                    <p className="text-gray-500">
-                                      {prod.productInfo.category}
-                                    </p>
-                                  </div>
-                                </>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex gap-1">
-                            <Button
-                              isIconOnly
-                              size="sm"
-                              radius="sm"
-                              variant="bordered"
-                              className="border border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
-                              onClick={() => {
-                                const temp = cart.slice();
-                                const element = temp.find(
-                                  (i) => i.productInfo.id == prod.productInfo.id
-                                );
-                                if (element) {
-                                  element.cartInfo.amount -= 1;
-
-                                  if (element.cartInfo.amount == 0) {
-                                    temp.splice(temp.indexOf(element), 1);
-                                  }
-
-                                  setCart(temp);
-                                }
-                              }}
-                            >
-                              <MinusIcon size="xs" />
-                            </Button>
-
-                            <Input
-                              classNames={{
-                                base: "w-[3em]",
-                                mainWrapper: "",
-                                input: "text-xs",
-                                inputWrapper:
-                                  "border border-gray-700 !bg-transparent text-default-500 dark:border-gray-700 hover:!bg-gray-200 dark:hover:!bg-gray-700 dark:!bg-gray-800",
-                              }}
-                              size="sm"
-                              type="number"
-                              onValueChange={(value) => {
-                                const temp = cart.slice();
-                                const prod2 = temp.find(
-                                  (i) => i.productInfo.id == prod.productInfo.id
-                                );
-
-                                if (prod2) {
-                                  if (value == "0") {
-                                    temp.splice(temp.indexOf(prod2), 1);
-                                  } else {
-                                    if (
-                                      Number(value) < prod2.productInfo.stock
-                                    ) {
-                                      prod2.cartInfo.amount = Number(value);
-                                    } else {
-                                      return toast.error(
-                                        t(
-                                          "existencia-de-producto-en-tienda-excedida"
-                                        )
-                                      );
-                                    }
-                                  }
-                                  setCart(temp);
-                                }
-                              }}
-                              value={String(prod.cartInfo.amount)}
-                            />
-
-                            <Button
-                              isIconOnly
-                              size="sm"
-                              radius="sm"
-                              variant="bordered"
-                              className="border border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
-                              onClick={() => {
-                                const temp = cart.slice();
-                                const element = temp.find(
-                                  (i) => i.productInfo.id == prod.productInfo.id
-                                );
-                                if (element) {
-                                  if (
-                                    element.cartInfo.amount !==
-                                    prod.productInfo.stock
-                                  ) {
-                                    element.cartInfo.amount += 1;
-                                  } else {
-                                    return toast.error(
-                                      t(
-                                        "existencia-de-producto-en-tienda-excedida"
-                                      )
-                                    );
-                                  }
-                                  setCart(temp);
-                                }
-                              }}
-                            >
-                              <PlusIcon size="xs" />
-                            </Button>
-                            <Button
-                              isIconOnly
-                              size="sm"
-                              radius="sm"
-                              variant="bordered"
-                              className="border border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
-                              onClick={() => {
-                                const temp = cart.slice();
-                                const element = temp.find(
-                                  (i) => i.productInfo.id == prod.productInfo.id
-                                );
-                                if (element) {
-                                  temp.splice(temp.indexOf(element), 1);
-                                  setCart(temp);
-                                }
-                              }}
-                            >
-                              <TrashIcon size="xs" />
-                            </Button>
-                          </div>
-                        </li>
-                        {index != cart.indexOf(cart.slice(-1)[0]) && (
-                          <Divider orientation="horizontal" className="my-3" />
-                        )}
-                      </>
-                    ))}
-                </ol>
-              </div>
-            )}
-            {cart != null && cart.length > 0 && (
-              <div className="">
-                <Divider orientation="horizontal" className="my-3" />
-                <div className="flex flex-col gap-2">
-                  <div className="flex justify-between">
-                    <p>{t("subtotal")}</p>
-                    <p>${getCartSubtotal(cart)}</p>
-                  </div>
-                  <div className="flex justify-between">
-                    <p>{t("envio")}</p>
-                    <p>{t("no-disponible")}</p>
-                  </div>
-                  <div className="flex justify-between">
-                    <p>{t("impuestos")}</p>
-                    <p>{t("no-disponible")}</p>
-                  </div>
-                </div>
-                <Divider orientation="horizontal" className="my-3" />
-                <div className="flex flex-col gap-2">
-                  {/* <div className="flex justify-between">
-                    <div>ddd</div>
-                    <div>ddd</div>
-                  </div> */}
-                  <Button
-                    size="sm"
-                    radius="sm"
-                    variant="bordered"
-                    className="border border-none text-gray-100 bg-gray-800 hover:bg-gray-800 dark:hover:bg-gray-300 dark:text-gray-800 dark:bg-gray-100"
-                  >
-                    {t("ir-a-pago")}
-                  </Button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
     </div>
   );
 });

@@ -7,16 +7,9 @@ import { Button, Input, Link, Navbar, NavbarItem } from "@nextui-org/react";
 import { PublicRoutes } from "../../../Utils/routermanager.routes.utils";
 import { useCallback, useContext, useState } from "react";
 import { ThemeContext } from "../../../Context/ThemeContext";
-import {
-  EyeIcon,
-  EyeSlashIcon,
-  KeyIcon,
-  MailIcon,
-  SearchIcon,
-  ThemeDarkIcon,
-} from "../../../Assets/Icons/IconsCollection";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { Icon } from "../../../Assets/Icons/IconsCollection";
 
 interface ISignInProps {}
 
@@ -46,9 +39,9 @@ const SignIn: React.FunctionComponent<ISignInProps> = ({}) => {
       )}
     >
       {passwordInputType == "password" ? (
-        <EyeIcon size={"xs"} />
+        <Icon icon="eye" size={"xs"} />
       ) : (
-        <EyeSlashIcon size={"xs"} />
+        <Icon icon="eyeSlash" size={"xs"} />
       )}
     </Button>
   );
@@ -99,7 +92,7 @@ const SignIn: React.FunctionComponent<ISignInProps> = ({}) => {
               placeholder={t("escribe-email")}
               labelPlacement="outside"
               size="lg"
-              startContent={<MailIcon size="lg" />}
+              startContent={<Icon icon="mail" size="lg" />}
               //endContent={<SearchIcon />}
               type="email"
             />
@@ -116,7 +109,7 @@ const SignIn: React.FunctionComponent<ISignInProps> = ({}) => {
                 labelPlacement="outside"
                 placeholder={t("escribe-contrasena")}
                 size="lg"
-                startContent={<KeyIcon size="lg" />}
+                startContent={<Icon icon="key" size="lg" />}
                 endContent={<PassBtnRender />}
                 type={passwordInputType}
               />

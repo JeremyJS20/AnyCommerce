@@ -13,11 +13,6 @@ import {
   TableCell,
   getKeyValue,
   Chip,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  Button,
-  DropdownItem,
   Divider,
 } from "@nextui-org/react";
 import { useTranslation } from "react-i18next";
@@ -30,8 +25,11 @@ import { ordersCollection } from "../../../Utils/DataCollection/Orders.datacolle
 import Moment from "react-moment";
 import { NumericFormat } from "react-number-format";
 import usePager, { useQuery } from "../../../Hooks/Common/usePager";
-import { VerticalDotsIcon } from "../../../Assets/Icons/IconsCollection";
 import useMyOrders from "../../../Hooks/Pages/Orders/useMyOrders";
+import DropDw, {
+  dropDownItemType,
+} from "../../../Components/Common/Inputs/Dropdown";
+import { Icon } from "../../../Assets/Icons/IconsCollection";
 
 type IMyOrdersProps = {};
 
@@ -154,6 +152,16 @@ const MyOrders: FunctionComponent<IMyOrdersProps> = ({}) => {
     setOrders(p);
   }, [query]);
 
+  const listDropDwItems: dropDownItemType[] = [
+    {
+      key: "cancelar",
+      text: "cancelar",
+      icon: <Icon icon="x" size="xs" />,
+      type: "danger",
+      onPress: () => {},
+    },
+  ];
+
   return (
     <div className="flex gap-10 flex-col">
       <Table
@@ -224,33 +232,11 @@ const MyOrders: FunctionComponent<IMyOrdersProps> = ({}) => {
                         </p>
                       </Chip>
                     ) : columnKey == "actions" ? (
-                      <Dropdown
+                      <DropDw
                         placement="bottom-end"
-                        classNames={{ base: "!min-w-[10em] " }}
-                        className="bg-gray-200 dark:bg-gray-700"
-                      >
-                        <DropdownTrigger>
-                          <Button
-                            isIconOnly
-                            startContent={<VerticalDotsIcon size="sm" />}
-                            size="sm"
-                            className="bg-transparent"
-                          />
-                        </DropdownTrigger>
-                        <DropdownMenu
-                          className="!max-w-[10em]"
-                          aria-label="ddd"
-                          variant="flat"
-                        >
-                          <DropdownItem
-                            key="account"
-                            textValue="2"
-                            className="text-gray-800 hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100"
-                          >
-                            {t("cancelar")}
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </Dropdown>
+                        btnStartIcon={<Icon icon="verticalDots" size="lg" color="text-gray-900 dark:text-gray-100" />}
+                        items={listDropDwItems}
+                      />
                     ) : (
                       getKeyValue(item, columnKey)
                     )}

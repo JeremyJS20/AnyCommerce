@@ -25,12 +25,12 @@ import { purchaseInfo } from "../../../Utils/types.utils";
 import Moment from "react-moment";
 import { NumericFormat } from "react-number-format";
 import usePager, { useQuery } from "../../../Hooks/Common/usePager";
-import { VerticalDotsIcon } from "../../../Assets/Icons/IconsCollection";
 import {
   PurchaseFiltersCollection,
   PurchaseSortCollection,
 } from "../../../Utils/DataCollection/Purchases.datacollection.filters";
 import useMyPurchases from "../../../Hooks/Pages/Purchases/useMyPurchases";
+import { Icon } from "../../../Assets/Icons/IconsCollection";
 
 type IMyPurchasesProps = {};
 
@@ -226,7 +226,7 @@ const MyPurchases: FunctionComponent<IMyPurchasesProps> = ({}) => {
                           <DropdownTrigger>
                             <Button
                               isIconOnly
-                              startContent={<VerticalDotsIcon size="sm" />}
+                              startContent={<Icon icon="verticalDots" size="sm" />}
                               size="sm"
                               className="bg-transparent"
                             />

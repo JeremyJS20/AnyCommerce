@@ -4,14 +4,10 @@ import { PublicRoutes } from "../Utils/routermanager.routes.utils";
 import { useContext } from "react";
 import { ThemeContext } from "../Context/ThemeContext";
 import {
-  CopyRightIcon,
-  InstagramIcon,
-  XTwitterIcon,
-} from "../Assets/Icons/IconsCollection";
-import {
   anyCommerceIconDark,
   anyCommerceIconLight,
 } from "../Assets/Img/ImgCollection";
+import { Icon } from "../Assets/Icons/IconsCollection";
 
 type IFooterProps = {};
 
@@ -23,12 +19,12 @@ const Footer: React.FunctionComponent<IFooterProps> = ({}) => {
     {
       key: "sn0",
       text: "X Twitter",
-      icon: <XTwitterIcon size="lg" />,
+      icon: <Icon icon="xTwitter"  size="lg" />,
     },
     {
       key: "sn1",
       text: "Instagram",
-      icon: <InstagramIcon size="xl" />,
+      icon: <Icon icon="instagram"  size="xl" />,
     },
   ];
 
@@ -60,7 +56,7 @@ const Footer: React.FunctionComponent<IFooterProps> = ({}) => {
                   className="w-6 h-auto tablet:w-8"
                 />
                 <p className="font-bold text-2xl tablet:text-4xl !text-gray-800 dark:!text-gray-100">
-                  Any<span className="text-green-700">Commerce</span>
+                  Any<span className="text-ideal-green">Commerce</span>
                 </p>
               </div>
             </Link>
@@ -88,7 +84,7 @@ const Footer: React.FunctionComponent<IFooterProps> = ({}) => {
           <div className="flex justify-between items-center flex-col tablet:flex-row gap-3">
             <p className="text-default-500 text-sm">
               <span className="mr-1">
-                <CopyRightIcon size="xs" color="text-default-500" />
+                <Icon icon="copyright"  size="xs" color="text-default-500" />
               </span>{" "}
               {t("derechos-de-autor")}
             </p>

@@ -4,9 +4,7 @@ import { FunctionComponent, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { PublicRoutes } from "../../../Utils/routermanager.routes.utils";
-import {
-  BoxIcon
-} from "../../../Assets/Icons/IconsCollection";
+
 import { cartProducts, productInfo } from "../../../Utils/types.utils";
 import { CartContext } from "../../../Context/CartContext";
 import { toast } from "sonner";
@@ -23,6 +21,7 @@ import {
 import usePager, { useQuery } from "../../../Hooks/Common/usePager";
 import useProducts from "../../../Hooks/Pages/Products/useProducts";
 import { renderProductRating, renderUnitsInStock } from "../../../Components/Common/CommonComponents";
+import { Icon } from "../../../Assets/Icons/IconsCollection";
 
 interface IProductsProps {}
 
@@ -166,7 +165,7 @@ const Products: FunctionComponent<IProductsProps> = ({}) => {
         <Divider orientation="horizontal" />
         {products.length <= 0 ? (
           <div className="flex text-7xl flex-col items-center justify-center gap-4 h-[70vh]">
-            <BoxIcon size="" />
+            <Icon icon="box" size="sm" />
             <p className="text-3xl">{t("productos-no-encontrados")}</p>
           </div>
         ) : (
@@ -193,9 +192,9 @@ const Products: FunctionComponent<IProductsProps> = ({}) => {
                           <img src={prod.img} className="w-[100%] h-auto bg-cover bg-center bg-no-repeat " />
                           <div className="flex flex-col gap-4 px-2">
                             <div className="flex flex-col gap-0">
-                              <p className=" text-xl">{prod.name}</p>
+                              <p className=" text-xl line-clamp-2">{prod.name}</p>
                               <div className="flex items-center gap-0 text-gray-500">
-                                {renderProductRating(prod.rating, 'sm')}
+                                {renderProductRating(prod.rating, 'sm', t)}
                               </div>
                               {renderUnitsInStock(prod.stock, t)}
                             </div>

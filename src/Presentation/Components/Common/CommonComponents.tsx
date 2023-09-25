@@ -1,32 +1,26 @@
 import { Button } from "@nextui-org/react";
 import { FunctionComponent, useState } from "react";
-import {
-  StarHalfFilledIcon,
-  StarFilledIcon,
-  StarEmptyIcon,
-  ArrowLeftIcon,
-  ArrowRightIcon,
-} from "../../Assets/Icons/IconsCollection";
+import { Icon } from "../../Assets/Icons/IconsCollection";
 
 export const renderProductRating = (
   rating: (number | null)[],
-  size: "xs" | "sm" | "base" | "lg" | "xl"
+  size: "xs" | "sm" | "base" | "lg" | "xl",
+  t: any
 ) => {
   return (
     <>
       {rating.map((rat) =>
         rat != null ? (
           String(rat).includes(".") ? (
-            <StarHalfFilledIcon size={size} color={"text-yellow-500"} />
+            <Icon icon="starHalfFilled"  size={size} color={"text-ideal-green"} />
           )  : (
-            <StarFilledIcon size={size} color={"text-yellow-500"} />
+            <Icon icon="starFilled"  size={size} color={"text-ideal-green"} />
           )
         ) : (
-          <StarEmptyIcon size={size} color={"text-yellow-500"} />
+          <Icon icon="starEmpty"  size={size} color={"text-ideal-green"} />
         )
       )}
-      <p className="ml-2 pb-[2px] text-lg ">
-        {"("}
+      <p className="ml-2 pb-[2px] text-base ">
         {rating.reduce((a, b) => {
           return Math.max(Number(a), Number(b));
         }, 0)}
@@ -35,7 +29,10 @@ export const renderProductRating = (
           .find((rat) => String(rat).includes("."))
           ?.toString()
           .replace("0", "")}
-        {")"}
+
+        {` ${t('estrellas').toLowerCase()}`}
+
+
       </p>
     </>
   );
@@ -87,10 +84,10 @@ export const ImagesSlider: FunctionComponent<{ images: string[] }> = ({
   const [imageIndex, setImageIndex] = useState<number>(0);
 
   return (
-    <div className="w-[95%] h-full flex flex-col gap-3">
+    <div className="w-full h-full flex flex-col gap-3">
       <div className="relative flex">
         <div
-          className="w-full h-[20em] tablet:h-[25em] laptop:h-[40em] rounded-xl bg-cover bg-center bg-no-repeat "
+          className="w-full h-[20em] tablet:h-[25em] laptop:h-[40em] rounded-xl bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${props.images[imageIndex]})` }}
         ></div>
         <div className="absolute w-full h-full flex items-center justify-between px-2">
@@ -98,7 +95,7 @@ export const ImagesSlider: FunctionComponent<{ images: string[] }> = ({
             isIconOnly
             className={` rounded-full bg-gray-100 dark:bg-gray-600 ${props.images.length <= 1? 'hidden':''}`}
             size="sm"
-            startContent={<ArrowLeftIcon size="sm" />}
+            startContent={<Icon icon="arrowLeft"  size="sm" />}
             onClick={() => {
               setImageIndex(
                 imageIndex <= 0
@@ -112,7 +109,7 @@ export const ImagesSlider: FunctionComponent<{ images: string[] }> = ({
             isIconOnly
             className={` rounded-full bg-gray-100 dark:bg-gray-600 ${props.images.length <= 1? 'hidden':''}`}
             size="sm"
-            startContent={<ArrowRightIcon size="sm" />}
+            startContent={<Icon icon="arrowRight"  size="sm" />}
             onClick={() => {
               setImageIndex(
                 imageIndex >= props.images.length - 1 ? 0 : imageIndex + 1
