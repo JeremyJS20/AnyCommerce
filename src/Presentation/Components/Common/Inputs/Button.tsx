@@ -29,7 +29,7 @@ const Btn: FunctionComponent<IBtnProps> = ({ ...props }) => {
         : type == "primary"
         ? "border border-none text-gray-100 bg-gray-800 hover:bg-gray-800 dark:hover:bg-gray-300 dark:text-gray-800 dark:bg-gray-100"
         : type == "secondary"
-        ? "border  border-gray-800 text-gray-900  bg-transparent hover:bg-gray-300 dark:hover:bg-gray-700 dark:border-gray-700 dark:text-gray-100 dark:bg-transparent"
+        ? "border  border-gray-800 text-gray-900  bg-transparent hover:bg-gray-200 dark:hover:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:bg-transparent"
         : type == "quaternary"
         ? "bg-ideal-green"
         : "bg-transparent"

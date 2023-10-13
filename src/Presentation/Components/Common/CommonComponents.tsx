@@ -41,7 +41,7 @@ export const renderProductRating = (
 export const renderProductPrice = (price: number) => (
   <>
     <p>$</p>
-    <p className="text-3xl tablet:text-4xl">{String(price).split(".")[0]}</p>
+    <p className="text-ihnerit">{String(price).split(".")[0]}</p>
     <p className="">
       .
       {String(price).split(".")[1] == undefined

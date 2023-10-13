@@ -11,15 +11,15 @@ export const DynamicFormInput = forwardRef(
         ...props
       }: {
         input: inputs;
-        values?: any;
-        setValues?: React.Dispatch<any>;
-        isInvalidInput?: any;
+        formValues?: any;
+        setFormValues?: React.Dispatch<any>;
+        invalidInputs?: any;
       },
       ref
     ) => {
       const { t } = useTranslation();
   
-      const { input, values, setValues, isInvalidInput } = props;
+      const { input, formValues, setFormValues, invalidInputs } = props;
   
       const [selectedCountry, setSelectedCountry] = useState<Iterable<string>>(
         new Set([])
@@ -57,10 +57,10 @@ export const DynamicFormInput = forwardRef(
   
       useEffect(() => {
         if (selectedCountryPhoneCodeValue == "") return;
-        if (setValues)
-          setValues({
+        if (setFormValues)
+          setFormValues({
             [input as string]: {
-              ...values[input as string],
+              ...formValues[input as string],
               prefix: selectedCountryPhoneCodeValue,
               countryAlpha2: selectedCountryValue,
               verified: false,
@@ -69,19 +69,20 @@ export const DynamicFormInput = forwardRef(
       }, [selectedCountryPhoneCodeValue]);
   
       useEffect(() => {
-        if (setValues)
-          setValues({
+        if (setFormValues)
+          setFormValues({
             [input as string]: input == "email" || input == "phone" ? {} : "",
           });
       }, []);
   
       useEffect(() => {
-        console.log(isInvalidInput);
-      }, [isInvalidInput]);
+        console.log(invalidInputs);
+      }, [invalidInputs]);
   
       return (
         <div className="flex items-center gap-2">
           <Input
+          isRequired
             classNames={{
               base: "",
               mainWrapper: "h-full",
@@ -101,11 +102,11 @@ export const DynamicFormInput = forwardRef(
                 ? "number"
                 : "text"
             }
-            isInvalid={isInvalidInput ? isInvalidInput[input as string] : false}
+           // isInvalid={isInvalidInput ? isInvalidInput[input as string] : false}
             errorMessage={
-              isInvalidInput
-                ? isInvalidInput[input as string]
-                  ? t(isInvalidInput.message)
+              invalidInputs
+                ? invalidInputs[input as string]
+                  ? t(invalidInputs.message)
                   : ""
                 : ""
             }
@@ -117,22 +118,22 @@ export const DynamicFormInput = forwardRef(
             }
             value={
               input == "email" || input == "phone"
-                ? values[input as string]?.value
-                : values[input as string]
+                ? formValues[input as string]?.value
+                : formValues[input as string]
             }
             onValueChange={(value) => {
-              if (!setValues) return;
+              if (!setFormValues) return;
               if (input == "phone") {
-                return setValues({
+                return setFormValues({
                   [input as string]: {
-                    ...values[input],
+                    ...formValues[input],
                     value: value,
                   },
                 });
               }
   
               if (input == "email") {
-                return setValues({
+                return setFormValues({
                   [input as string]: {
                     value: value,
                     verified: false,
@@ -140,7 +141,7 @@ export const DynamicFormInput = forwardRef(
                 });
               }
   
-              setValues({ [input as string]: value });
+              setFormValues({ [input as string]: value });
             }}
             startContent={
               <div

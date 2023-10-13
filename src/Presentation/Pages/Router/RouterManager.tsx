@@ -55,7 +55,26 @@ const RouterManager: React.FunctionComponent<IRouterManagerProps> = ({}) => {
                       </AsideMenu>
                     }
                   >
-                    <Route path={':childPage' || `:childPage${PrivateRoutes.ACCOUNTFILTERS}`} element={<AsideMenuContent />} />
+                    <Route path={":childPage"} element={<Outlet />}>
+                      <Route index element={<AsideMenuContent />} />
+
+                      <Route
+                        path={`${PrivateRoutes.ACCOUNTFILTERS}`}
+                        element={<AsideMenuContent />}
+                      />
+
+                      <Route
+                        path={`new`}
+                        element={<AsideMenuContent />}
+                      />
+                      <Route
+                        path={`:id`}
+                        element={<AsideMenuContent />}
+                      >
+                        <Route path="?:action" element={<AsideMenuContent />} />
+                        <Route path="transactions" element={<AsideMenuContent />} />
+                      </Route>
+                    </Route>
                   </Route>
 
                   <Route

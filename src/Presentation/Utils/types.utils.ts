@@ -1,3 +1,4 @@
+import { Dispatch, ReactNode } from "react";
 import { commonType } from "../Pages/PublicPages/Products/Products";
 
 export type cartProducts = {
@@ -83,8 +84,11 @@ export type listInfo = {
 export type addressInfo = {
   id: string;
   country: string,
+  countryName: string,
   state: string,
+  stateName: string,
   city: string,
+  cityName: string,
   postalCode: number,
   address: string,
   default: boolean
@@ -92,18 +96,45 @@ export type addressInfo = {
 
 export type paymentMethodInfo = {
   id: string;
-  type: "card" | "service";
+  type: "card";
   default: boolean;
   methodInfo: (
     methodTypeCardInfo
-    | methodTypeServiceInfo
   );
+} | {
+  id: string;
+  type: "service";
+  default: boolean;
+  methodInfo: (
+   methodTypeServiceInfo
+  );
+}
+
+export type transactionsInfo = {
+  id: string,
+  idMethod: string,
+  idOrder: string,
+  status: 'completed' | '',
+  date: Date,
+  cost: number,
+
+}
+
+export type paymentMethodInfo2 = {
+  id: string;
+  type: "card";
+  cardName: string,
+  cardNumber: string,
+  expirationDate: string,
+  securityCode: number,
+  default: boolean;
 };
 
 export type methodTypeCardInfo = {
-  company: "MasterCard" | "Visa";
+  company: "MasterCard" | "Visa" | "AmericanExpress" | "DiscoverCard";
   name?: string,
   ending: number;
+  expirationDate?: Date;
   dates: {
     expiration: Date;
   };
@@ -113,6 +144,125 @@ export type methodTypeServiceInfo = {
   name: string,
 }
 
-export type inputs = "name" | "lastName" | "email" | "phone" | "password" | undefined;
+export type inputs2 = "name" | "lastName" | "email" | "phone" | "password" | undefined;
 
 export type profileInfoKeys = "personalInfo" | "mainAddress" | "security";
+
+export type countriesType = {
+  id: number;
+  iso2: string;
+  name: string;
+};
+
+export type statesType = {
+  country_code: string;
+  country_id: number;
+  id: number;
+  iso2: string;
+  latitude: string;
+  longitude: string;
+  name: string;
+  type: any;
+};
+
+export type citiesType = {
+  id: number;
+  name: string;
+};
+
+export type inputs =
+ {
+      key: string;
+      text: string;
+      value?: any;
+      isRequired: boolean;
+      isVisible?: boolean;
+      type: "select";
+      placeholder: string;
+      inputOptions: {
+        items: any[];
+        onSelectionChange?: (options: {
+          value: any;
+          key: string;
+          selections: any;
+          setSelections: Dispatch<any>;
+          values: any;
+          setValues: Dispatch<any>;
+        }) => void;
+        renderValue?: (items: any) => JSX.Element;
+        itemsRender?: (item: any) => JSX.Element;
+      };
+    }
+  | {
+      key: string;
+      text: string;
+      value?: any;
+      isRequired: boolean;
+      isVisible?: boolean;
+      type: "selectWithInheritData";
+      placeholder: string;
+      dataInheritFrom: string;
+      dataInheritKey: string;
+      inputOptions: {
+        items: any[];
+        onSelectionChange?: (options: {
+          value: any;
+          key: string;
+          selections: any;
+          setSelections: Dispatch<any>;
+          values: any;
+          setValues: Dispatch<any>;
+        }) => void;
+        renderValue?: (items: any) => JSX.Element;
+        itemsRender?: (item: any) => JSX.Element;
+      };
+    }
+  | {
+      key: string;
+      text: string;
+      value?: any;
+      isRequired: boolean;
+      type: "text" | "number" | 'textarea' | "password";
+      isVisible?: boolean;
+      placeholder: string;
+      onValueChange?: (props: {key: string, value: any, state: any, setState: Dispatch<any>}) => void
+      width?: string
+      endContent?: ReactNode
+    }
+    | {
+      key: string;
+      text: string;
+      value: boolean;
+      isVisible?: boolean;
+      type: "check";
+    };
+export type addressKeyType = "country" | "state" | "city" | "postalCode" | "address" | "default";
+export type listKeyType = "name" | "visibility" | "description";
+
+export type ModalProps = {
+  type?: string,
+  visible: boolean;
+  title: string;
+  actionTitle: string;
+  msg?: string,
+  confirmBtnColor?: '!bg-red-600/60 !text-gray-100' | ''
+  itemId?: string
+  size?:
+    | "xs"
+    | "sm"
+    | "md"
+    | "lg"
+    | "xl"
+    | "2xl"
+    | "3xl"
+    | "4xl"
+    | "5xl"
+    | "full"
+    | undefined
+}
+
+
+export type modalHandleProps = {
+  setModalProps: (props: ModalProps) => void;
+  modalProps: ModalProps;
+};

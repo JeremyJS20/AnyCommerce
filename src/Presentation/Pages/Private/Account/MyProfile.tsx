@@ -1,13 +1,14 @@
 import { Button, Divider, Input, Tooltip } from "@nextui-org/react";
-import { FunctionComponent, useRef, useState } from "react";
+import { Dispatch, FunctionComponent, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import FormModal, {
   formModalHandleProps,
-} from "../../../Components/Common/Modals/FormModal.components.common";
+} from "../../../Components/Common/Modals/Form.modal.components.common";
 import { DynamicFormInput } from "../../../Components/Common/Inputs/DynamicFormInput.component.common";
 import { inputs, profileInfoKeys } from "../../../Utils/types.utils";
 import Btn from "../../../Components/Common/Inputs/Button";
 import { Icon } from "../../../Assets/Icons/IconsCollection";
+import { personalInfoSchema } from "../../../../Validation/Validators/personalInfo.validator";
 
 type IMyProfileProps = {};
 
@@ -63,7 +64,7 @@ const MyProfile: FunctionComponent<IMyProfileProps> = ({}) => {
             <div className="flex justify-between items-center">
               <h1 className=" font-semibold text-lg">{t(pf.toLowerCase())}</h1>
               <Btn
-                icon={<Icon icon="edit"  size="xs" />}
+                icon={<Icon icon="edit" size="xs" />}
                 text="editar"
                 aditionalClassnames={pf != "mainAddress" ? "hidden" : "hidden"}
                 onPress={() => {
@@ -101,7 +102,11 @@ const MyProfile: FunctionComponent<IMyProfileProps> = ({}) => {
                             size="sm"
                             className="!h-fit !w-fit !min-w-fit text-inherit cursor-default"
                             startContent={
-                              <Icon icon="check"  size="sm" color=" text-green-700" />
+                              <Icon
+                                icon="check"
+                                size="sm"
+                                color=" text-ideal-green"
+                              />
                             }
                           />
                         </Tooltip>
@@ -116,7 +121,7 @@ const MyProfile: FunctionComponent<IMyProfileProps> = ({}) => {
                             isIconOnly
                             size="sm"
                             className="!h-fit !w-fit !min-w-fit text-inherit"
-                            startContent={<Icon icon="question"  size="sm" />}
+                            startContent={<Icon icon="question" size="sm" />}
                           />
                         </Tooltip>
                       ))}
@@ -137,7 +142,7 @@ const MyProfile: FunctionComponent<IMyProfileProps> = ({}) => {
                 endContent={
                   pf != "mainAddress" ? (
                     <Btn
-                      icon={<Icon icon="edit"  size="sm" />}
+                      icon={<Icon icon="edit" size="sm" />}
                       text="editar"
                       onPress={() => {
                         formModalRef.current?.setModalProps({
@@ -156,7 +161,8 @@ const MyProfile: FunctionComponent<IMyProfileProps> = ({}) => {
                 size="md"
                 classNames={{
                   base: "!w-full tablet:!w-[47%] ",
-                  label: "mb-1 text-base text-default-500 font-bold cursor-text",
+                  label:
+                    "mb-1 text-base text-default-500 font-bold cursor-text",
                   input: "text-base cursor-default",
                   inputWrapper: "h-full !bg-transparent shadow-none",
                 }}
@@ -167,7 +173,52 @@ const MyProfile: FunctionComponent<IMyProfileProps> = ({}) => {
         </div>
       ))}
 
-      <FormModal ref={formModalRef}>
+      <FormModal
+        ref={formModalRef}
+        validatorFunction={(values: any, setIsInvalidInput: Dispatch<any>) => {
+          Object.keys(values).forEach(async (k) => {
+            let isInvalid: boolean;
+            let message = "";
+
+            if (k == "email") {
+              const validate = await personalInfoSchema
+                .partial()
+                .safeParseAsync({
+                  [k]: String(values[k].value),
+                });
+
+              isInvalid = !validate.success;
+              if (isInvalid)
+                message = (validate as any).error.format()[k]._errors[0];
+            } else if (k == "phone") {
+              if (!values[k].prefix || values[k].prefix == "") {
+                isInvalid = true;
+                if (isInvalid) message = "telefono-no-valido";
+              } else {
+                const validate = await personalInfoSchema.partial().safeParse({
+                  [k]: `${values[k].prefix}${values[k].value}`,
+                });
+                isInvalid = !validate.success;
+                if (isInvalid)
+                  message = (validate as any).error.format()[k]._errors[0];
+              }
+            } else {
+              const validate = await personalInfoSchema.partial().safeParse({
+                [k]: values[k],
+              });
+
+              isInvalid = !validate.success;
+              if (isInvalid)
+                message = (validate as any).error.format()[k]._errors[0];
+            }
+
+            setIsInvalidInput({
+              [k]: isInvalid,
+              message: message,
+            });
+          });
+        }}
+      >
         <DynamicFormInput input={inputToEdit} />
       </FormModal>
     </div>

@@ -235,7 +235,7 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
                 <Divider orientation="horizontal" className="" />
                 <div className="flex justify-between">
                   <div className="flex flex-row justify-center tablet:justify-start gap-2 ">
-                    <div className="flex gap-[2px]">
+                    <div className="flex gap-[2px] text-3xl">
                       {renderProductPrice(product.cost)}
                     </div>
 

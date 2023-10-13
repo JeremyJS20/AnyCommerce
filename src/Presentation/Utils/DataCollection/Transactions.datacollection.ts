@@ -1,53 +1,66 @@
-import { paymentMethodInfo } from "../types.utils";
+import { transactionsInfo } from "../types.utils";
 
-export const paymentMethodsCollection: paymentMethodInfo[] = [
+export const TransactionsCollection: transactionsInfo[] = [
   {
-    id: "64fbe6f10b2281825a1dc9a5",
-    type: 'card',
-    default: true,
-    methodInfo: {
-      company: 'MasterCard',
-      ending: 4581,
-      expirationDate: new Date(),
-      dates: {
-        expiration: new Date()
-      }
-    }
+    id: 'dsa47fa4f6f65saf',
+    idMethod: '64fbe6f10b2281825a1dc9a5',
+    idOrder: '46ag45a46we4fa6f4',
+    status: 'completed',
+    date: new Date(),
+    cost: 20.5
   },
   {
-    id: "64fbe6f19af14f0e9180fea4",
-    type: 'card',
-    default: false,
-    methodInfo: {
-      company: 'MasterCard',
-      ending: 1548,
-      expirationDate: new Date(),
-      dates: {
-        expiration: new Date()
-      }
-    }
-  },
-  {
-    id: "64fbe6f1ef395b61b6e36441",
-    type: 'card',
-    default: false,
-    methodInfo: {
-      company: 'Visa',
-      ending: 5854,
-      expirationDate: new Date(),
-      dates: {
-        expiration: new Date()
-      }
-    }
-  },
-  {
-    id: "64fbe6f1ef395b61b6e36441",
-    type: 'service',
-    default: false,
-    methodInfo: {
-      name: 'PayPal'
-    }
-  },
+    id: 'saf465a4sd65waf',
+    idMethod: '64fbe6f19af14f0e9180fea4',
+    idOrder: '46ag45a46we4fa6f4',
+    status: 'completed',
+    date: new Date(),
+    cost: 22.5
+  }
+  // {
+  //   id: "64fbe6f10b2281825a1dc9a5",
+  //   type: 'card',
+  //   default: true,
+  //   methodInfo: {
+  //     company: 'MasterCard',
+  //     ending: 4581,
+  //     dates: {
+  //       expiration: new Date()
+  //     }
+  //   }
+  // },
+  // {
+  //   id: "64fbe6f19af14f0e9180fea4",
+  //   type: 'card',
+  //   default: false,
+  //   methodInfo: {
+  //     company: 'MasterCard',
+  //     ending: 1548,
+  //     dates: {
+  //       expiration: new Date()
+  //     }
+  //   }
+  // },
+  // {
+  //   id: "64fbe6f1ef395b61b6e36441",
+  //   type: 'card',
+  //   default: false,
+  //   methodInfo: {
+  //     company: 'Visa',
+  //     ending: 5854,
+  //     dates: {
+  //       expiration: new Date()
+  //     }
+  //   }
+  // },
+  // {
+  //   id: "64fbe6f1ef395b61b6e36441",
+  //   type: 'service',
+  //   default: false,
+  //   methodInfo: {
+  //     name: 'PayPal'
+  //   }
+  // },
   // {
   //   id: "64fbe6f1cbf785c68a34f02c",
   //   amount: 4,

@@ -20,7 +20,10 @@ import {
 } from "../../../Hooks/Common/useFilterPanel2";
 import usePager, { useQuery } from "../../../Hooks/Common/usePager";
 import useProducts from "../../../Hooks/Pages/Products/useProducts";
-import { renderProductRating, renderUnitsInStock } from "../../../Components/Common/CommonComponents";
+import {
+  renderProductRating,
+  renderUnitsInStock,
+} from "../../../Components/Common/CommonComponents";
 import { Icon } from "../../../Assets/Icons/IconsCollection";
 
 interface IProductsProps {}
@@ -40,8 +43,6 @@ const Products: FunctionComponent<IProductsProps> = ({}) => {
 
   const [products, setProducts] = useState<productInfo[]>(ProductsCollection);
   const [products2, setProducts2] = useState<productInfo[]>(ProductsCollection);
-
-
 
   const { selectedFiltersFormatted, setSelectedFilters, FilterPanelComponent } =
     useFilterPanel({ filterCollection: ProductFiltersCollection });
@@ -189,12 +190,17 @@ const Products: FunctionComponent<IProductsProps> = ({}) => {
                     >
                       <div className="h-full flex flex-col justify-between gap-4 border-none text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 rounded-lg p-3">
                         <div className="flex flex-col gap-2">
-                          <img src={prod.img} className="w-[100%] h-auto bg-cover bg-center bg-no-repeat " />
+                          <img
+                            src={prod.img}
+                            className="w-[100%] h-auto bg-cover bg-center bg-no-repeat "
+                          />
                           <div className="flex flex-col gap-4 px-2">
                             <div className="flex flex-col gap-0">
-                              <p className=" text-xl line-clamp-2">{prod.name}</p>
+                              <p className=" text-xl line-clamp-2">
+                                {prod.name}
+                              </p>
                               <div className="flex items-center gap-0 text-gray-500">
-                                {renderProductRating(prod.rating, 'sm', t)}
+                                {renderProductRating(prod.rating, "sm", t)}
                               </div>
                               {renderUnitsInStock(prod.stock, t)}
                             </div>
@@ -213,19 +219,98 @@ const Products: FunctionComponent<IProductsProps> = ({}) => {
                                 : String(prod.cost).split(".")[1]}
                             </p>
                           </div>
+                          {/* <Btn
+                            size="md"
+                            type="quaternary"
+                            text="agregar-al-carrito"
+                            aditionalClassnames="text-gray-100 "
+                            onPress={
+                              () => {
+                                if (prod.stock <= 0) {
+                                  return toast.error(
+                                    t(
+                                      "existencia-de-producto-en-tienda-agotada"
+                                    )
+                                  );
+                                }
+
+                                const cartExists = JSON.parse(
+                                  String(localStorage.getItem("cart"))
+                                ) as cartProducts[] | null;
+
+                                if (cartExists != null) {
+                                  const prodInCart = cartExists.find(
+                                    (ce) => ce.productInfo.id == prod.id
+                                  );
+
+                                  if (
+                                    prodInCart != null ||
+                                    prodInCart != undefined
+                                  ) {
+                                    if (
+                                      prodInCart.cartInfo.amount !== prod.stock
+                                    ) {
+                                      prodInCart.cartInfo.amount += 1;
+                                    } else {
+                                      return toast.error(
+                                        t(
+                                          "existencia-de-producto-en-tienda-excedida"
+                                        )
+                                      );
+                                    }
+                                  } else {
+                                    const cartProduct: cartProducts = {
+                                      productInfo: prod,
+                                      cartInfo: {
+                                        amount: 1,
+                                      },
+                                    };
+                                    cartExists.push(cartProduct);
+                                  }
+                                  setCart(cartExists);
+                                } else {
+                                  const cartProducts: cartProducts[] = [
+                                    {
+                                      productInfo: prod,
+                                      cartInfo: {
+                                        amount: 1,
+                                      },
+                                    },
+                                  ];
+                                  setCart(cartProducts);
+                                }
+
+                                toast.success(
+                                  t("producto-agredado-a-carrito", {
+                                    action: {
+                                      label: "Undo",
+                                      onClick: () => console.log("Undo"),
+                                    },
+                                  })
+                                );
+                              }
+                              // props.cartRef.current?.setCollapseCart(true)
+                            }
+                          /> */}
                           <Button
                             size="md"
                             radius="sm"
                             variant="bordered"
-                            className={`border border-none text-gray-100 bg-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 dark:text-gray-800 dark:bg-gray-100 ${prod.stock <= 0? '!bg-gray-900/80 dark:!bg-gray-100/80':''}`}
+                            className={`border border-none text-gray-100 bg-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 dark:text-gray-800 dark:bg-gray-100 ${
+                              prod.stock <= 0
+                                ? "!bg-gray-900/80 dark:!bg-gray-100/80"
+                                : ""
+                            }`}
                             disabled={prod.stock <= 0}
                             onClick={(e) => {
                               e.preventDefault();
 
-                              if(prod.stock <= 0){
-                                return toast.error(t('existencia-de-producto-en-tienda-agotada'))
+                              if (prod.stock <= 0) {
+                                return toast.error(
+                                  t("existencia-de-producto-en-tienda-agotada")
+                                );
                               }
-                            
+
                               const cartExists = JSON.parse(
                                 String(localStorage.getItem("cart"))
                               ) as cartProducts[] | null;

@@ -1,0 +1,34 @@
+[
+    {
+        "key": "mastercard",
+        "text": "MasterCard",
+        "values": [
+            "2221-2720",
+            "51-55"
+        ]
+    },
+    {
+        "key": "visa",
+        "text": "Visa",
+        "values": [
+            "4-"
+        ]
+    },
+    {
+        "key": "americanexpress",
+        "text": "AmericanExpress",
+        "values": [
+            "34-",
+            "37-"
+        ]
+    },
+    {
+        "key": "discovercard",
+        "text": "DiscoverCard",
+        "values": [
+            "6011-",
+            "644-649",
+            "65-"
+        ]
+    }
+]

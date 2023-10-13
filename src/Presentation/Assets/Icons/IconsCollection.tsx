@@ -48,7 +48,10 @@ const icons:any = {
     sliders: 'fa-solid fa-sliders',
     check: 'fa-solid fa-circle-check',
     question: 'fa-solid fa-circle-question',
-    address: 'fa-solid fa-map-location-dot'
+    address: 'fa-solid fa-map-location-dot',
+    book: 'fa-solid fa-book',
+    circleArrow: 'fa-solid fa-clock-rotate-left',
+
 };
 
 export const Icon: FunctionComponent<{icon: string, size: 'xs'|'sm'|'md'|'base'|'lg'|'xl'|'2xl'|'4xl'|'6xl', color?: string}> = ({ ...props }) => {
