@@ -1,17 +1,18 @@
-import { Divider, Link } from "@nextui-org/react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Divider } from "@nextui-org/react";
+import { Outlet, useLocation } from "react-router-dom";
 
-import { useTranslation } from "react-i18next";
 import { PrivateRoutes } from "../../Utils/routermanager.routes.utils";
 import { useEffect } from "react";
 import { Icon } from "../../Assets/Icons/IconsCollection";
+import { Link2 } from "./Inputs/Link";
+import { useNavigator, useTranslator } from "../../Hooks/Common/useCommon";
 
 interface IAsideMenuProps {}
 
 const AsideMenu: React.FunctionComponent<IAsideMenuProps> = ({}) => {
-  const { t } = useTranslation();
+  const translator = useTranslator();
   const location = useLocation();
-  const navigate = useNavigate();
+  const navigator = useNavigator();
 
   const menuItems = [
     {
@@ -19,42 +20,42 @@ const AsideMenu: React.FunctionComponent<IAsideMenuProps> = ({}) => {
       parentPage: "account",
       text: "perfil",
       route: "myprofile",
-      icon: <Icon icon="user"  size="lg" />,
+      icon: <Icon icon="user" size="lg" />,
     },
     {
       key: "menuitem7",
       parentPage: "account",
       text: "direcciones",
       route: "myaddresses",
-      icon: <Icon icon="address"  size="lg" />,
+      icon: <Icon icon="address" size="lg" />,
     },
     {
       key: "menuitem1",
       parentPage: "account",
       text: "pedidos",
       route: "myorders",
-      icon: <Icon icon="orders"  size="lg" />,
+      icon: <Icon icon="orders" size="lg" />,
     },
     {
       key: "menuitem2",
       parentPage: "account",
       text: "compras",
       route: "mypurchases",
-      icon: <Icon icon="cart"  size="lg" />,
+      icon: <Icon icon="cart" size="lg" />,
     },
     {
       key: "menuitem3",
       parentPage: "account",
       text: "listas",
       route: "mylists",
-      icon: <Icon icon="list"  size="lg" />,
+      icon: <Icon icon="list" size="lg" />,
     },
     {
       key: "menuitem4",
       parentPage: "account",
       text: "metodos-de-pago",
       route: "mypaymentmethods",
-      icon: <Icon icon="money"  size="lg" />,
+      icon: <Icon icon="money" size="lg" />,
     },
     // {
     //   key: "menuitem5",
@@ -68,7 +69,7 @@ const AsideMenu: React.FunctionComponent<IAsideMenuProps> = ({}) => {
       parentPage: "stores",
       text: "dashboard",
       route: "mypaymentmethods",
-      icon: <Icon icon="money"  size="lg" />,
+      icon: <Icon icon="money" size="lg" />,
     },
   ];
 
@@ -88,22 +89,23 @@ const AsideMenu: React.FunctionComponent<IAsideMenuProps> = ({}) => {
               .filter((mi) => location.pathname.includes(mi.parentPage))
               .map((mi) => (
                 <li key={mi.key} className="mb-1">
-                  <Link
-                    href={`${PrivateRoutes.ACCOUNT}/${mi.route}`}
-                    className={`flex items-center gap-3 rounded-xl p-3 hover:bg-ideal-green hover:text-gray-100 ${
+                  <Link2
+                    //href={`${PrivateRoutes.ACCOUNT}/${mi.route}`}
+                    text={
+                      <>
+                        {mi.icon}
+                        <p className={` hidden tablet:inline`}>{translator({text: mi.text})}</p>
+                      </>
+                    }
+                    additionalClassName={`flex items-center gap-3 rounded-xl p-3 hover:bg-ideal-green hover:text-gray-100 ${
                       location.pathname.includes(mi.route)
                         ? "text-gray-100 bg-ideal-green"
                         : "text-default-500"
                     }`}
-                    as={"a"}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate(`${PrivateRoutes.ACCOUNT}/${mi.route}`);
+                    action={() => {
+                      navigator({route: `${PrivateRoutes.ACCOUNT}/${mi.route}`, title: mi.route});
                     }}
-                  >
-                    {mi.icon}
-                    <p className={` hidden tablet:inline`}>{t(mi.text)}</p>
-                  </Link>
+                  />
                 </li>
               ))}
           </ul>

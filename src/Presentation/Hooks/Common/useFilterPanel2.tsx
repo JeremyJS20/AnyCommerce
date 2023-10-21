@@ -15,15 +15,14 @@ import {
   cloneElement,
   FunctionComponent,
 } from "react";
-import { useTranslation } from "react-i18next";
-import { commonType } from "../../Pages/PublicPages/Products/Products";
 import {
   FiltersCollectionType,
   SortCollectionType,
 } from "../../Utils/DataCollection/Products.datacollection.filter.utils";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useQuery } from "./usePager";
+import { useLocation } from "react-router-dom";
 import { Icon } from "../../Assets/Icons/IconsCollection";
+import { useNavigator, useQuery, useTranslator } from "./useCommon";
+import { commonType } from "../../Utils/types.utils";
 
 interface IFilterPanelProps {
   filterCollection: FiltersCollectionType[];
@@ -37,7 +36,7 @@ type IRendersProps = {
 };
 
 export const useFilterPanel = ({ ...props }: IFilterPanelProps) => {
-  const { t } = useTranslation();
+  const translator = useTranslator();
   const query = useQuery();
 
   const [selectedFilters, setSelectedFilters] = useState<Iterable<string>>(
@@ -66,13 +65,6 @@ export const useFilterPanel = ({ ...props }: IFilterPanelProps) => {
     }
   }, [query]);
 
-  // useEffect(() => props.setSelectedFilters(selectedValue), [selectedValue]);
-
-  // useEffect(() => {
-  //   if (selectedValue.toString() != props.getFilters().toString())
-  //     setSelectedFilters(props.getFilters());
-  // }, [props.getFilters()]);
-
   return {
     selectedFilters: selectedFilters,
     selectedFiltersFormatted: selectedValue,
@@ -90,10 +82,10 @@ export const useFilterPanel = ({ ...props }: IFilterPanelProps) => {
             className="bg-transparent "
           >
             <div className="flex items-end">
-              <Icon icon="filter" size="lg" />
+              <Icon icon="filter" size="lg" color="text-gray-900 dark:text-gray-100"/>
               <p className="text-sm text-end h-4 ml-[-5px] pt-[2px]">+</p>
             </div>
-            <p className={`text-sm `}>{t("agregar-filtro")}</p>
+            <p className={`text-sm `}>{translator({text: 'agregar-filtro'})}</p>
           </Button>
         </DropdownTrigger>
         <DropdownMenu
@@ -110,7 +102,7 @@ export const useFilterPanel = ({ ...props }: IFilterPanelProps) => {
         >
           <DropdownSection
             aria-aria-labelledby="ddd"
-            title={t("filtros")}
+            title={translator({text: 'filtros'})}
             classNames={{ heading: "text-sm" }}
           >
             {props.filterCollection.map((fc: any) => (
@@ -119,7 +111,7 @@ export const useFilterPanel = ({ ...props }: IFilterPanelProps) => {
                 className={`text-gray-800 hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100 `}
                 startContent={fc.icon}
               >
-                {t(fc.text)}
+                {translator({text: fc.text})}
               </DropdownItem>
             ))}
           </DropdownSection>
@@ -136,7 +128,7 @@ export const useFilterPanelBtns = ({
   filterCollection: FiltersCollectionType[];
 }) => {
   const location = useLocation();
-  const navigate = useNavigate();
+  const navigator = useNavigator();
   const query = useQuery();
 
   const [filterValues, setFilterValues] = useState<any>({});
@@ -151,9 +143,9 @@ export const useFilterPanelBtns = ({
     const querys = location.search.split('&').filter(r => !(r.includes('filters')));
 
     const actualRoute = `${location.pathname}${querys[0]}`;
-    //${querys[0].split('=')[0]}=${1}
-    if(Object.keys(filterValues).length > 0) navigate(`${actualRoute}&filters=${JSON.stringify(filterValues)}${querys[1]? `&${querys[1]}`: ''}`)
-    else navigate(`${actualRoute}${querys[1]? `&${querys[1]}`: ''}`)
+
+    if(Object.keys(filterValues).length > 0) navigator({route: `${actualRoute}&filters=${JSON.stringify(filterValues)}${querys[1]? `&${querys[1]}`: ''}`, title: String(localStorage.getItem('pageTitle'))})
+    else navigator({route: `${actualRoute}${querys[1]? `&${querys[1]}`: ''}`, title: String(localStorage.getItem('pageTitle'))})
   } ,[filterValues]);
 
   return {
@@ -278,8 +270,8 @@ export const useSortBtn = ({
 }: {
   sortCollection: SortCollectionType[];
 }) => {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
+  const translator = useTranslator();
+  const navigator = useNavigator();
   const query = useQuery();
 
   const [selectedKey, setSelectedKey] = useState<Iterable<string>>(new Set([]));
@@ -294,7 +286,7 @@ export const useSortBtn = ({
     const actualRoute = `${location.pathname}${querys.toString().replace(',', '&')}`;
     
     if(activeSorter){      
-      navigate(`${actualRoute}&sort=${activeSorter.key}`);
+      navigator({route: `${actualRoute}&sort=${activeSorter.key}`});
     }
   }, [sortValue]);
 
@@ -326,8 +318,8 @@ export const useSortBtn = ({
             startContent={<Icon icon="sort" size="base" color="text-gray-900 dark:text-gray-100"/>}
           >
             <p className={`text-md text-gray-900 dark:text-gray-100`}>
-              {t("ordenar")}
-              <span className="font-bold">{sortValue? ` ${t(String(props.sortCollection.find(sc => sc.key == sortValue)?.text)).toLowerCase()} ${String(props.sortCollection.find(sc => sc.key == sortValue)?.value).toLowerCase()}`: ''}</span>
+              {translator({text: 'ordenar'})}
+              <span className="font-bold">{sortValue? ` ${translator({text: String(props.sortCollection.find(sc => sc.key == sortValue)?.text)}).toLowerCase()} ${String(props.sortCollection.find(sc => sc.key == sortValue)?.value).toLowerCase()}`: ''}</span>
             </p>
           </Button>
         </DropdownTrigger>
@@ -344,7 +336,7 @@ export const useSortBtn = ({
           onSelectionChange={setSelectedKey as any}
         >
           <DropdownSection
-            title={t("ordenar-por")}
+            title={translator({text: 'ordenar-por'})}
             aria-aria-labelledby="ddd"
             classNames={{ heading: "text-sm" }}
           >
@@ -354,10 +346,10 @@ export const useSortBtn = ({
                 className={`text-gray-800 hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100 `}
                 //startContent={filter.icon}
               >
-                {`${t(sc.text)}: ${
+                {`${translator({text: sc.text})}: ${
                   sc.text2
-                    ? t(sc.text2).toLowerCase()
-                    : t(sc.value).toLowerCase()
+                    ? translator({text: sc.text2}).toLowerCase()
+                    : translator({text: sc.value}).toLowerCase()
                 }`}
               </DropdownItem>
             ))}
@@ -371,7 +363,7 @@ export const useSortBtn = ({
 const RenderDropDown: FunctionComponent<IRendersProps> = ({
   ...props
 }: IRendersProps) => {
-  const { t } = useTranslation();
+  const translator = useTranslator();
 
   const [filterValues, setFilterValues] = useState<any>(
     props.getSelectedFilterValues()[props.keyFilter]
@@ -468,17 +460,17 @@ const RenderDropDown: FunctionComponent<IRendersProps> = ({
             startContent={props.filter.icon}
           >
             <p className={`text-md text-gray-900 dark:text-gray-100`}>
-              {t(props.filter.text)}:{" "}
+              {translator({text: props.filter.text})}:{" "}
               <span className="font-bold">
                 {(props.filter.inputOptions?.items as commonType[]).find(
                   (f) => f.key == selectedValue2
                 )
-                  ? t(
-                      String(
+                  ? translator(
+                      {text:String(
                         (props.filter.inputOptions?.items as commonType[]).find(
                           (f) => f.key == selectedValue2
                         )?.text
-                      )
+                      )}
                     )
                   : ""}
               </span>
@@ -502,13 +494,9 @@ const RenderDropDown: FunctionComponent<IRendersProps> = ({
           <DropdownItem
             key={f.key}
             className={`text-gray-800 hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100 `}
-            //onClick={() => navigate(feat.route)}
-            //startContent={filter.icon}
           >
-            {`${t(f.text)} `}
-            {/* ${
-              f.text.includes("cinco") ? t("o-mas").toLowerCase() : ""
-            } */}
+            {`${translator({text: f.text})} `}
+
           </DropdownItem>
         ))}
       </DropdownMenu>
@@ -519,7 +507,7 @@ const RenderDropDown: FunctionComponent<IRendersProps> = ({
 const RenderRange: FunctionComponent<IRendersProps> = ({
   ...props
 }: IRendersProps) => {
-  const { t } = useTranslation();
+  const translator = useTranslator();
 
   const [filterValues, setFilterValues] = useState<any>(
     props.getSelectedFilterValues()[props.keyFilter]
@@ -560,12 +548,6 @@ const RenderRange: FunctionComponent<IRendersProps> = ({
               currentFilters = { ...currentFilters, [cf]: undefined };
           });
 
-          // setFilterValues({
-          //     price: {
-          //       min: 0,
-          //       max: 0,
-          //     }
-          // });
           props.setSelectedFiltersValues(currentFilters);
         }}
       >
@@ -575,11 +557,11 @@ const RenderRange: FunctionComponent<IRendersProps> = ({
             radius="sm"
             variant="bordered"
             className="border border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
-            endContent={<Icon icon="arrowDown" size="xs" />}
+            endContent={<Icon icon="arrowDown" size="xs" color="text-gray-900 dark:text-gray-100" />}
             startContent={props.filter.icon}
           >
             <p className={`text-md text-gray-900 dark:text-gray-100`}>
-              {t(props.filter.text)}:{" "}
+              {translator({text: props.filter.text})}:{" "}
               <span className="font-bold">
                 {Object.values(filterValues[props.keyFilter]).some(
                   (p: any) => p > 0
@@ -605,8 +587,6 @@ const RenderRange: FunctionComponent<IRendersProps> = ({
       >
         <DropdownItem
           className={`text-gray-800 hover:!bg-gray-200 dark:hover:!bg-gray-700 dark:text-gray-100 cursor-default !h-[500px]`}
-          //onClick={() => navigate(feat.route)}
-          //startContent={filter.icon}
           isReadOnly
         >
           <div className="flex flex-col gap-2">
@@ -624,7 +604,7 @@ const RenderRange: FunctionComponent<IRendersProps> = ({
                 label="Min"
                 maxLength={2}
                 min={0}
-                startContent={<Icon icon="dollarSign" size="xs" />}
+                startContent={<Icon icon="dollarSign" size="xs" color="text-gray-900 dark:text-gray-100"/>}
                 value={String(filterValues[props.keyFilter]?.min)}
                 onValueChange={(value) => {
                   const x = {
@@ -634,7 +614,7 @@ const RenderRange: FunctionComponent<IRendersProps> = ({
                       min: Number(value),
                     },
                   };
-                  //if (x.price.min > x.price.max) x.price.max = x.price.min * 2;
+
                   x[props.keyFilter].max = x[props.keyFilter].min * 2;
 
                   props.setSelectedFiltersValues(x);
@@ -653,7 +633,7 @@ const RenderRange: FunctionComponent<IRendersProps> = ({
                 label="Max"
                 maxLength={2}
                 min={0}
-                startContent={<Icon icon="dollarSign" size="xs" />}
+                startContent={<Icon icon="dollarSign" size="xs" color="text-gray-900 dark:text-gray-100" />}
                 value={String(filterValues[props.keyFilter]?.max)}
                 onValueChange={(value) => {
                   //if (Number(value) < filterValues.price.min) return;
@@ -684,7 +664,7 @@ const RenderRange: FunctionComponent<IRendersProps> = ({
 const RenderSearcher: FunctionComponent<IRendersProps> = ({
   ...props
 }: IRendersProps) => {
-  const { t } = useTranslation();
+  const translator = useTranslator();
 
   const [filterValues, setFilterValues] = useState<any>(
     props.getSelectedFilterValues()[props.keyFilter]
@@ -709,10 +689,10 @@ const RenderSearcher: FunctionComponent<IRendersProps> = ({
       }}
       size="md"
       type="text"
-      startContent={<Icon icon="search" size="sm" />}
+      startContent={<Icon icon="search" size="sm" color="text-gray-900 dark:text-gray-100"/>}
       value={filterValues.search}
       width={50}
-      placeholder={t("escribe-algo")}
+      placeholder={translator({text: "escribe-algo"})}
       onValueChange={(value) =>
         setFilterValues({ ...filterValues, search: value })
       }
@@ -730,7 +710,7 @@ const RenderSearcher: FunctionComponent<IRendersProps> = ({
             props.setSelectedFiltersValues(currentFilters);
           }}
         >
-          <Icon icon="x" size="xs" />
+          <Icon icon="x" size="xs" color="text-gray-900 dark:text-gray-100"/>
         </div>
       }
     />

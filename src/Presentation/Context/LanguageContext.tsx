@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useCallback, useEffect, useState } from "react";
+import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import i18n from "../Utils/Internationalization/i18n.internationalization.utils";
 
 const defaultValue = {

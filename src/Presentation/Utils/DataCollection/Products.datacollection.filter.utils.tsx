@@ -27,21 +27,21 @@ export const ProductFiltersCollection:FiltersCollectionType[] = [
     key: "search",
     text: "buscador",
     placeNumber: 1,
-    icon: <Icon icon="search" size={"base"} />,
+    icon: <Icon icon="search" size={"base"} color="text-gray-900 dark:text-gray-100"/>,
     inputType: "search",
   },
   {
     key: "price",
     text: "precio",
     placeNumber: 2,
-    icon: <Icon icon="dollarSign" size={"base"} />,
+    icon: <Icon icon="dollarSign" size={"base"} color="text-gray-900 dark:text-gray-100"/>,
     inputType: "range",
   },
   {
     key: "rating",
     text: "calificacion",
     placeNumber: 3,
-    icon: <Icon icon="starFilled" size={"base"} />,
+    icon: <Icon icon="starFilled" size={"base"} color="text-gray-900 dark:text-gray-100"/>,
     inputType: "dropdown",
     inputOptions: {
       items: [
@@ -77,7 +77,7 @@ export const ProductFiltersCollection:FiltersCollectionType[] = [
     key: "category",
     text: "categoria",
     placeNumber: 4,
-    icon: <Icon icon="list" size={"base"} />,
+    icon: <Icon icon="list" size={"base"} color="text-gray-900 dark:text-gray-100"/>,
     inputType: "dropdown",
     inputOptions: {
       items: [

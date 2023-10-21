@@ -1,19 +1,19 @@
 import { Button, Divider, Input, Tooltip } from "@nextui-org/react";
 import { Dispatch, FunctionComponent, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
 import FormModal, {
-  formModalHandleProps,
+
 } from "../../../Components/Common/Modals/Form.modal.components.common";
 import { DynamicFormInput } from "../../../Components/Common/Inputs/DynamicFormInput.component.common";
-import { inputs, profileInfoKeys } from "../../../Utils/types.utils";
+import { modalHandleProps, profileInfoKeys } from "../../../Utils/types.utils";
 import Btn from "../../../Components/Common/Inputs/Button";
 import { Icon } from "../../../Assets/Icons/IconsCollection";
 import { personalInfoSchema } from "../../../../Validation/Validators/personalInfo.validator";
+import { useTranslator } from "../../../Hooks/Common/useCommon";
 
 type IMyProfileProps = {};
 
 const MyProfile: FunctionComponent<IMyProfileProps> = ({}) => {
-  const { t } = useTranslation();
+  const translator = useTranslator();
 
   const [profileInfo] = useState<any>({
     personalInfo: {
@@ -42,9 +42,9 @@ const MyProfile: FunctionComponent<IMyProfileProps> = ({}) => {
     },
   });
 
-  const [inputToEdit, setInputToEdit] = useState<inputs>();
+  const [inputToEdit, setInputToEdit] = useState<string>('');
 
-  const formModalRef = useRef<formModalHandleProps>();
+  const formModalRef = useRef<modalHandleProps>();
 
   return (
     <div className="flex gap-10 flex-col">
@@ -62,7 +62,7 @@ const MyProfile: FunctionComponent<IMyProfileProps> = ({}) => {
         <div key={pf} className="flex flex-col gap-5">
           <div className="flex flex-col gap-2">
             <div className="flex justify-between items-center">
-              <h1 className=" font-semibold text-lg">{t(pf.toLowerCase())}</h1>
+              <h1 className=" font-semibold text-lg">{translator({text: pf.toLowerCase()})}</h1>
               <Btn
                 icon={<Icon icon="edit" size="xs" />}
                 text="editar"
@@ -86,7 +86,7 @@ const MyProfile: FunctionComponent<IMyProfileProps> = ({}) => {
                 label={
                   <p className="flex items-center gap-2">
                     <span className="text-gray-900 dark:text-gray-100">
-                      {`${t(pfck.toLowerCase())}:`}{" "}
+                      {`${translator({text: pfck.toLowerCase()})}:`}{" "}
                     </span>
                     {typeof profileInfo[pf as profileInfoKeys][pfck] ==
                       "object" &&
@@ -95,16 +95,16 @@ const MyProfile: FunctionComponent<IMyProfileProps> = ({}) => {
                           className="bg-gray-900 dark:bg-gray-100 text-gray-100 dark:text-gray-900"
                           placement="right"
                           showArrow
-                          content={t("verificado")}
+                          content={translator({text: 'verificado'})}
                         >
-                          <Button
-                            isIconOnly
+                          <Btn
+                            type="onlyIcon"
                             size="sm"
-                            className="!h-fit !w-fit !min-w-fit text-inherit cursor-default"
-                            startContent={
+                            additionalClassName="!h-fit !w-fit !min-w-fit text-inherit cursor-default"
+                            icon={
                               <Icon
                                 icon="check"
-                                size="sm"
+                                size="xs"
                                 color=" text-ideal-green"
                               />
                             }
@@ -115,7 +115,7 @@ const MyProfile: FunctionComponent<IMyProfileProps> = ({}) => {
                           className="bg-gray-900 dark:bg-gray-100 text-gray-100 dark:text-gray-900"
                           placement="right"
                           showArrow
-                          content={t("necesita-verificacion")}
+                          content={translator({text: 'necesita-verificacion'})}
                         >
                           <Button
                             isIconOnly

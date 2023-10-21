@@ -1,5 +1,10 @@
 import { Dispatch, ReactNode } from "react";
-import { commonType } from "../Pages/PublicPages/Products/Products";
+
+export type commonType = {
+  key: string;
+  text: string;
+  value: any;
+};
 
 export type cartProducts = {
   productInfo: productInfo;
@@ -189,7 +194,7 @@ export type inputs =
           values: any;
           setValues: Dispatch<any>;
         }) => void;
-        renderValue?: (items: any) => JSX.Element;
+        renderValue?: (items: any) => ReactNode;
         itemsRender?: (item: any) => JSX.Element;
       };
     }
@@ -213,7 +218,7 @@ export type inputs =
           values: any;
           setValues: Dispatch<any>;
         }) => void;
-        renderValue?: (items: any) => JSX.Element;
+        renderValue?: (items: any) => ReactNode;
         itemsRender?: (item: any) => JSX.Element;
       };
     }
@@ -261,8 +266,22 @@ export type ModalProps = {
     | undefined
 }
 
-
 export type modalHandleProps = {
   setModalProps: (props: ModalProps) => void;
   modalProps: ModalProps;
+};
+
+export type commonTypeRoute = {
+  key: string,
+  text: string,
+  route?: string,
+  current: boolean
+}
+
+export type pagerOptionsType = {
+  pages: number[];
+  currentPage: number;
+  starting: number;
+  take: number;
+  pagesAmount: number;
 };

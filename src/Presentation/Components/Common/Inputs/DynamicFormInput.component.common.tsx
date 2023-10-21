@@ -1,23 +1,21 @@
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, forwardRef } from "@nextui-org/react";
-import { useState, useMemo, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { inputs } from "../../../Utils/types.utils";
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input } from "@nextui-org/react";
+import { useState, useMemo, useEffect, forwardRef } from "react";
 import countries from "../../../Utils/DataCollection/countries.json";
 import { Icon } from "../../../Assets/Icons/IconsCollection";
+import { useTranslator } from "../../../Hooks/Common/useCommon";
 
 export const DynamicFormInput = forwardRef(
     (
       {
         ...props
       }: {
-        input: inputs;
+        input: string;
         formValues?: any;
         setFormValues?: React.Dispatch<any>;
         invalidInputs?: any;
-      },
-      ref
+      }, ref
     ) => {
-      const { t } = useTranslation();
+      const translator = useTranslator();
   
       const { input, formValues, setFormValues, invalidInputs } = props;
   
@@ -92,8 +90,8 @@ export const DynamicFormInput = forwardRef(
                 "h-full border border-gray-700 !bg-transparent text-default-500 dark:border-gray-700 hover:!bg-gray-200 dark:hover:!bg-gray-700 dark:!bg-gray-800",
             }}
             name={input}
-            label={`${t(`${input?.toLowerCase()}`)}:`}
-            placeholder={t(`escribe-${input?.toLowerCase()}`)}
+            label={`${translator({text: `${input?.toLowerCase()}`})}:`}
+            placeholder={translator({text: `escribe-${input?.toLowerCase()}`})}
             size="lg"
             type={
               input == "email" || input == "password"
@@ -106,14 +104,14 @@ export const DynamicFormInput = forwardRef(
             errorMessage={
               invalidInputs
                 ? invalidInputs[input as string]
-                  ? t(invalidInputs.message)
+                  ? translator({text: invalidInputs.message})
                   : ""
                 : ""
             }
             labelPlacement="outside"
             description={
               input == "email" || input == "phone" || input == "password"
-                ? t(`edit-${input.toLowerCase()}-description`)
+                ? translator({text: `edit-${input.toLowerCase()}-description`})
                 : ""
             }
             value={

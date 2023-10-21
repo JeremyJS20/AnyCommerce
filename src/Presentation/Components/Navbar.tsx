@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
   PrivateRoutes,
   PublicRoutes,
@@ -8,7 +8,6 @@ import {
   NavbarContent,
   NavbarItem,
   Button,
-  Link,
   Input,
   Dropdown,
   DropdownItem,
@@ -17,7 +16,6 @@ import {
   Badge,
   DropdownSection,
 } from "@nextui-org/react";
-import { useTranslation } from "react-i18next";
 import { ThemeContext, themeVerifier } from "../Context/ThemeContext";
 import {
   Dispatch,
@@ -26,21 +24,21 @@ import {
   forwardRef,
   useCallback,
   useContext,
-  useEffect,
   useImperativeHandle,
   useRef,
-  useState,
 } from "react";
 import { LanguageContext, changeLanguage } from "../Context/LanguageContext";
 import {
-  anyCommerceIconDark,
   anyCommerceIconLight,
 } from "../Assets/Img/ImgCollection";
 import { CartContext } from "../Context/CartContext";
 import Btn from "./Common/Inputs/Button";
-import Cart from "./Cart";
+import Cart, { cartProps } from "./Cart";
 import { Icon } from "../Assets/Icons/IconsCollection";
 import DropDw, { dropDownItemType } from "./Common/Inputs/Dropdown";
+import { useNavigator, useTranslator } from "../Hooks/Common/useCommon";
+import { Link2 } from "./Common/Inputs/Link";
+import { MobileNavBar } from "./Common/MobileNavBar";
 
 interface INavbarProps {}
 
@@ -51,7 +49,7 @@ const Navbar: FunctionComponent<INavbarProps> = ({}) => {
     setCollapseMobileMenu: Dispatch<boolean>;
   }>();
   const mainNavBarRef = useRef<{}>();
-  const cartRef = useRef<{ setCollapseCart: Dispatch<boolean> }>();
+  const cartRef = useRef<cartProps>();
 
   if (location.pathname.includes(PublicRoutes.SIGNIN)) return <></>;
 
@@ -74,12 +72,12 @@ const MainNavBar = forwardRef(
       ...props
     }: {
       mobileNavBarRef: MutableRefObject<any>;
-      cartRef: MutableRefObject<any>;
+      cartRef: MutableRefObject<cartProps | undefined>;
     },
     ref
   ) => {
-    const { t } = useTranslation();
-    const navigate = useNavigate();
+    const translator = useTranslator();
+    const navigator = useNavigator();
 
     const { theme, setTheme } = useContext(ThemeContext);
     const { locale } = useContext(LanguageContext);
@@ -106,16 +104,16 @@ const MainNavBar = forwardRef(
         text: "productos",
         description: "productos-descripcion",
         type: "normal",
-        onPress: () => navigate(PublicRoutes.PRODUCTS),
-        //route: PublicRoutes.PRODUCTS,
+        onPress: () =>
+          !location.pathname.includes(PublicRoutes.PRODUCTS) && navigator({ route: PublicRoutes.PRODUCTS, title: "productos" }),
       },
       {
         key: "feature1",
         text: "tiendas",
         description: "tiendas-descripcion",
         type: "normal",
-        onPress: () => navigate(PublicRoutes.STORES),
-        //route: PublicRoutes.STORES,
+        onPress: () =>
+        !location.pathname.includes(PublicRoutes.STORES) && navigator({ route: PublicRoutes.STORES, title: "tiendas" }),
       },
     ];
 
@@ -138,42 +136,38 @@ const MainNavBar = forwardRef(
         className="py-0 h-14 bg-ideal-green text-gray-100 relative"
         maxWidth="2xl"
         //isBordered
-        
       >
         <NavbarContent className=" gap-6 items-center" justify="start">
           <NavbarItem className="flex laptop:hidden">
-            <Button
-              isIconOnly
-              size="sm"
-              radius="sm"
-              variant="bordered"
-              className="border border-none bg-transparent z-50"
-              onClick={() => props.mobileNavBarRef.current?.setCollapseMobileMenu(true)}
-            >
-              <Icon icon="bars" size={"xl"} color="text-gray-100" />
-            </Button>
+            <Btn
+              type="onlyIcon"
+              icon={<Icon icon="bars" size={"xl"} color="text-gray-100" />}
+              onPress={() =>
+                props.mobileNavBarRef.current?.setCollapseMobileMenu(true)
+              }
+            />
           </NavbarItem>
           <NavbarItem className="hidden laptop:flex">
-            <Link
-              href={PublicRoutes.HOME}
-              onClick={(e) => {
-                e.preventDefault();
+            <Link2
+              //route={PublicRoutes.HOME}
+              action={() => {
                 if (location.pathname == PublicRoutes.HOME) {
                   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
                   props.mobileNavBarRef.current?.setCollapseMobileMenu(false);
                 } else {
-                  navigate(PublicRoutes.HOME);
+                  navigator({ route: PublicRoutes.HOME, title: "inicio" });
                 }
               }}
-              className="hidden laptop:flex"
-            >
-              <div className="gap-2 items-center flex">
-                <img src={anyCommerceIconLight} className="w-6 h-auto" />
-                <p className="font-semibold text-xl !text-gray-100 dark:!text-gray-100">
-                  AnyCommerce
-                </p>
-              </div>
-            </Link>
+              text={
+                <div className="gap-2 items-center flex">
+                  <img src={anyCommerceIconLight} className="w-6 h-auto" />
+                  <p className="font-semibold text-xl !text-gray-100 dark:!text-gray-100">
+                    AnyCommerce
+                  </p>
+                </div>
+              }
+              additionalClassName="hidden laptop:flex"
+            />
           </NavbarItem>
           <DropDw
             btnTitle="articulos"
@@ -260,7 +254,7 @@ const MainNavBar = forwardRef(
               size="sm"
               type="primary"
               aditionalClassnames="!bg-gray-100 !text-gray-900"
-              onPress={() => navigate(PublicRoutes.SIGNIN)}
+              onPress={() => navigator({route: PublicRoutes.SIGNIN, title: 'inicio'})}
             />
           </NavbarItem>
           <Dropdown
@@ -303,19 +297,18 @@ const MainNavBar = forwardRef(
                   startContent={<Icon icon="user" size="lg" />}
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate(`${PrivateRoutes.ACCOUNT}/myprofile`);
+                    navigator({route: `${PrivateRoutes.ACCOUNT}/myprofile`, title: 'myprofile'});
                   }}
                 >
-                  {t("cuenta")}
+                  {translator({text: 'cuenta'})}
                 </DropdownItem>
                 <DropdownItem
                   key="settings"
                   textValue="3"
                   className="text-gray-800 hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100"
-                  //className="text-gray-800 hover:!bg-ideal-green hover:!text-gray-100 dark:text-gray-100"
                   startContent={<Icon icon="store" size="base" />}
                 >
-                  {t("tiendas")}
+                  {translator({text: 'tiendas'})}
                 </DropdownItem>
               </DropdownSection>
 
@@ -325,7 +318,7 @@ const MainNavBar = forwardRef(
                 className="text-gray-800 hover:!bg-red-600/60 hover:!text-gray-100 dark:text-gray-100"
                 startContent={<Icon icon="signOut" size="base" />}
               >
-                {t("cerrar-sesion")}
+                  {translator({text: 'cerrar-sesion'})}
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
@@ -335,88 +328,6 @@ const MainNavBar = forwardRef(
   }
 );
 
-const MobileNavBar = forwardRef(({}, ref) => {
-  const { theme } = useContext(ThemeContext);
-  const navigate = useNavigate();
 
-  const [collapseMobileMenu, setCollapseMobileMenu] = useState<boolean>(false);
-
-  useImperativeHandle(ref, () => ({
-    setCollapseMobileMenu: setCollapseMobileMenu,
-  }));
-
-  useEffect(() => {
-    if (collapseMobileMenu) document.body.classList.add("overflow-hidden");
-    else document.body.classList.remove("overflow-hidden");
-  }, [collapseMobileMenu]);
-
-  /**
-   *       className={`fixed top-0 z-0 w-full h-full bg-gray-900/50 backdrop-blur-sm laptop:hidden transition-opacity duration-300 ${
-        collapseMobileMenu ? " opacity-100 !z-40" : "opacity-0"
-      }`}
-   */
-
-  return (
-    <div
-      className={`fixed top-0 z-0 w-full h-full bg-gray-900/50 backdrop-blur-sm laptop:hidden transition-opacity duration-300 ${
-        collapseMobileMenu ? " opacity-100 !z-40" : "opacity-0"
-      }`}
-      onClick={(e) => {
-        if ((e.target as HTMLDivElement).tagName === "DIV")
-          setCollapseMobileMenu(false);
-      }}
-    >
-      <NextNavbar
-        className={`h-full items-start bg-gray-100 dark:bg-gray-900 transition-width duration-300 z-50 ${
-          collapseMobileMenu ? "w-full tablet:w-[50%] " : "w-0"
-        }`}
-        isBlurred={false}
-      >
-        <NavbarContent className=" !justify-between">
-          <NavbarItem>
-            <Link
-              href={PublicRoutes.HOME}
-              onClick={(e) => {
-                e.preventDefault();
-                if (location.pathname == PublicRoutes.HOME) {
-                  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-                  setCollapseMobileMenu(false);
-                } else {
-                  navigate(PublicRoutes.HOME);
-                }
-              }}
-            >
-              <div className="flex gap-2 items-center">
-                <img
-                  src={
-                    theme === "light"
-                      ? anyCommerceIconDark
-                      : anyCommerceIconLight
-                  }
-                  className="w-4 h-auto"
-                />
-                <p className="font-bold text-xl !text-gray-800 dark:!text-gray-100">
-                  Any<span className="text-green-700">Commerce</span>
-                </p>
-              </div>
-            </Link>
-          </NavbarItem>
-          <NavbarItem className="">
-            <Button
-              isIconOnly
-              size="sm"
-              radius="sm"
-              variant="bordered"
-              className="border border-none bg-gray-100 hover:bg-gray-200  dark:hover:bg-transparent dark:text-gray-800 dark:bg-transparent"
-              onClick={() => setCollapseMobileMenu(false)}
-            >
-              <Icon icon="x" size="xs" />
-            </Button>
-          </NavbarItem>
-        </NavbarContent>
-      </NextNavbar>
-    </div>
-  );
-});
 
 export default Navbar;

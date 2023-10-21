@@ -5,11 +5,12 @@ import {
   SelectItem,
   Textarea,
 } from "@nextui-org/react";
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, ReactNode, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { inputs } from "../../../Utils/types.utils";
 
 interface IMultipleInputFormProps {
-  inputs: any[];
+  inputs: inputs[];
   formValues?: any;
   setFormValues?: React.Dispatch<any>;
   invalidInputs?: any[];
@@ -93,7 +94,7 @@ const MultipleFormInputs: FunctionComponent<IMultipleInputFormProps> = ({
     console.log(invalidInputs);
   }, [invalidInputs]);
 
-  const defaultRenderSelectValue = (items: any, key: string) => {
+  const defaultRenderSelectValue = (items: any):ReactNode => {
     const item = items[0];
 
     if (item == undefined) {
@@ -136,7 +137,7 @@ const MultipleFormInputs: FunctionComponent<IMultipleInputFormProps> = ({
                       selections: inputSelectValues,
                       setSelections: setInputSelectValues,
                       values: formValues,
-                      setValues: setFormValues,
+                      setValues: setFormValues? setFormValues: () => {},
                     })
                   : onSelectionValueChange(e.target.value, input.key)
               }
@@ -193,14 +194,12 @@ const MultipleFormInputs: FunctionComponent<IMultipleInputFormProps> = ({
                       selections: inputSelectValues,
                       setSelections: setInputSelectValues,
                       values: formValues,
-                      setValues: setFormValues,
+                      setValues: setFormValues? setFormValues: () => {},
                     })
                   : onSelectionValueChange(e.target.value, input.key)
               }
               variant="bordered"
-              renderValue={(items) =>
-                defaultRenderSelectValue(items, input.key)
-              }
+              renderValue={defaultRenderSelectValue}
               disallowEmptySelection
               classNames={{
                 popover: "bg-gray-200 dark:bg-gray-700",
@@ -234,7 +233,6 @@ const MultipleFormInputs: FunctionComponent<IMultipleInputFormProps> = ({
                 invalidInputs?.find((is) => Object.keys(is).includes(input.key))
                   ?.message
               )}
-              name={input}
               label={`${t(`${input.text}`)}:`}
               placeholder={t(input.placeholder)}
               size="lg"
@@ -244,7 +242,7 @@ const MultipleFormInputs: FunctionComponent<IMultipleInputFormProps> = ({
               description={""}
               value={formValues[input.key]}
               onValueChange={(value) =>
-                onValueChange(value, input.key, input.type)
+                onValueChange(value, input.key, input.type as any)
               }
               classNames={{
                 base: "",
@@ -286,7 +284,7 @@ const MultipleFormInputs: FunctionComponent<IMultipleInputFormProps> = ({
             )}
             endContent={input.endContent}
             width={'50%'}
-            name={input}
+           // name={input}
             label={`${t(`${input.text}`)}:`}
             placeholder={t(input.placeholder)}
             size="lg"
@@ -297,15 +295,14 @@ const MultipleFormInputs: FunctionComponent<IMultipleInputFormProps> = ({
             value={formValues[input.key]}
             onValueChange={(value) =>
               {                
-                return input.onValueChange? input.onValueChange({key: input.key, value: value, state: formValues, setState: setFormValues}) : onValueChange(value, input.key, input.type)
+                return input.onValueChange? input.onValueChange({key: input.key, value: value, state: formValues, setState: setFormValues as any}) : onValueChange(value, input.key, input.type as any)
               }
             }
             className={input.width? `w-[${input.width}%]`: ''}
             classNames={{
               base: input.width? `w-[${input.width}%]`: '',
               mainWrapper: "h-full",
-              input: "text-default-500 text-sm font-normal",
-              label: " font-semibold",
+              input: "text-sm pl-3",
               inputWrapper:
                 "h-full border border-gray-700 !bg-transparent text-default-500 dark:border-gray-700 hover:!bg-gray-200 dark:hover:!bg-gray-700 dark:!bg-gray-800",
             }}

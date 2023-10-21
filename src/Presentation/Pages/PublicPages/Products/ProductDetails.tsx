@@ -1,5 +1,9 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { cartProducts, productInfo } from "../../../Utils/types.utils";
+import { useParams } from "react-router-dom";
+import {
+  cartProducts,
+  commonTypeRoute,
+  productInfo,
+} from "../../../Utils/types.utils";
 import { useContext, useState } from "react";
 import { ProductsCollection } from "../../../Utils/DataCollection/Products.datacollection.utils";
 import {
@@ -13,11 +17,9 @@ import {
   DropdownSection,
   DropdownTrigger,
   Input,
-  Link,
   Tab,
   Tabs,
 } from "@nextui-org/react";
-import { useTranslation } from "react-i18next";
 import { PublicRoutes } from "../../../Utils/routermanager.routes.utils";
 import {
   ImagesSlider,
@@ -30,13 +32,16 @@ import { CartContext } from "../../../Context/CartContext";
 import { LanguageContext } from "../../../Context/LanguageContext";
 import Btn from "../../../Components/Common/Inputs/Button";
 import { Icon } from "../../../Assets/Icons/IconsCollection";
+import { useNavigator, useTranslator } from "../../../Hooks/Common/useCommon";
+import { Link2 } from "../../../Components/Common/Inputs/Link";
 
 type IProductDetailsProps = {};
 
 const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
-  const { t } = useTranslation();
+  const translator = useTranslator();
+  const navigator = useNavigator();
+
   const { id } = useParams();
-  const navigate = useNavigate();
   const { setCart } = useContext(CartContext);
   const { locale } = useContext(LanguageContext);
 
@@ -46,7 +51,7 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
 
   const [productAmount, setProductAmount] = useState<number>(1);
 
-  const pagesResume = [
+  const pagesResume: commonTypeRoute[] = [
     {
       key: "pageResume0",
       text: "productos",
@@ -76,11 +81,15 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
       content: () => (
         <div className="w-[95%] mx-auto flex flex-col gap-10 tablet:w-[90%]">
           <div className="flex flex-col gap-3">
-            <h1 className=" text-xl font-semibold">{t("descripcion")}</h1>
+            <h1 className=" text-xl font-semibold">
+              {translator({ text: "descripcion" })}
+            </h1>
             <p className=" text-default-500">{product.description}</p>
           </div>
           <div className="flex flex-col gap-3">
-            <h1 className=" text-xl font-semibold">{t("caracteristicas")}</h1>
+            <h1 className=" text-xl font-semibold">
+              {translator({ text: "caracteristicas" })}
+            </h1>
             <div className="flex flex-col">
               {product.details?.characteristics?.map((cha) => (
                 <div key={cha.key} className="flex gap-3 text-default-500">
@@ -102,7 +111,9 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
           {product.reviews && product.reviews.length <= 0 ? (
             <div className="flex flex-col py-24 gap-2 items-center justify-center">
               <Icon icon="starFilled" size="4xl" />
-              <p className="text-xl">{t("no-se-encontraron-reviews")}</p>
+              <p className="text-xl">
+                {translator({ text: "no-se-encontraron-reviews" })}
+              </p>
             </div>
           ) : (
             product.reviews?.map((r) => (
@@ -120,11 +131,11 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
                     <p className=" font-semibold text-lg">{r.userName}</p>
                     <div className="flex items-start gap-2 text-default-500 flex-col tablet:flex-row tablet:items-center">
                       <div className="flex items-center">
-                        {renderProductRating(r.rating, "base", t)}
+                        {renderProductRating(r.rating, "base", translator)}
                       </div>
-                      <p>{`${t("calificado-en")} ${r.from}, ${new Date(
-                        r.date
-                      ).toLocaleDateString(locale, {
+                      <p>{`${translator({ text: "calificado-en" })} ${
+                        r.from
+                      }, ${new Date(r.date).toLocaleDateString(locale, {
                         day: "numeric",
                         month: "long",
                         year: "numeric",
@@ -147,7 +158,7 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
     },
   ]);
 
-  const RenderPageResumer = (pagesResume: any[]) =>
+  const RenderPageResumer = (pagesResume: commonTypeRoute[]) =>
     pagesResume.map((pr) =>
       pr.current ? (
         <Chip
@@ -158,23 +169,24 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
           <p className="pb-[7px]">{pr.text.substring(0, 15)}...</p>
         </Chip>
       ) : (
-        <Link
+        <Link2
           key={pr.key}
-          href={pr.route}
-          onClick={(e) => {
-            e.preventDefault();
-            navigate(pr.route);
+          action={() => {
+            navigator({ route: pr.route, title: "productos" });
           }}
-          className=""
-        >
-          <Chip
-            endContent={<Icon icon="arrowRight" size="xs" />}
-            variant="light"
-            className="text-default-500 text-base p-0 flex items-center gap-3"
-          >
-            <p className="pb-1 underline underline-offset-2">{t(pr.text)}</p>
-          </Chip>
-        </Link>
+          additionalClassName=""
+          text={
+            <Chip
+              endContent={<Icon icon="arrowRight" size="xs" />}
+              variant="light"
+              className="text-default-500 text-base p-0 flex items-center gap-3"
+            >
+              <p className="pb-1 underline underline-offset-2">
+                {translator({ text: pr.text })}
+              </p>
+            </Chip>
+          }
+        />
       )
     );
 
@@ -195,36 +207,20 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
           <div className="flex justify-between">
             <div className="flex flex-col gap-2">
               <h1 className="text-3xl font- line-clamp-3">{product.name}</h1>
-              <div className="flex items-center gap-">
-                {renderProductRating(product.rating, "base", t)}
+              <div className="flex items-center gap- text-default-500">
+                {renderProductRating(product.rating, "base", translator)}
               </div>
-            </div>
-            <div className="flex flex-col justify-start hidden">
-              <Button
-                isIconOnly
-                size="md"
-                startContent={
-                  <Icon icon="heartFilled" color="text-gray-100" size="xl" />
-                }
-                className="bg-transparent"
-              />
-              <Button
-                isIconOnly
-                size="md"
-                startContent={<Icon icon="list" size="xl" />}
-                className="bg-transparent"
-              />
             </div>
           </div>
           <Divider orientation="horizontal" className="" />
 
-          <div className="flex flex-col hidden">
+          {/* <div className="flex flex-col hidden">
             <div>ddd</div>
             <Divider orientation="horizontal" className="" />
-          </div>
+          </div> */}
           <div className="flex flex-col gap-5">
             <div className="text-base">
-              {renderUnitsInStock(product.stock, t)}
+              {renderUnitsInStock(product.stock, translator)}
             </div>
             <div
               className={`flex gap-5 flex-col items-center justify-between  tablet:flex-row ${
@@ -238,46 +234,6 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
                     <div className="flex gap-[2px] text-3xl">
                       {renderProductPrice(product.cost)}
                     </div>
-
-                    {/* <Button
-                  isIconOnly
-                  size="md"
-                  radius="sm"
-                  variant="bordered"
-                  className="border hidden border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
-                  disabled={product.stock <= 0}
-                  onClick={() => {
-                    setProductAmount(
-                      productAmount <= 1 ? 1 : productAmount - 1
-                    );
-                  }}
-                >
-                  <Icon icon="minus" size="sm" />
-                </Button>
-
-
-                <Button
-                  isIconOnly
-                  size="md"
-                  radius="sm"
-                  variant="bordered"
-                  disabled={product.stock <= 0}
-                  className="border hidden border-gray-800 bg-gray-100 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-800 dark:bg-gray-800"
-                  onClick={() => {
-                    setProductAmount(
-                      productAmount < product.stock
-                        ? productAmount + 1
-                        : productAmount
-                    );
-                    if (productAmount == product.stock) {
-                      toast.error(
-                        t("existencia-de-producto-en-tienda-excedida")
-                      );
-                    }
-                  }}
-                >
-                  <Icon icon="plus" size="sm" />
-                </Button> */}
                   </div>
                   <div className="flex flex-row flex-wrap tablet:flex-row items-center justify-end gap-2">
                     <Input
@@ -301,7 +257,9 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
                         );
                         if (productAmount == product.stock) {
                           toast.error(
-                            t("existencia-de-producto-en-tienda-excedida")
+                            translator({
+                              text: "existencia-de-producto-en-tienda-excedida",
+                            })
                           );
                         }
                       }}
@@ -315,22 +273,24 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
                       onPress={
                         () => {
                           //e.preventDefault();
-  
+
                           if (product.stock <= 0) {
                             return toast.error(
-                              t("existencia-de-producto-en-tienda-agotada")
+                              translator({
+                                text: "existencia-de-producto-en-tienda-agotada",
+                              })
                             );
                           }
-  
+
                           const cartExists = JSON.parse(
                             String(localStorage.getItem("cart"))
                           ) as cartProducts[] | null;
-  
+
                           if (cartExists != null) {
                             const prodInCart = cartExists.find(
                               (ce) => ce.productInfo.id == product.id
                             );
-  
+
                             if (prodInCart != null || prodInCart != undefined) {
                               prodInCart.cartInfo.amount = productAmount;
                             } else {
@@ -354,14 +314,15 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
                             ];
                             setCart(cartProducts);
                           }
-  
+
                           toast.success(
-                            t("producto-agredado-a-carrito", {
+                            translator({ text: "producto-agredado-a-carrito" }),
+                            {
                               action: {
                                 label: "Undo",
                                 onClick: () => console.log("Undo"),
                               },
-                            })
+                            }
                           );
                         }
                         // props.cartRef.current?.setCollapseCart(true)
@@ -409,7 +370,7 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
               <div className="flex flex-col text-default-500 gap-4">
                 {product.dates.restock ? (
                   <p className=" text-default-500">
-                    {t("posible-existencia-mensaje")}
+                    {translator({ text: "posible-existencia-mensaje" })}
                     {": "}
                     {`${new Date(
                       String(product.dates.restock)
@@ -420,7 +381,7 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
                     })}`}
                   </p>
                 ) : (
-                  <p>{t("sin-existencia-mensaje")}:</p>
+                  <p>{translator({ text: "sin-existencia-mensaje" })}:</p>
                 )}
 
                 <div className="flex items-center flex-col gap-2 tablet:flex-row">
@@ -437,7 +398,7 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
                     text="agregar-recordatorio"
                     type="primary"
                   />
-                  <p>{t("o").toLowerCase()}</p>
+                  <p>{translator({ text: "o" }).toLowerCase()}</p>
 
                   <Dropdown
                     classNames={{ base: "!max-w-[13em] " }}
@@ -462,19 +423,8 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
                         size="md"
                         className="border border-none text-gray-100 bg-gray-800 hover:bg-gray-800 dark:hover:bg-gray-300 dark:text-gray-800 dark:bg-gray-100 w-full tablet:w-fit"
                       >
-                        {t("agregar-a-lista")}
+                        {translator({ text: "agregar-a-lista" })}
                       </Button>
-                      {/* <Btn
-                        icon={
-                          <ListIcon
-                            size="lg"
-                            color="text-gray-100 dark:text-gray-900"
-                          />
-                        }
-                        size="md"
-                        text="agregar-recordatorio"
-                        type="primary"
-                      /> */}
                     </DropdownTrigger>
 
                     <DropdownMenu className="!max-w-[13em]" aria-label="ddd">
@@ -492,7 +442,7 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
                         startContent={<Icon icon="plus" size="sm" />}
                         className="text-gray-800 hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100"
                       >
-                        {t("crear-lista")}
+                        {translator({ text: "crear-lista" })}
                       </DropdownItem>
                     </DropdownMenu>
                   </Dropdown>
@@ -502,17 +452,17 @@ const ProductDetails: React.FunctionComponent<IProductDetailsProps> = ({}) => {
           </div>
         </div>
       </div>
-
+      {/* products tabs details */}
       <div className="flex flex-col gap-5">
         <Divider orientation="horizontal" className="tablet:" />
-        <Tabs fullWidth variant={'underlined'} aria-label="Tabs variants">
+        <Tabs fullWidth variant={"underlined"} aria-label="Tabs variants">
           {productTabs.map((tab) => (
             <Tab
               key={tab.key}
               title={
                 <div className="flex items-center space-x-2">
                   {tab.icon}
-                  <span>{t(tab.label)}</span>
+                  <span>{translator({ text: tab.label })}</span>
                 </div>
               }
               className="text-base pb-5"

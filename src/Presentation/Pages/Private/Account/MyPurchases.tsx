@@ -20,22 +20,22 @@ import {
   DropdownItem,
   Divider,
 } from "@nextui-org/react";
-import { useTranslation } from "react-i18next";
 import { purchaseInfo } from "../../../Utils/types.utils";
 import Moment from "react-moment";
 import { NumericFormat } from "react-number-format";
-import usePager, { useQuery } from "../../../Hooks/Common/usePager";
+import usePager from "../../../Hooks/Common/usePager";
 import {
   PurchaseFiltersCollection,
   PurchaseSortCollection,
 } from "../../../Utils/DataCollection/Purchases.datacollection.filters";
 import useMyPurchases from "../../../Hooks/Pages/Purchases/useMyPurchases";
 import { Icon } from "../../../Assets/Icons/IconsCollection";
+import { useQuery, useTranslator } from "../../../Hooks/Common/useCommon";
 
 type IMyPurchasesProps = {};
 
 const MyPurchases: FunctionComponent<IMyPurchasesProps> = ({}) => {
-  const { t } = useTranslation();
+  const translator = useTranslator();
   const query = useQuery();
 
   const [purchases, setPurchases] = useState<purchaseInfo[]>([]);
@@ -166,11 +166,11 @@ const MyPurchases: FunctionComponent<IMyPurchasesProps> = ({}) => {
         <TableHeader columns={columns}>
           {columns.map((column) => (
             <TableColumn key={column.uid} align="start">
-              {t(column.name)}
+              {translator({text: column.name})}
             </TableColumn>
           ))}
         </TableHeader>
-        <TableBody emptyContent={t("no-se-encontraron-compras")}>
+        <TableBody emptyContent={translator({text: 'no-se-encontraron-compras'})}>
           {purchases.map((item) => (
             <TableRow key={item.id}>
               {(columnKey) => {
@@ -214,7 +214,7 @@ const MyPurchases: FunctionComponent<IMyPurchasesProps> = ({}) => {
                           // color={colorStatus[getKeyValue(item, columnKey)] as any}
                         >
                           <p className=" font-semibold">
-                            {t(getKeyValue(item, columnKey))}
+                            {translator({text: getKeyValue(item, columnKey)})}
                           </p>
                         </Chip>
                       ) : columnKey == "actions" ? (
@@ -241,7 +241,7 @@ const MyPurchases: FunctionComponent<IMyPurchasesProps> = ({}) => {
                               textValue="2"
                               className="text-gray-800 hover:!bg-gray-300 dark:hover:!bg-gray-600 dark:text-gray-100"
                             >
-                              {t("cancelar")}
+                              {translator({text: 'cancelar'})}
                             </DropdownItem>
                           </DropdownMenu>
                         </Dropdown>

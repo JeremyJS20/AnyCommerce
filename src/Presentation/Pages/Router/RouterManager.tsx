@@ -86,9 +86,6 @@ const RouterManager: React.FunctionComponent<IRouterManagerProps> = ({}) => {
                     element={<>ResetPass</>}
                   />
                 </Route>
-                {/* <Route element={<AuthPrivateRouteVerifier />}>
-          <Route path={PrivateRoutes.CHATUI} element={<ChatUIComponent socket={socket} />} />
-        </Route> */}
               </Routes>
             </BrowserRouter>
           </CartContextProvider>

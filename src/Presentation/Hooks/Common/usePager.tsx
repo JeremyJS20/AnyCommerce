@@ -4,12 +4,12 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Link,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import { Icon } from "../../Assets/Icons/IconsCollection";
+import { pagerOptionsType } from "../../Utils/types.utils";
+import { Link2 } from "../../Components/Common/Inputs/Link";
+import { useNavigator, useQuery, useTranslator } from "./useCommon";
 
 type IUsePagerProps = {
   items: any[];
@@ -23,23 +23,10 @@ type usePagerType = {
   PagerComponent: () => JSX.Element;
 };
 
-export type pagerOptionsType = {
-  pages: number[];
-  currentPage: number;
-  starting: number;
-  take: number;
-  pagesAmount: number;
-};
-
-export function useQuery() {
-  const { search } = useLocation();
-
-  return React.useMemo(() => new URLSearchParams(search), [search]);
-}
-
 const usePager = ({ ...props }: IUsePagerProps): usePagerType => {
   const query = useQuery();
-  const navigate = useNavigate();
+  const navigator = useNavigator();
+  const translator = useTranslator();
 
   const firstItem = 2;
   const lastItem = 4;
@@ -74,55 +61,59 @@ const usePager = ({ ...props }: IUsePagerProps): usePagerType => {
     });
   }, [props.items]);
 
-//   useEffect(() => {
-//     const queryFilters = JSON.parse(String(query.get("filters")));
+  //   useEffect(() => {
+  //     const queryFilters = JSON.parse(String(query.get("filters")));
 
-//     console.log(Number(query.get('page')), pagerOptions.currentPage);
-    
+  //     console.log(Number(query.get('page')), pagerOptions.currentPage);
 
-//     if (queryFilters != null && Object.keys(queryFilters).length > 0) {
-//       console.log(query.get('page'));
-//       setPagerOptions({
-//         ...pagerOptions,
-//         currentPage: 1,
-//         starting: 0
-//       });
-//     }
-//   }, [query]);
+  //     if (queryFilters != null && Object.keys(queryFilters).length > 0) {
+  //       console.log(query.get('page'));
+  //       setPagerOptions({
+  //         ...pagerOptions,
+  //         currentPage: 1,
+  //         starting: 0
+  //       });
+  //     }
+  //   }, [query]);
 
   useEffect(() => {
-//      const queryFilters = JSON.parse(String(query.get("filters")));
+    //      const queryFilters = JSON.parse(String(query.get("filters")));
 
-//     if(Number(query.get('page')) == 1){
-//         if (queryFilters != null && Object.keys(queryFilters).length <= 1) {
-//             console.log('klk');
-            
-//             return navigate(
-//               `/products?page=${query.get("page")}${
-//                 query.get("filters") != null ? `&filters=${query.get("filters")}` : ""
-//               }${query.get("sort") != null ? `&sort=${query.get("sort")}` : ""}`
-//             );
-//           } else {
-//             navigate(
-//                 `/products?page=${pagerOptions.currentPage}${
-//                   query.get("filters") != null ? `&filters=${query.get("filters")}` : ""
-//                 }${query.get("sort") != null ? `&sort=${query.get("sort")}` : ""}`
-//               );
-//           }
-//     } else {
-//         navigate(
-//             `/products?page=${pagerOptions.currentPage}${
-//               query.get("filters") != null ? `&filters=${query.get("filters")}` : ""
-//             }${query.get("sort") != null ? `&sort=${query.get("sort")}` : ""}`
-//           );
-//     }
-// console.log(query.get('page'));
+    //     if(Number(query.get('page')) == 1){
+    //         if (queryFilters != null && Object.keys(queryFilters).length <= 1) {
+    //             console.log('klk');
 
-navigate(
-    `${location.pathname}?page=${pagerOptions.currentPage}${
-      query.get("filters") != null ? `&filters=${query.get("filters")}` : ""
-    }${query.get("sort") != null ? `&sort=${query.get("sort")}` : ""}`
-  );
+    //             return navigate(
+    //               `/products?page=${query.get("page")}${
+    //                 query.get("filters") != null ? `&filters=${query.get("filters")}` : ""
+    //               }${query.get("sort") != null ? `&sort=${query.get("sort")}` : ""}`
+    //             );
+    //           } else {
+    //             navigate(
+    //                 `/products?page=${pagerOptions.currentPage}${
+    //                   query.get("filters") != null ? `&filters=${query.get("filters")}` : ""
+    //                 }${query.get("sort") != null ? `&sort=${query.get("sort")}` : ""}`
+    //               );
+    //           }
+    //     } else {
+    //         navigate(
+    //             `/products?page=${pagerOptions.currentPage}${
+    //               query.get("filters") != null ? `&filters=${query.get("filters")}` : ""
+    //             }${query.get("sort") != null ? `&sort=${query.get("sort")}` : ""}`
+    //           );
+    //     }
+    // console.log(query.get('page'));
+
+    navigator({
+      route: `${location.pathname}?page=${pagerOptions.currentPage}${
+        query.get("filters") != null ? `&filters=${query.get("filters")}` : ""
+      }${query.get("sort") != null ? `&sort=${query.get("sort")}` : ""}`,
+    });
+
+    const pageTile = localStorage.getItem('pageTitle');
+        
+    if(pageTile != null) document.title = `${translator({text: pageTile})} - AnyCommerce`;
+    else document.title = 'AnyCommerce';
   }, [pagerOptions]);
 
   return {
@@ -134,15 +125,18 @@ navigate(
         {pagerOptions.pages.length > 0 &&
           pagerOptions.pages[0] != firstItem && (
             <div className="flex items-center gap-2">
-              <Link
-                href="#"
-                className="text-sm dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-transparent rounded-xl"
-                isDisabled={
+              <Link2
+                additionalClassName="text-sm dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-transparent rounded-xl"
+                text={
+                  <div className="flex items-center gap-1">
+                    <Icon icon="doubleArrowLeft" size="base" />
+                  </div>
+                }
+                disabled={
                   pagerOptions.currentPage == pagerOptions.pages[0] ||
                   pagerOptions.pages.length <= 1
                 }
-                onClick={(e) => {
-                  e.preventDefault();
+                action={() => {
                   setPagerOptions({
                     ...pagerOptions,
                     currentPage: pagerOptions.pages[0],
@@ -153,51 +147,46 @@ navigate(
                     take: props.take,
                   });
                 }}
-              >
-                <div className="flex items-center gap-1">
-                  {/* <p>{t("next")}</p> */}
-                  <Icon icon="doubleArrowLeft" size="base" />
-                </div>
-              </Link>
-              <Link
-                href="#"
-                className="text-sm dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-transparent rounded-xl"
-                isDisabled={
+              />
+
+              <Link2
+                additionalClassName="text-sm dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-transparent rounded-xl"
+                text={
+                  <div className="flex items-center gap-1">
+                    <Icon icon="arrowLeft" size="base" />
+                  </div>
+                }
+                disabled={
                   pagerOptions.currentPage == pagerOptions.pages[0] ||
                   pagerOptions.pages.length <= 1
                 }
-                onClick={(e) => {
-                  e.preventDefault();
+                action={() => {
                   setPagerOptions({
                     ...pagerOptions,
                     currentPage: pagerOptions.currentPage - 1,
                     starting:
                       pagerOptions.currentPage == 1
                         ? 0
-                        : Number(String(pagerOptions.currentPage - 2))*props.take,
+                        : Number(String(pagerOptions.currentPage - 2)) *
+                          props.take,
                     take: props.take,
                   });
                 }}
-              >
-                <div className="flex items-center gap-1">
-                  {/* <p>{t("ultimo")}</p> */}
-                  <Icon icon="arrowLeft" size="base" />
-                </div>
-              </Link>
+              />
             </div>
           )}
         <div className="flex gap-1">
           {!(pagerOptions.pages.length > 10) ? (
             pagerOptions.pages.map((page) => (
-              <Link
-                href={`products?page=${page}`}
-                className={`text-gray-100 dark:text-gray-900 px-3 py-1 rounded-xl ${
+              <Link2
+                text={page}
+                additionalClassName={`text-gray-100 dark:text-gray-900 px-3 py-1 rounded-xl ${
                   page == pagerOptions.currentPage
                     ? "bg-gray-900 dark:bg-gray-100"
                     : "!text-gray-900 dark:!text-gray-100"
                 }`}
-                onClick={(e) => {
-                  e.preventDefault();
+                action={() => {
+                  navigator({ route: `?page=${page}`, title: 'productos'});
                   setPagerOptions({
                     ...pagerOptions,
                     currentPage: page,
@@ -205,9 +194,7 @@ navigate(
                     take: props.take,
                   });
                 }}
-              >
-                {page}
-              </Link>
+              />
             ))
           ) : (
             <>
@@ -224,9 +211,9 @@ navigate(
                         Number(pagerOptions.currentPage) - 1 + 5
                       )
                   ).map((page) => (
-                    <Link
-                      href={`products?page=${page}`}
-                      className={`text-gray-100 dark:text-gray-900 px-3 py-1 rounded-xl ${
+                    <Link2
+                      text={page}
+                      additionalClassName={`text-gray-100 dark:text-gray-900 px-3 py-1 rounded-xl ${
                         pagerOptions.pages.slice(-5).includes(page)
                           ? "hidden"
                           : ""
@@ -235,8 +222,8 @@ navigate(
                           ? "bg-gray-900 dark:bg-gray-100"
                           : "!text-gray-900 dark:!text-gray-100"
                       }`}
-                      onClick={(e) => {
-                        e.preventDefault();
+                      action={() => {
+                        navigator({ route: `?page=${page}`, title: 'productos'});
                         setPagerOptions({
                           ...pagerOptions,
                           currentPage: page,
@@ -245,9 +232,7 @@ navigate(
                           take: props.take,
                         });
                       }}
-                    >
-                      {page}
-                    </Link>
+                    />
                   ))}
                 </div>
 
@@ -303,15 +288,15 @@ navigate(
               </div>
 
               {pagerOptions.pages.slice(-5).map((page) => (
-                <Link
-                  href={`products?page=${page}`}
-                  className={`text-gray-100 dark:text-gray-900 px-3 py-1 rounded-xl ${
+                <Link2
+                  text={page}
+                  additionalClassName={`text-gray-100 dark:text-gray-900 px-3 py-1 rounded-xl ${
                     page == pagerOptions.currentPage
                       ? "bg-gray-900 dark:bg-gray-100"
                       : "!text-gray-900 dark:!text-gray-100"
                   }`}
-                  onClick={(e) => {
-                    e.preventDefault();
+                  action={() => {
+                    navigator({ route: `?page=${page}`, title: 'productos'});
                     setPagerOptions({
                       ...pagerOptions,
                       currentPage: page,
@@ -319,9 +304,7 @@ navigate(
                       take: props.take,
                     });
                   }}
-                >
-                  <p>{page}</p>
-                </Link>
+                />
               ))}
             </>
           )}
@@ -329,15 +312,18 @@ navigate(
         {pagerOptions.pages.length > 0 &&
           pagerOptions.pages.slice(-1)[0] != lastItem && (
             <div className="flex items-center gap-2">
-              <Link
-                href="#"
-                className="text-sm dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-transparent rounded-xl"
-                isDisabled={
+              <Link2
+                text={
+                  <div className="flex items-center gap-1">
+                    <Icon icon="arrowRight" size="base" />
+                  </div>
+                }
+                additionalClassName="text-sm dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-transparent rounded-xl"
+                disabled={
                   pagerOptions.currentPage == pagerOptions.pages.slice(-1)[0] ||
                   pagerOptions.pages.length <= 1
                 }
-                onClick={(e) => {
-                  e.preventDefault();
+                action={() => {
                   setPagerOptions({
                     ...pagerOptions,
                     currentPage: pagerOptions.currentPage + 1,
@@ -345,21 +331,19 @@ navigate(
                       Number(String(pagerOptions.currentPage)) * props.take,
                   });
                 }}
-              >
-                <div className="flex items-center gap-1">
-                  {/* <p>{t("next")}</p> */}
-                  <Icon icon="arrowRight" size="base" />
-                </div>
-              </Link>
-              <Link
-                href="#"
-                className="text-sm dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-transparent rounded-xl"
-                isDisabled={
+              />
+              <Link2
+                text={
+                  <div className="flex items-center gap-1">
+                    <Icon icon="doubleArrowRight" size="base" />
+                  </div>
+                }
+                additionalClassName="text-sm dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-transparent rounded-xl"
+                disabled={
                   pagerOptions.currentPage == pagerOptions.pages.slice(-1)[0] ||
                   pagerOptions.pages.length <= 1
                 }
-                onClick={(e) => {
-                  e.preventDefault();
+                action={() => {
                   setPagerOptions({
                     ...pagerOptions,
                     currentPage: pagerOptions.pages.slice(-1)[0],
@@ -372,12 +356,7 @@ navigate(
                     take: props.take,
                   });
                 }}
-              >
-                <div className="flex items-center gap-1">
-                  {/* <p>{t("ultimo")}</p> */}
-                  <Icon icon="doubleArrowRight" size="base" />
-                </div>
-              </Link>
+              />
             </div>
           )}
       </div>

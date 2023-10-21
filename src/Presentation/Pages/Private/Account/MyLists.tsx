@@ -1,6 +1,5 @@
 import { FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
-import { Card, CardBody, Divider, Link } from "@nextui-org/react";
-import { useTranslation } from "react-i18next";
+import { Card, CardBody, Divider } from "@nextui-org/react";
 import {
   inputs,
   listInfo,
@@ -8,7 +7,7 @@ import {
   modalHandleProps,
 } from "../../../Utils/types.utils";
 import { listsCollection } from "../../../Utils/DataCollection/Lists.datacollection";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import DropDw, {
   dropDownItemType,
 } from "../../../Components/Common/Inputs/Dropdown";
@@ -22,8 +21,13 @@ import {
   PublicRoutes,
 } from "../../../Utils/routermanager.routes.utils";
 import { listValidatorSchema } from "../../../../Validation/Validators/list.validator";
-import { useQuery } from "../../../Hooks/Common/usePager";
 import ViewModal from "../../../Components/Common/Modals/View.modal.components.common";
+import {
+  useNavigator,
+  useQuery,
+  useTranslator,
+} from "../../../Hooks/Common/useCommon";
+import { Link2 } from "../../../Components/Common/Inputs/Link";
 
 type IMyListsProps = {};
 
@@ -32,8 +36,8 @@ const MyLists: FunctionComponent<IMyListsProps> = ({}) => {
   const location = useLocation();
   const query = useQuery();
 
-  const { t } = useTranslation();
-  const navigate = useNavigate();
+  const translator = useTranslator();
+  const navigator = useNavigator();
 
   const [lists] = useState<listInfo[]>(listsCollection);
 
@@ -45,7 +49,7 @@ const MyLists: FunctionComponent<IMyListsProps> = ({}) => {
         icon: <Icon icon="eye" size="xs" />,
         type: "normal",
         onPress: () => {
-          navigate(`${location.pathname}/${id}?action=view`);
+          navigator({ route: `${location.pathname}/${id}?action=view` });
         },
       },
       {
@@ -54,7 +58,7 @@ const MyLists: FunctionComponent<IMyListsProps> = ({}) => {
         icon: <Icon icon="edit" size="xs" />,
         type: "normal",
         onPress: () => {
-          navigate(`${location.pathname}/${id}?action=edit`);
+          navigator({ route: `${location.pathname}/${id}?action=edit` });
         },
       },
       {
@@ -118,7 +122,7 @@ const MyLists: FunctionComponent<IMyListsProps> = ({}) => {
   );
 
   const resetValues = () => {
-    navigate(`${PrivateRoutes.ACCOUNT}/${childPage}`);
+    navigator({ route: `${PrivateRoutes.ACCOUNT}/${childPage}` });
   };
 
   const formModalRef = useRef<modalHandleProps>();
@@ -162,7 +166,7 @@ const MyLists: FunctionComponent<IMyListsProps> = ({}) => {
         <div className="flex flex-col justify-center items-center w-full h-[10em]">
           <Icon icon="box" size="6xl" />
           <h1 className="font-semibold text-lg text-default-500">
-            {t("lista-vacia")}
+            {translator({ text: "lista-vacia" })}
           </h1>
         </div>
       );
@@ -184,8 +188,7 @@ const MyLists: FunctionComponent<IMyListsProps> = ({}) => {
             //   itemId: id,
             // });
 
-            console.log('remove ', id);
-            
+            console.log("remove ", id);
           },
         },
       ];
@@ -201,40 +204,46 @@ const MyLists: FunctionComponent<IMyListsProps> = ({}) => {
             shadow="none"
           >
             <CardBody className="p-0 rounded-lg border-none border-gray-300 dark:border-gray-700 ">
-              <Link
+              <Link2
                 //href={`${PublicRoutes.PRODUCTS}/${prod.id}`}
-                onClick={(e) => {
-                  e.preventDefault();
+                action={() => {
                   //  navigate(`${PublicRoutes.PRODUCTS}/${prod.id}`);
                 }}
-                className="!h-full"
-              >
-                <div className="h-full flex flex-col justify-between gap-4 border-none text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 rounded-lg p-3">
-                  <div className="flex flex-col gap-2">
-                    <img
-                      src={lp.img}
-                      className="w-[100%] h-auto bg-cover bg-center bg-no-repeat "
-                    />
-                    <div className="flex flex-col gap-4 px-2">
-                      <p className=" text-base line-clamp-2">{lp.name}</p>
+                additionalClassName="!h-full"
+                text={
+                  <div className="h-full flex flex-col justify-between gap-4 border-none text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 rounded-lg p-3">
+                    <div className="flex flex-col gap-2">
+                      <img
+                        src={lp.img}
+                        className="w-[100%] h-auto bg-cover bg-center bg-no-repeat "
+                      />
+                      <div className="flex flex-col gap-4 px-2">
+                        <p className=" text-base line-clamp-2">{lp.name}</p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-5">
+                      <Btn
+                        size="sm"
+                        type="primary"
+                        text="ir-al-detalle"
+                        aditionalClassnames="p-4"
+                        onPress={() =>
+                          navigator({
+                            route: `${PublicRoutes.PRODUCTS}/${lp.id}`,
+                          })
+                        }
+                      />
                     </div>
                   </div>
-                  <div className="flex flex-col gap-5">
-                    <Btn
-                      size="sm"
-                      type="primary"
-                      text="ir-al-detalle"
-                      aditionalClassnames="p-4"
-                      onPress={() =>
-                        navigate(`${PublicRoutes.PRODUCTS}/${lp.id}`)
-                      }
-                    />
-                  </div>
-                </div>
-              </Link>
+                }
+              />
               <DropDw
                 btnStartIcon={
-                  <Icon icon="horizontalDots" size="sm" color="text-gray-100 dark:text-gray-900" />
+                  <Icon
+                    icon="horizontalDots"
+                    size="sm"
+                    color="text-gray-100 dark:text-gray-900"
+                  />
                 }
                 additionalClassName="absolute right-0 top-0 bg-gray-900 dark:bg-gray-100 rounded-full h-[20px]"
                 items={listDropDwItems(lp.id)}
@@ -268,7 +277,7 @@ const MyLists: FunctionComponent<IMyListsProps> = ({}) => {
                 actionTitle: "agregar",
                 visible: true,
               });
-              navigate(`${location.pathname}/new`);
+              navigator({ route: `${location.pathname}/new` });
             }}
             type="secondary"
           />
@@ -277,65 +286,68 @@ const MyLists: FunctionComponent<IMyListsProps> = ({}) => {
       </div>
       <div className="flex flex-col gap-5 justify-between flex-wrap laptop:flex-row">
         {lists.map((list) => (
-          <Link
+          <Link2
             key={list.id}
             //href={`${location.pathname}/${list.id}`}
-            className="w-full laptop:w-[49%] border cursor-default border-gray-800 dark:border-gray-700 rounded-xl py-3 px-5 flex items-center justify-between text-inherit"
-            onClick={(e) => {
-              e.preventDefault();
+            additionalClassName="w-full laptop:w-[49%] border cursor-default border-gray-800 dark:border-gray-700 rounded-xl py-3 px-5 flex items-center justify-between text-inherit"
+            action={() => {
               //navigate(`${location.pathname}/${list.id}`);
             }}
-          >
-            <div className="flex gap-1 items-center text-sm laptop:text-base">
-              <div className=" flex gap-1 flex-col">
-                <h1 className=" font-semibold">
-                  {list.name}{" "}
-                  <span className=" text-default-500 ">
-                    - {list.visibility}
-                  </span>{" "}
-                </h1>
-                <p className=" text-default-500 text-sm line-clamp-2">
-                  {list.description}
-                </p>
-              </div>
+            text={
+              <div className="flex gap-1 items-center text-sm laptop:text-base">
+                <div className=" flex gap-1 flex-col">
+                  <h1 className=" font-semibold">
+                    {list.name}{" "}
+                    <span className=" text-default-500 ">
+                      - {list.visibility}
+                    </span>{" "}
+                  </h1>
+                  <p className=" text-default-500 text-sm line-clamp-2">
+                    {list.description}
+                  </p>
+                </div>
 
-              <DropDw
-                btnStartIcon={
-                  <Icon
-                    icon="verticalDots"
-                    size="lg"
-                    color="text-gray-900 dark:text-gray-100"
-                  />
-                }
-                items={listDropDwItems(list.id)}
-                placement="bottom-end"
-              />
-            </div>
-          </Link>
+                <DropDw
+                  btnStartIcon={
+                    <Icon
+                      icon="verticalDots"
+                      size="lg"
+                      color="text-gray-900 dark:text-gray-100"
+                    />
+                  }
+                  items={listDropDwItems(list.id)}
+                  placement="bottom-end"
+                />
+              </div>
+            }
+          />
         ))}
 
-        <Link
+        <Link2
           //href={`${location.pathname}/new`}
-          className={`w-full laptop:w-[49%] border-2 border-dashed cursor-pointer border-gray-800 dark:border-gray-700 rounded-xl py-3 px-5 flex items-center justify-between text-inherit ${
+          additionalClassName={`w-full laptop:w-[49%] border-2 border-dashed cursor-pointer border-gray-800 dark:border-gray-700 rounded-xl py-3 px-5 flex items-center justify-between text-inherit ${
             lists.length <= 0 ? "hidden" : ""
           }`}
-          onPress={() => {
+          action={() => {
             formModalRef.current?.setModalProps({
               type: "form",
               title: `crear-lista`,
               actionTitle: "agregar",
               visible: true,
             });
-            navigate(`${location.pathname}/new`);
+            navigator({ route: `${location.pathname}/new` });
           }}
-        >
-          <div className="flex h-[em] items-center gap-2 text-sm laptop:text-base">
-            <Icon icon="plus" size="sm" color="text-default-500" />
-            <h1 className=" font-semibold text-default-500">
-              {`${t("crear")} ${t("lista").toLowerCase()}`}
-            </h1>
-          </div>
-        </Link>
+          text={
+            <div className="flex h-[em] items-center gap-2 text-sm laptop:text-base">
+              <Icon icon="plus" size="sm" color="text-default-500" />
+              <h1 className=" font-semibold text-default-500">
+                {`${translator({ text: "crear" })} ${translator({
+                  text: "lista",
+                }).toLowerCase()}`}
+              </h1>
+            </div>
+          }
+        />
       </div>
       <FormModal
         ref={formModalRef}

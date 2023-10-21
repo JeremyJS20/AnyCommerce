@@ -5,16 +5,21 @@ import {
   useState,
   useImperativeHandle,
   useEffect,
+  Dispatch,
 } from "react";
-import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { cartProducts } from "../Utils/types.utils";
 import { CartContext } from "../Context/CartContext";
 import Btn from "./Common/Inputs/Button";
 import { Icon } from "../Assets/Icons/IconsCollection";
+import { useTranslator } from "../Hooks/Common/useCommon";
+
+export type cartProps = {
+  setCollapseCart: Dispatch<boolean>;
+};
 
 const Cart = forwardRef(({}, ref) => {
-  const { t } = useTranslation();
+  const translator = useTranslator();
   const { cart, setCart } = useContext(CartContext);
 
   const [collapseCart, setCollapseCart] = useState<boolean>(false);
@@ -81,7 +86,7 @@ const Cart = forwardRef(({}, ref) => {
         >
           <header className="mb-3 flex justify-between">
             <p className="text-xl font-bold">
-              {t("carrito")}
+              {translator({ text: "carrito" })}
               <span
                 className={`${
                   cart == null ? "hidden" : cart.length <= 0 ? "hidden" : ""
@@ -96,7 +101,7 @@ const Cart = forwardRef(({}, ref) => {
             </p>
 
             <Btn
-              icon={<Icon icon="x"  size="xs" />}
+              icon={<Icon icon="x" size="xs" />}
               text="editar"
               //aditionalClassnames={pf != "mainAddress" ? "hidden" : ""}
               onPress={() => setCollapseCart(false)}
@@ -108,7 +113,9 @@ const Cart = forwardRef(({}, ref) => {
           <div className="h-[90vh] flex flex-col justify-between">
             {cart != null && cart.length <= 0 ? (
               <div className="flex h-[90vh] items-center justify-center">
-                <p className="text-xl text-gray-500">{t("carrito-vacio")}</p>
+                <p className="text-xl text-gray-500">
+                  {translator({ text: "carrito-vacio" })}
+                </p>
               </div>
             ) : (
               <div className=" max-h-[65vh] overflow-auto tablet:max-h-[75vh]">
@@ -168,7 +175,7 @@ const Cart = forwardRef(({}, ref) => {
                           </div>
                           <div className="flex gap-1">
                             <Btn
-                              icon={<Icon icon="minus"  size="xs" />}
+                              icon={<Icon icon="minus" size="xs" />}
                               //aditionalClassnames={pf != "mainAddress" ? "hidden" : ""}
                               onPress={() => {
                                 const temp = cart.slice();
@@ -213,9 +220,9 @@ const Cart = forwardRef(({}, ref) => {
                                       prod2.cartInfo.amount = Number(value);
                                     } else {
                                       return toast.error(
-                                        t(
-                                          "existencia-de-producto-en-tienda-excedida"
-                                        )
+                                        translator({
+                                          text: "existencia-de-producto-en-tienda-excedida",
+                                        })
                                       );
                                     }
                                   }
@@ -225,7 +232,7 @@ const Cart = forwardRef(({}, ref) => {
                               value={String(prod.cartInfo.amount)}
                             />
                             <Btn
-                              icon={<Icon icon="plus"  size="xs" />}
+                              icon={<Icon icon="plus" size="xs" />}
                               //aditionalClassnames={pf != "mainAddress" ? "hidden" : ""}
                               onPress={() => {
                                 const temp = cart.slice();
@@ -240,9 +247,9 @@ const Cart = forwardRef(({}, ref) => {
                                     element.cartInfo.amount += 1;
                                   } else {
                                     return toast.error(
-                                      t(
-                                        "existencia-de-producto-en-tienda-excedida"
-                                      )
+                                      translator({
+                                        text: "existencia-de-producto-en-tienda-excedida",
+                                      })
                                     );
                                   }
                                   setCart(temp);
@@ -251,7 +258,7 @@ const Cart = forwardRef(({}, ref) => {
                               type="tertiary"
                             />
                             <Btn
-                              icon={<Icon icon="trash"  size="xs" />}
+                              icon={<Icon icon="trash" size="xs" />}
                               //aditionalClassnames={pf != "mainAddress" ? "hidden" : ""}
                               onPress={() => {
                                 const temp = cart.slice();
@@ -280,25 +287,21 @@ const Cart = forwardRef(({}, ref) => {
                 <Divider orientation="horizontal" className="my-3" />
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-between">
-                    <p>{t("subtotal")}</p>
+                    <p>{translator({text: 'subtotal'})}</p>
                     <p>${getCartSubtotal(cart)}</p>
                   </div>
                   <div className="flex justify-between">
-                    <p>{t("envio")}</p>
-                    <p>{t("no-disponible")}</p>
+                    <p>{translator({text: 'envio'})}</p>
+                    <p>{translator({text: 'no-disponible'})}</p>
                   </div>
                   <div className="flex justify-between">
-                    <p>{t("impuestos")}</p>
-                    <p>{t("no-disponible")}</p>
+                    <p>{translator({text: 'impuestos'})}</p>
+                    <p>{translator({text: 'no-disponible'})}</p>
                   </div>
                 </div>
                 <Divider orientation="horizontal" className="my-3" />
                 <div className="flex flex-col gap-2">
-                  <Btn
-                    text="ir-a-pago"
-                    onPress={() => {}}
-                    type="primary"
-                  />
+                  <Btn text="ir-a-pago" onPress={() => {}} type="primary" />
                 </div>
               </div>
             )}

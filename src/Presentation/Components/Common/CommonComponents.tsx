@@ -5,8 +5,7 @@ import { Icon } from "../../Assets/Icons/IconsCollection";
 export const renderProductRating = (
   rating: (number | null)[],
   size: "xs" | "sm" | "base" | "lg" | "xl",
-  t: any
-) => {
+  translator: (props:{text:string}) => string) => {
   return (
     <>
       {rating.map((rat) =>
@@ -30,9 +29,9 @@ export const renderProductRating = (
           ?.toString()
           .replace("0", "")}
 
-        {` ${t('estrellas').toLowerCase()}`}
-
-
+        {` ${translator({text: Number(rating.reduce((a, b) => {
+          return Math.max(Number(a), Number(b));
+        }, 0)) <= 1? 'estrella': 'estrellas'}).toLowerCase()}`}
       </p>
     </>
   );
@@ -51,27 +50,25 @@ export const renderProductPrice = (price: number) => (
   </>
 );
 
-export const renderUnitsInStock = (stock: number, t: any) => {
+export const renderUnitsInStock = (stock: number, translator: (props:{text:string}) => string) => {
 
   return (
     <p
       className={`${
         stock <= 10 && stock >= 1
-          ? "text-blue-500"
+          ? "text-default-500"
           : stock <= 0
           ? "text-red-500"
-          : "text-green-600"
+          : "text-ideal-green"
       }`}
     >
       {stock > 20
-        ? `+20 ${t("unidades-en-stock").toLowerCase()}`
+        ? `+20 ${translator({text: "unidades-en-stock"}).toLowerCase()}`
         : stock <= 10 && stock >= 1
-        ? `${t("solo")} ${stock} ${t(
-            "pocas-unidades-en-stock"
-          ).toLowerCase()} - ${t("ordena-pronto").toLowerCase()}`
+        ? `${translator({text: "solo"})} ${stock} ${translator({text: "pocas-unidades-en-stock"}).toLowerCase()} -  ${translator({text: "ordena-pronto"}).toLowerCase()}`
         : stock <= 0
-        ? `${t("no-disponible")}`
-        : `${stock} ${t("unidades-en-stock").toLowerCase()}`}
+        ? `${translator({text: "no-disponible"})}`
+        : `${stock} ${translator({text: "unidades-en-stock"}).toLowerCase()}`}
     </p>
   );
 };

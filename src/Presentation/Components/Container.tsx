@@ -9,14 +9,14 @@ import { PrivateRoutes, PublicRoutes } from "../Utils/routermanager.routes.utils
 import { Toaster } from "sonner";
 import Footer from "./Footer";
 import { Divider } from "@nextui-org/react";
-import { useTranslation } from "react-i18next";
+import { useTranslator } from "../Hooks/Common/useCommon";
 
 interface IContainerProps {}
 
 const Container: React.FunctionComponent<IContainerProps> = () => {
   const { theme } = useContext(ThemeContext);
   const location = useLocation();
-  const { t } = useTranslation();
+  const translator = useTranslator();
 
   const { childPage } = useParams();
 
@@ -42,7 +42,10 @@ const Container: React.FunctionComponent<IContainerProps> = () => {
   }, [theme]);
 
   useEffect(() => {
-    document.title = "AnyCommerce";
+    const pageTitle = localStorage.getItem('pageTitle');
+    
+    if(pageTitle != null) document.title = `${translator({text: pageTitle})} - AnyCommerce`
+    else document.title = "AnyCommerce";
   }, []);
 
   useEffect(() => {
@@ -65,7 +68,7 @@ const Container: React.FunctionComponent<IContainerProps> = () => {
     <div className=" bg-gray-100 text-gray-900 tracking-tight dark:text-gray-100 dark:bg-gray-900">
       <Navbar />
       <div className="flex items-center p-2 justify-center font-bold">
-        {t('web-en-construccion')}
+        {translator({text: 'web-en-construccion'})}
       </div>
       <Divider orientation="horizontal"/>
       <div className="flex justify-center ">

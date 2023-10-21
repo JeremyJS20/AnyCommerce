@@ -6,10 +6,17 @@ import {
   useRef,
   useState,
 } from "react";
-import { Button, Chip, Divider, Link, SelectItem } from "@nextui-org/react";
-import { useTranslation } from "react-i18next";
-import { addressInfo, addressKeyType, citiesType, countriesType, inputs, modalHandleProps, statesType } from "../../../Utils/types.utils";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Button, Chip, Divider, SelectItem } from "@nextui-org/react";
+import {
+  addressInfo,
+  addressKeyType,
+  citiesType,
+  countriesType,
+  inputs,
+  modalHandleProps,
+  statesType,
+} from "../../../Utils/types.utils";
+import { useLocation, useParams } from "react-router-dom";
 import DropDw, {
   dropDownItemType,
 } from "../../../Components/Common/Inputs/Dropdown";
@@ -23,14 +30,16 @@ import countries2 from "../../../Utils/DataCollection/countries.json";
 import { addressValidatorSchema } from "../../../../Validation/Validators/address.validator";
 import { PrivateRoutes } from "../../../Utils/routermanager.routes.utils";
 import ConfirmationModal from "../../../Components/Common/Modals/Confirmation.modal.component";
+import { useNavigator, useTranslator } from "../../../Hooks/Common/useCommon";
+import { Link2 } from "../../../Components/Common/Inputs/Link";
 
 type IMyAddressesProps = {};
 
 const MyAddresses: FunctionComponent<IMyAddressesProps> = ({}) => {
   const { id, childPage } = useParams();
 
-  const { t } = useTranslation();
-  const navigate = useNavigate();
+  const translator = useTranslator();
+  const navigator = useNavigator();
   const location = useLocation();
 
   const [addresses] = useState<addressInfo[]>(addressesCollection);
@@ -56,7 +65,7 @@ const MyAddresses: FunctionComponent<IMyAddressesProps> = ({}) => {
         icon: <Icon icon="edit" size="xs" />,
         type: "normal",
         onPress: () => {
-          navigate(`${location.pathname}/${id}?action=edit`);
+          navigator({ route: `${location.pathname}/${id}?action=edit` });
         },
       },
       {
@@ -68,10 +77,10 @@ const MyAddresses: FunctionComponent<IMyAddressesProps> = ({}) => {
           confirmModalRef.current?.setModalProps({
             title: `eliminar-direccion`,
             actionTitle: "eliminar",
-            msg: 'eliminar-direccion-confirmacion',
+            msg: "eliminar-direccion-confirmacion",
             visible: true,
-            confirmBtnColor: '!bg-red-600/60 !text-gray-100',
-            itemId: id
+            confirmBtnColor: "!bg-red-600/60 !text-gray-100",
+            itemId: id,
           });
         },
       },
@@ -98,13 +107,16 @@ const MyAddresses: FunctionComponent<IMyAddressesProps> = ({}) => {
           }) => {
             const { value, key, selections, setSelections, values, setValues } =
               options;
-  
+
             if (selections["state"] != undefined)
               selections["state"] = new Set([]);
-            if (selections["city"] != undefined) selections["city"] = new Set([]);
-  
+            if (selections["city"] != undefined)
+              selections["city"] = new Set([]);
+
             try {
-              const states = await CountriesService.getStates<statesType>(value);
+              const states = await CountriesService.getStates<statesType>(
+                value
+              );
               setAddressUtils({
                 ...addressUtils,
                 states: states.data as statesType[],
@@ -112,12 +124,12 @@ const MyAddresses: FunctionComponent<IMyAddressesProps> = ({}) => {
             } catch (error) {
               console.log(error);
             }
-  
+
             setSelections({
               ...selections,
               [key]: new Set([value]),
             });
-  
+
             setValues({
               ...values,
               [key]: value,
@@ -127,11 +139,13 @@ const MyAddresses: FunctionComponent<IMyAddressesProps> = ({}) => {
             const item = addressUtils.countries?.find(
               (c) => c.iso2 == items[0].key
             );
-            
-            if(!item) return<></>
 
-            const emoji = countries2.find((c) => c.alpha2 == items[0].key)?.emoji;
-  
+            if (!item) return <></>;
+
+            const emoji = countries2.find(
+              (c) => c.alpha2 == items[0].key
+            )?.emoji;
+
             return (
               <div className="flex items-center gap-3 text-gray-900 dark:text-gray-100">
                 <span className="text-2xl">{emoji}</span>
@@ -150,7 +164,7 @@ const MyAddresses: FunctionComponent<IMyAddressesProps> = ({}) => {
             >
               <div className="flex items-center gap-3 text-gray-900 dark:text-gray-100">
                 <span className="text-2xl">
-                {countries2.find((c) => c.alpha2 == item.iso2)?.emoji}
+                  {countries2.find((c) => c.alpha2 == item.iso2)?.emoji}
                 </span>
                 <p>{item?.name}</p>
               </div>
@@ -178,9 +192,10 @@ const MyAddresses: FunctionComponent<IMyAddressesProps> = ({}) => {
           }) => {
             const { value, key, selections, setSelections, values, setValues } =
               options;
-  
-            if (selections["city"] != undefined) selections["city"] = new Set([]);
-  
+
+            if (selections["city"] != undefined)
+              selections["city"] = new Set([]);
+
             try {
               const cities = await CountriesService.getCities<citiesType>(
                 values["country"],
@@ -193,12 +208,12 @@ const MyAddresses: FunctionComponent<IMyAddressesProps> = ({}) => {
             } catch (error) {
               console.log(error);
             }
-  
+
             setSelections({
               ...selections,
               [key]: new Set([value]),
             });
-  
+
             setValues({
               ...values,
               [key]: value,
@@ -273,7 +288,7 @@ const MyAddresses: FunctionComponent<IMyAddressesProps> = ({}) => {
       states: [],
     });
 
-    navigate(`${PrivateRoutes.ACCOUNT}/${childPage}`);
+    navigator({ route: `${PrivateRoutes.ACCOUNT}/${childPage}` });
   };
 
   useEffect(() => {
@@ -300,24 +315,30 @@ const MyAddresses: FunctionComponent<IMyAddressesProps> = ({}) => {
         inputs.forEach((i) => {
           if (i.type == "number")
             i.value = Number(address[i.key as addressKeyType]);
-          else if(i.type == 'check') i.value = address[i.key as addressKeyType] as boolean;
+          else if (i.type == "check")
+            i.value = address[i.key as addressKeyType] as boolean;
           else i.value = String(address[i.key as addressKeyType]);
         });
 
         formModalRef.current?.setModalProps({
-          type: 'form',
+          type: "form",
           title: `editar-direccion`,
           actionTitle: "editar",
           visible: true,
         });
 
-        try {          
-          const states = await CountriesService.getStates<statesType>(address.country);
-          const cities = await CountriesService.getCities<citiesType>(address.country, address.state);
+        try {
+          const states = await CountriesService.getStates<statesType>(
+            address.country
+          );
+          const cities = await CountriesService.getCities<citiesType>(
+            address.country,
+            address.state
+          );
           setAddressUtils({
             ...addressUtils,
             states: states.data as statesType[],
-            cities: cities.data as citiesType[]
+            cities: cities.data as citiesType[],
           });
         } catch (error) {
           console.log(error);
@@ -342,13 +363,13 @@ const MyAddresses: FunctionComponent<IMyAddressesProps> = ({}) => {
             text="agregar-direccion"
             onPress={() => {
               formModalRef.current?.setModalProps({
-                type: 'form',
+                type: "form",
                 title: `agregar-direccion`,
                 actionTitle: "agregar",
                 visible: true,
                 //size: 'lg'
               });
-              navigate(`${location.pathname}/new`);
+              navigator({ route: `${location.pathname}/new` });
             }}
             type="secondary"
           />
@@ -357,90 +378,93 @@ const MyAddresses: FunctionComponent<IMyAddressesProps> = ({}) => {
       </div>
       <div className="flex flex-col gap-5 justify-between flex-wrap laptop:flex-row">
         {addresses.map((address) => (
-          <Link
+          <Link2
             key={address.id}
             // href={`${location.pathname}/${address.id}`}
-            className="w-full laptop:w-[49%] border cursor-default border-gray-800 dark:border-gray-700 rounded-xl py-3 px-5 flex items-center justify-between text-inherit"
-            onClick={(e) => {
-              e.preventDefault();
+            additionalClassName="w-full laptop:w-[49%] border cursor-default border-gray-800 dark:border-gray-700 rounded-xl py-3 px-5 flex items-center justify-between text-inherit"
+            action={() => {
               //navigate(`${location.pathname}/${address.id}`);
             }}
-          >
-            <div className="flex w-full gap-2 items-center justify-between text-sm laptop:text-base">
-              <div className=" flex  flex-col">
-                <h1 className=" font-semibold">{address.address} </h1>
-                <p className=" text-default-500 text-sm line-clamp-2">
-                  {address.countryName}
-                </p>
-                <p className=" text-default-500 text-sm line-clamp-2">
-                  {address.stateName}
-                </p>
-                <p className=" text-default-500 text-sm line-clamp-2">
-                  {address.cityName}
-                </p>
-                <p className=" text-default-500 text-sm line-clamp-2">
-                  {address.postalCode}
-                </p>
-              </div>
+            text={
+              <div className="flex w-full gap-2 items-center justify-between text-sm laptop:text-base">
+                <div className=" flex  flex-col">
+                  <h1 className=" font-semibold">{address.address} </h1>
+                  <p className=" text-default-500 text-sm line-clamp-2">
+                    {address.countryName}
+                  </p>
+                  <p className=" text-default-500 text-sm line-clamp-2">
+                    {address.stateName}
+                  </p>
+                  <p className=" text-default-500 text-sm line-clamp-2">
+                    {address.cityName}
+                  </p>
+                  <p className=" text-default-500 text-sm line-clamp-2">
+                    {address.postalCode}
+                  </p>
+                </div>
 
-              <div className="flex items-center justify-end w-[40%]">
-                {address.default ? (
-                  <Chip
-                    size="sm"
-                    className="bg-gray-200 dark:bg-gray-800 !rounded-xl text-xs"
-                  >
-                    {" "}
-                    {t("defecto")}
-                  </Chip>
-                ) : (
-                  <Button
-                    variant="flat"
-                    size="sm"
-                    color="success"
-                    className="bg-transparent"
-                  >
-                    {t("establecer-defecto")}
-                  </Button>
-                )}
-                <DropDw
-                  btnStartIcon={
-                    <Icon
-                      icon="verticalDots"
-                      size="lg"
-                      color="text-gray-900 dark:text-gray-100"
-                    />
-                  }
-                  items={listDropDwItems(address.id)}
-                  placement="bottom-end"
-                />
+                <div className="flex items-center justify-end w-[40%]">
+                  {address.default ? (
+                    <Chip
+                      size="sm"
+                      className="bg-gray-200 dark:bg-gray-800 !rounded-xl text-xs"
+                    >
+                      {" "}
+                      {translator({ text: "defecto" })}
+                    </Chip>
+                  ) : (
+                    <Button
+                      variant="flat"
+                      size="sm"
+                      color="success"
+                      className="bg-transparent"
+                    >
+                      {translator({ text: "establecer-defecto" })}
+                    </Button>
+                  )}
+                  <DropDw
+                    btnStartIcon={
+                      <Icon
+                        icon="verticalDots"
+                        size="lg"
+                        color="text-gray-900 dark:text-gray-100"
+                      />
+                    }
+                    items={listDropDwItems(address.id)}
+                    placement="bottom-end"
+                  />
+                </div>
               </div>
-            </div>
-          </Link>
+            }
+          />
         ))}
 
-        <Link
-         // href={`${location.pathname}/new`}
-          className={`w-full laptop:w-[49%] border-2 border-dashed cursor-pointer border-gray-800 dark:border-gray-700 rounded-xl py-3 px-5 flex items-center justify-between text-inherit ${
+        <Link2
+          // href={`${location.pathname}/new`}
+          additionalClassName={`w-full laptop:w-[49%] border-2 border-dashed cursor-pointer border-gray-800 dark:border-gray-700 rounded-xl py-3 px-5 flex items-center justify-between text-inherit ${
             addresses.length <= 0 ? "hidden" : ""
           }`}
-          onPress={() => {
+          action={() => {
             formModalRef.current?.setModalProps({
-              type: 'form',
+              type: "form",
               title: `agregar-direccion`,
               actionTitle: "agregar",
               visible: true,
               //size: 'lg'
             });
-            navigate(`${location.pathname}/new`);
+            navigator({ route: `${location.pathname}/new` });
           }}
-        >
-          <div className="flex h-[em] items-center gap-2 text-sm laptop:text-base">
-            <Icon icon="plus" size="sm" color="text-default-500" />
-            <h1 className=" font-semibold text-default-500">
-              {`${t("agregar")} ${t("direccion").toLowerCase()}`}
-            </h1>
-          </div>
-        </Link>
+          text={
+            <div className="flex h-[em] items-center gap-2 text-sm laptop:text-base">
+              <Icon icon="plus" size="sm" color="text-default-500" />
+              <h1 className=" font-semibold text-default-500">
+                {`${translator({ text: "agregar" })} ${translator({
+                  text: "direccion",
+                }).toLowerCase()}`}
+              </h1>
+            </div>
+          }
+        />
       </div>
       <FormModal
         ref={formModalRef}
@@ -450,10 +474,12 @@ const MyAddresses: FunctionComponent<IMyAddressesProps> = ({}) => {
       >
         <MultipleFormInputs inputs={inputs} />
       </FormModal>
-      <ConfirmationModal ref={confirmModalRef} onConfirmBtnClicked={(id:string) => {
-        console.log(id);
-        
-      }}/>
+      <ConfirmationModal
+        ref={confirmModalRef}
+        onConfirmBtnClicked={(id: string) => {
+          console.log(id);
+        }}
+      />
     </div>
   );
 };

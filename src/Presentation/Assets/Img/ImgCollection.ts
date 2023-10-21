@@ -19,18 +19,26 @@ export {
 }
 
 
-export type imgCollectionType = "mastercard" | "visa" | 'discovercard' | "americanexpress" | "unknowncard";
+export type imgCollectionType = "mastercard" | "visa" | 'discovercard' | "americanexpress" | "unknowncard" | "anyCommerceLight" | "anyCommerceDark" | "ecommerce" | "paypal";
 
 export const imgs: {
     visa: string,
     mastercard: string,
     discovercard: string,
     americanexpress: string,
-    unknowncard: string
+    unknowncard: string,
+    anyCommerceLight: string,
+    anyCommerceDark: string,
+    ecommerce: string,
+    paypal: string
 } = {
     visa: visa,
     mastercard: mastercard,
     discovercard: discovercard,
     americanexpress: americanexpress,
-    unknowncard: unknowncard
+    unknowncard: unknowncard,
+    anyCommerceDark: anyCommerceIconDark,
+    anyCommerceLight: anyCommerceIconLight,
+    ecommerce: eCommerce,
+    paypal: paypal
 }

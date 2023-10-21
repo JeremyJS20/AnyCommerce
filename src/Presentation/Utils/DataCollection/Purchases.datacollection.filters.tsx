@@ -9,7 +9,7 @@ export const PurchaseFiltersCollection: FiltersCollectionType[] = [
     key: "search",
     text: "buscador",
     placeNumber: 1,
-    icon: <Icon icon="search" size={"base"} />,
+    icon: <Icon icon="search" size={"base"} color="text-gray-900 dark:text-gray-100"/>,
     inputType: "search",
   },
   // {

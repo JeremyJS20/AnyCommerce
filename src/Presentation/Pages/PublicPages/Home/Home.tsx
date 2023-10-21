@@ -1,38 +1,39 @@
-import { Button } from "@nextui-org/react";
-import * as React from "react";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { PublicRoutes } from "../../../Utils/routermanager.routes.utils";
+import Btn from "../../../Components/Common/Inputs/Button";
+import { FunctionComponent } from "react";
+import { useNavigator, useTranslator } from "../../../Hooks/Common/useCommon";
 
 interface IHomeProps {}
 
-const Home: React.FunctionComponent<IHomeProps> = ({}) => {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
+const Home: FunctionComponent<IHomeProps> = ({}) => {
+  const translator = useTranslator();
+  const navigator = useNavigator();
 
   return (
     <div className="h-[95vh] flex flex-col gap-7 justify-center text-center items-center w-[80vw] m-auto desktop:w-[54vw]">
-      <p className=" text-4xl font-bold tablet:text-6xl">{t("presentacion")}</p>
-      <p className=" text-lg text-gray-500 w-[60vw] tablet:text-2xl desktop:w-[30vw]">{t("presentacion2")}</p>
+      <h1 className=" text-4xl font-bold tablet:text-6xl">
+        {translator({ text: "presentacion" })}
+      </h1>
+      <h2 className=" text-lg text-gray-500 w-[60vw] tablet:text-2xl desktop:w-[30vw]">
+        {translator({ text: "presentacion2" })}
+      </h2>
       <div className="flex items-center gap-5">
-        <Button
+        <Btn
+          text="comprar-ahora"
           size="md"
-          radius="sm"
-          variant="bordered"
-          className="border border-none text-gray-100 bg-gray-800 hover:bg-gray-800 dark:hover:bg-gray-300 dark:text-gray-800 dark:bg-gray-100"
-          onClick={() => navigate(PublicRoutes.PRODUCTS)}
-        >
-          {t("comprar-ahora")}
-        </Button>
-        <Button
+          onPress={() =>
+            navigator({ route: PublicRoutes.PRODUCTS, title: "productos" })
+          }
+          type="primary"
+        />
+        <Btn
+          text="vender-ahora"
           size="md"
-          radius="sm"
-          variant="bordered"
-          className="border border-none text-gray-100 bg-gray-800 hover:bg-gray-800 dark:hover:bg-gray-300 dark:text-gray-800 dark:bg-gray-100"
-          onClick={() => navigate(PublicRoutes.SIGNIN)}
-        >
-          {t("vender-ahora")}
-        </Button>
+          onPress={() =>
+            navigator({ route: PublicRoutes.SIGNIN, title: "iniciar-sesion" })
+          }
+          type="tertiary"
+        />
       </div>
     </div>
   );

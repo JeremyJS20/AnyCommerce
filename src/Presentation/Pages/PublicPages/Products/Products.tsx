@@ -1,8 +1,6 @@
 import { Divider } from "@nextui-org/divider";
-import { Button, Card, CardBody, Link } from "@nextui-org/react";
+import { Card, CardBody } from "@nextui-org/react";
 import { FunctionComponent, useContext, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { PublicRoutes } from "../../../Utils/routermanager.routes.utils";
 
 import { cartProducts, productInfo } from "../../../Utils/types.utils";
@@ -18,25 +16,26 @@ import {
   useFilterPanelBtns,
   useSortBtn,
 } from "../../../Hooks/Common/useFilterPanel2";
-import usePager, { useQuery } from "../../../Hooks/Common/usePager";
+import usePager from "../../../Hooks/Common/usePager";
 import useProducts from "../../../Hooks/Pages/Products/useProducts";
 import {
   renderProductRating,
   renderUnitsInStock,
 } from "../../../Components/Common/CommonComponents";
 import { Icon } from "../../../Assets/Icons/IconsCollection";
+import {
+  useNavigator,
+  useQuery,
+  useTranslator,
+} from "../../../Hooks/Common/useCommon";
+import Btn from "../../../Components/Common/Inputs/Button";
+import { Link2 } from "../../../Components/Common/Inputs/Link";
 
 interface IProductsProps {}
 
-export type commonType = {
-  key: string;
-  text: string;
-  value: any;
-};
-
 const Products: FunctionComponent<IProductsProps> = ({}) => {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
+  const translator = useTranslator();
+  const navigator = useNavigator();
   const query = useQuery();
 
   const { setCart } = useContext(CartContext);
@@ -148,9 +147,11 @@ const Products: FunctionComponent<IProductsProps> = ({}) => {
     <div className="w-[95%] px-6 py-10 laptop:w-[80%]">
       <div className="flex flex-col pb-5 gap-2">
         <div>
-          <header className="font-semibold text-2xl">{t("productos")}</header>
+          <header className="font-semibold text-2xl">
+            {translator({ text: "productos" })}
+          </header>
           <p className="text-base text-default-500">
-            {t("productos-descripcion2")}
+            {translator({ text: "productos-descripcion2" })}
           </p>
         </div>
         {/* <Divider orientation="horizontal" className="" /> */}
@@ -167,7 +168,9 @@ const Products: FunctionComponent<IProductsProps> = ({}) => {
         {products.length <= 0 ? (
           <div className="flex text-7xl flex-col items-center justify-center gap-4 h-[70vh]">
             <Icon icon="box" size="sm" />
-            <p className="text-3xl">{t("productos-no-encontrados")}</p>
+            <p className="text-3xl">
+              {translator({ text: "productos-no-encontrados" })}
+            </p>
           </div>
         ) : (
           <div className="flex flex-col gap-10">
@@ -180,57 +183,61 @@ const Products: FunctionComponent<IProductsProps> = ({}) => {
                   shadow="none"
                 >
                   <CardBody className="p-0 rounded-lg border-none border-gray-300 dark:border-gray-700 ">
-                    <Link
-                      href={`${PublicRoutes.PRODUCTS}/${prod.id}`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        navigate(`${PublicRoutes.PRODUCTS}/${prod.id}`);
+                    <Link2
+                      //href={`${PublicRoutes.PRODUCTS}/${prod.id}`}
+                      action={() => {
+                        navigator({
+                          route: `${PublicRoutes.PRODUCTS}/${prod.id}`,
+                          title: prod.name,
+                        });
                       }}
-                      className="!h-full"
-                    >
-                      <div className="h-full flex flex-col justify-between gap-4 border-none text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 rounded-lg p-3">
-                        <div className="flex flex-col gap-2">
-                          <img
-                            src={prod.img}
-                            className="w-[100%] h-auto bg-cover bg-center bg-no-repeat "
-                          />
-                          <div className="flex flex-col gap-4 px-2">
-                            <div className="flex flex-col gap-0">
-                              <p className=" text-xl line-clamp-2">
-                                {prod.name}
-                              </p>
-                              <div className="flex items-center gap-0 text-gray-500">
-                                {renderProductRating(prod.rating, "sm", t)}
+                      additionalClassName="!h-full cursor-pointer"
+                      text={
+                        <div className="h-full flex flex-col justify-between gap-4 border-none text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 rounded-lg p-3">
+                          <div className="flex flex-col gap-2">
+                            <img
+                              src={prod.img}
+                              className="w-[100%] h-auto bg-cover bg-center bg-no-repeat "
+                            />
+                            <div className="flex flex-col gap-4 px-2">
+                              <div className="flex flex-col gap-0">
+                                <p className=" text-xl line-clamp-2">
+                                  {prod.name}
+                                </p>
+                                <div className="flex items-center gap-0 text-gray-500">
+                                  {renderProductRating(
+                                    prod.rating,
+                                    "sm",
+                                    translator
+                                  )}
+                                </div>
+                                {renderUnitsInStock(prod.stock, translator)}
                               </div>
-                              {renderUnitsInStock(prod.stock, t)}
                             </div>
                           </div>
-                        </div>
-                        <div className="flex flex-col gap-5">
-                          <div className="flex gap-[2px]">
-                            <p>$</p>
-                            <p className="text-4xl">
-                              {String(prod.cost).split(".")[0]}
-                            </p>
-                            <p className="">
-                              .
-                              {String(prod.cost).split(".")[1] == undefined
-                                ? "00"
-                                : String(prod.cost).split(".")[1]}
-                            </p>
-                          </div>
-                          {/* <Btn
-                            size="md"
-                            type="quaternary"
-                            text="agregar-al-carrito"
-                            aditionalClassnames="text-gray-100 "
-                            onPress={
-                              () => {
+                          <div className="flex flex-col gap-5">
+                            <div className="flex gap-[2px]">
+                              <p>$</p>
+                              <p className="text-4xl">
+                                {String(prod.cost).split(".")[0]}
+                              </p>
+                              <p className="">
+                                .
+                                {String(prod.cost).split(".")[1] == undefined
+                                  ? "00"
+                                  : String(prod.cost).split(".")[1]}
+                              </p>
+                            </div>
+
+                            <Btn
+                              type="primary"
+                              text="agregar-al-carrito"
+                              onPress={() => {
                                 if (prod.stock <= 0) {
                                   return toast.error(
-                                    t(
-                                      "existencia-de-producto-en-tienda-agotada"
-                                    )
+                                    translator({
+                                      text: "existencia-de-producto-en-tienda-agotada",
+                                    })
                                   );
                                 }
 
@@ -253,9 +260,9 @@ const Products: FunctionComponent<IProductsProps> = ({}) => {
                                       prodInCart.cartInfo.amount += 1;
                                     } else {
                                       return toast.error(
-                                        t(
-                                          "existencia-de-producto-en-tienda-excedida"
-                                        )
+                                        translator({
+                                          text: "existencia-de-producto-en-tienda-excedida",
+                                        })
                                       );
                                     }
                                   } else {
@@ -281,97 +288,28 @@ const Products: FunctionComponent<IProductsProps> = ({}) => {
                                 }
 
                                 toast.success(
-                                  t("producto-agredado-a-carrito", {
+                                  translator({
+                                    text: "producto-agredado-a-carrito",
+                                  }),
+                                  {
                                     action: {
                                       label: "Undo",
                                       onClick: () => console.log("Undo"),
                                     },
-                                  })
-                                );
-                              }
-                              // props.cartRef.current?.setCollapseCart(true)
-                            }
-                          /> */}
-                          <Button
-                            size="md"
-                            radius="sm"
-                            variant="bordered"
-                            className={`border border-none text-gray-100 bg-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 dark:text-gray-800 dark:bg-gray-100 ${
-                              prod.stock <= 0
-                                ? "!bg-gray-900/80 dark:!bg-gray-100/80"
-                                : ""
-                            }`}
-                            disabled={prod.stock <= 0}
-                            onClick={(e) => {
-                              e.preventDefault();
-
-                              if (prod.stock <= 0) {
-                                return toast.error(
-                                  t("existencia-de-producto-en-tienda-agotada")
-                                );
-                              }
-
-                              const cartExists = JSON.parse(
-                                String(localStorage.getItem("cart"))
-                              ) as cartProducts[] | null;
-
-                              if (cartExists != null) {
-                                const prodInCart = cartExists.find(
-                                  (ce) => ce.productInfo.id == prod.id
-                                );
-
-                                if (
-                                  prodInCart != null ||
-                                  prodInCart != undefined
-                                ) {
-                                  if (
-                                    prodInCart.cartInfo.amount !== prod.stock
-                                  ) {
-                                    prodInCart.cartInfo.amount += 1;
-                                  } else {
-                                    return toast.error(
-                                      t(
-                                        "existencia-de-producto-en-tienda-excedida"
-                                      )
-                                    );
                                   }
-                                } else {
-                                  const cartProduct: cartProducts = {
-                                    productInfo: prod,
-                                    cartInfo: {
-                                      amount: 1,
-                                    },
-                                  };
-                                  cartExists.push(cartProduct);
-                                }
-                                setCart(cartExists);
-                              } else {
-                                const cartProducts: cartProducts[] = [
-                                  {
-                                    productInfo: prod,
-                                    cartInfo: {
-                                      amount: 1,
-                                    },
-                                  },
-                                ];
-                                setCart(cartProducts);
-                              }
-
-                              toast.success(
-                                t("producto-agredado-a-carrito", {
-                                  action: {
-                                    label: "Undo",
-                                    onClick: () => console.log("Undo"),
-                                  },
-                                })
-                              );
-                            }}
-                          >
-                            {t("agregar-al-carrito")}
-                          </Button>
+                                );
+                              }}
+                              disabled={prod.stock <= 0}
+                              additionalClassName={`${
+                                prod.stock <= 0
+                                  ? "!bg-gray-900/80 dark:!bg-gray-100/80"
+                                  : ""
+                              }`}
+                            />
+                          </div>
                         </div>
-                      </div>
-                    </Link>
+                      }
+                    />
                   </CardBody>
                 </Card>
               ))}

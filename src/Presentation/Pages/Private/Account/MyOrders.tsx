@@ -15,7 +15,6 @@ import {
   Chip,
   Divider,
 } from "@nextui-org/react";
-import { useTranslation } from "react-i18next";
 import {
   OrdersFiltersCollection,
   OrdersSortCollection,
@@ -24,17 +23,18 @@ import { orderInfo } from "../../../Utils/types.utils";
 import { ordersCollection } from "../../../Utils/DataCollection/Orders.datacollection";
 import Moment from "react-moment";
 import { NumericFormat } from "react-number-format";
-import usePager, { useQuery } from "../../../Hooks/Common/usePager";
+import usePager from "../../../Hooks/Common/usePager";
 import useMyOrders from "../../../Hooks/Pages/Orders/useMyOrders";
 import DropDw, {
   dropDownItemType,
 } from "../../../Components/Common/Inputs/Dropdown";
 import { Icon } from "../../../Assets/Icons/IconsCollection";
+import { useQuery, useTranslator } from "../../../Hooks/Common/useCommon";
 
 type IMyOrdersProps = {};
 
 const MyOrders: FunctionComponent<IMyOrdersProps> = ({}) => {
-  const { t } = useTranslation();
+  const translator = useTranslator();
   const query = useQuery();
 
   const [orders, setOrders] = useState<orderInfo[]>(ordersCollection);
@@ -99,10 +99,10 @@ const MyOrders: FunctionComponent<IMyOrdersProps> = ({}) => {
     <div className="flex items-center justify-between">
       <span className="w-[20%]">
         {Array.from(selectedTableKeys).join("") == "all"
-          ? t("todos-los-items-seleccionados")
-          : `${Array.from(selectedTableKeys).length} ${t("de").toLowerCase()} ${
+          ? translator({text: 'todos-los-items-seleccionados'})
+          : `${Array.from(selectedTableKeys).length} ${translator({text: 'de'}).toLowerCase()} ${
               orders2.length
-            } ${t("seleccionados").toLowerCase()}`}
+            } ${translator({text: 'seleccionados'}).toLowerCase()}`}
       </span>
       <div className="">{PagerComponent()}</div>
       <div className="w-[20%]"></div>
@@ -184,11 +184,11 @@ const MyOrders: FunctionComponent<IMyOrdersProps> = ({}) => {
         <TableHeader columns={columns}>
           {columns.map((column) => (
             <TableColumn key={column.uid} align="start">
-              {t(column.name)}
+              {translator({text: column.name})}
             </TableColumn>
           ))}
         </TableHeader>
-        <TableBody emptyContent={t("no-se-encontraron-ordenes")}>
+        <TableBody emptyContent={translator({text: 'no-se-encontraron-ordenes'})}>
           {orders.map((item) => (
             <TableRow key={item.id}>
               {(columnKey) => {
@@ -228,7 +228,7 @@ const MyOrders: FunctionComponent<IMyOrdersProps> = ({}) => {
                         color={colorStatus[getKeyValue(item, columnKey)] as any}
                       >
                         <p className=" font-semibold">
-                          {t(getKeyValue(item, columnKey))}
+                          {translator({text: getKeyValue(item, columnKey)})}
                         </p>
                       </Chip>
                     ) : columnKey == "actions" ? (
